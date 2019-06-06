@@ -2,10 +2,16 @@ cmake_minimum_required (VERSION 3.7)
 
 project(redkite VERSION 0.5.2)
 
+# Temporary, to remove
+set(CMAKE_SYSTEM_NAME Windows)
+set(CMAKE_SYSTEM_VERSION 1)
+
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   message(STATUS "Build Redkite for Windows")
   add_compile_options(-DRK_OS_WIN)
   add_compile_options(-DRK_FOR_SHARED)
+  set(CMAKE_C_COMPILER   /usr/bin/x86_64-w64-mingw32-gcc) # temporary
+  set(CMAKE_CXX_COMPILER /usr/bin/x86_64-w64-mingw32-g++) # temporary
 elseif(CMAKE_SYSTEM_NAME MATCHES Darwin)
   message(FATAL_ERROR "Redkite not implemented yet for Mac OS X")
 elseif (CMAKE_SYSTEM_NAME MATCHES Linux)
