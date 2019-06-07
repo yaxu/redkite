@@ -33,6 +33,7 @@
 class RkEventQueue;
 struct RkCanvasInfo;
 
+// TODO: define a common interface for window platform
 class RkWindowX {
  public:
         explicit RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent = nullptr, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
@@ -46,14 +47,11 @@ class RkWindowX {
         void show(bool b);
         std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo();
         void setTitle(const std::string &title);
-        Display* display();
         RkSize& size() const;
         void setSize(const RkSize &size);
         RkPoint& position() const;
         void setPosition(const RkPoint &position);
         RkWindowId id() const;
-        void setEventQueue(RkEventQueue *queue);
-
         void setBorderWidth(int width);
         int borderWidth() const;
         void setBorderColor(const RkColor &color);
@@ -66,11 +64,13 @@ class RkWindowX {
         void setFocus(bool b);
         bool hasFocus();
         void setPointerShape(Rk::PointerShape shape);
+        void setEventQueue(RkEventQueue *queue);
 
  protected:
         bool openDisplay();
         bool isWindowCreated() const;
         bool hasParent() const;
+        Display* display();
         unsigned long pixelValue(const RkColor &color);
         void createCanvasInfo();
         void freeCanvasInfo();

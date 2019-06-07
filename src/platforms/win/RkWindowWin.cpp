@@ -24,7 +24,7 @@
 #include "RkLog.h"
 #include "RkWindowWin.h"
 
-RkWindowWin::RkWindowWin(const std::shared_ptr<RkNativeWindowInfo> &parent)
+RkWindowWin::RkWindowWin(const std::shared_ptr<RkNativeWindowInfo> &parent, Rk::WindowFlags flags)
         : parentWindowInfo{parent}
         , windowHandle{{nullptr}}
         , windowPosition{0, 0}
@@ -33,10 +33,12 @@ RkWindowWin::RkWindowWin(const std::shared_ptr<RkNativeWindowInfo> &parent)
         , borderColor{255, 255, 255}
         , backgroundColor{255, 255, 255}
         , eventQueue{nullptr}
+        , canvasInfo{nullptr}
+        , windowFlags{flags}
 {
 }
 
-RkWindowWin::RkWindowWin(const RkNativeWindowInfo &parent)
+RkWindowWin::RkWindowWin(const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
         : parentWindowInfo{std::make_shared<RkNativeWindowInfo>()}
         , windowHandle{{nullptr}}
         , windowPosition{0, 0}
@@ -45,6 +47,8 @@ RkWindowWin::RkWindowWin(const RkNativeWindowInfo &parent)
         , borderColor{255, 255, 255}
         , backgroundColor{255, 255, 255}
         , eventQueue{nullptr}
+        , canvasInfo{nullptr}
+        , windowFlags{flags}
 
 {
         *parentWindowInfo.get() = parent;
@@ -137,44 +141,38 @@ void RkWindowWin::setSize(const std::pair<int, int> &size)
         }
 }
 
-std::pair<int, int> RkWindowWin::position() const
+RkPoint& RkWindowWin::position() const
 {
         if (isWindowCreated()) {
                 RECT rect;
                 GetWindowRect(windowHandle.id, &rect);
-				if (hasParent())
-					MapWindowPoints(windowHandle.id, GetParent(windowHandle.id), reinterpret_cast<LPPOINT>(&rect), 2);
-                return {rect.left, rect.top};
+                if (hasParent())
+                        MapWindowPoints(windowHandle.id, GetParent(windowHandle.id), reinterpret_cast<LPPOINT>(&rect), 2);
+                windowPosition = {rect.left, rect.top};
         }
         return windowPosition;
 }
 
-void RkWindowWin::setPosition(const std::pair<int, int> &position)
+void RkWindowWin::setPosition(const RkPoint &position)
 {
         windowPosition = position;
         if (isWindowCreated())
-                SetWindowPos(windowHandle.id,0, position.first, position.second, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+                SetWindowPos(windowHandle.id, 0, position.first, position.second, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 }
 
 void RkWindowWin::setBorderWidth(int width)
 {
         borderWidth = width;
-        //        if (isWindowCreated())
-        //        XSetWindowBorderWidth(display(), windowHandle, borderWidth);
 }
 
-void RkWindowWin::setBorderColor(const std::tuple<int, int, int> &color)
+void RkWindowWin::setBorderColor(const RkColor &color)
 {
         borderColor = color;
-        //        if (isWindowCreated())
-        //        XSetWindowBorder(display(), windowHandle, pixelValue(borderColor));
 }
 
-void RkWindowWin::setBackgroundColor(const std::tuple<int, int, int> &background)
+void RkWindowWin::setBackgroundColor(const RkColor &background)
 {
         backgroundColor = background;
-        //        if (isWindowCreated())
-        //        XSetWindowBackground(display(), windowHandle, pixelValue(background));
 }
 
 RkWindowId RkWindowWin::id() const
@@ -182,6 +180,61 @@ RkWindowId RkWindowWin::id() const
         RkWindowId id;
         id.id = windowHandle.id;
         return id;
+}
+
+const RkColor& RkWindowWin::background() const
+{
+}
+
+void RkWindowWin::resizeCanvas()
+{
+}
+
+std::shared_ptr<RkCanvasInfo> getCanvasInfo()
+{
+}
+
+void RkWindowWin::update()
+{
+}
+
+#ifdef RK_GRAPHICS_CAIRO_BACKEND
+void RkWindowX::createCanvasInfo()
+{
+        canvasInfo = std::make_shared<RkCanvasInfo>();
+        canvasInfo->cairo_surface = cairo_win32_surface_create(windowHandle.id);
+}
+
+void RkWindowX::resizeCanvas()
+{
+}
+
+std::shared_ptr<RkCanvasInfo> RkWindowX::getCanvasInfo()
+{
+        return canvasInfo;
+}
+
+void RkWindowX::freeCanvasInfo()
+{
+        cairo_surface_destroy(canvasInfo->cairo_surface);
+}
+#else
+#error No graphics backend defined
+#endif // RK_GRAPHICS_CAIRO_BACKEND
+
+void RkWindowWin::setFocus(bool b)
+{
+        // IMPLEMENT
+}
+
+bool RkWindowWin::hasFocus()
+{
+        // IMPLEMENT
+}
+
+void RkWindowWin::setPointerShape(Rk::PointerShape shape)
+{
+        // IMPLEMENT
 }
 
 void RkWindowWin::setEventQueue(RkEventQueue *queue)

@@ -26,13 +26,20 @@
 
 #include "Rk.h"
 #include "RkPlatform.h"
+#include "RkSize.h"
+#include "RkPoint.h"
+#include "RkColor.h"
 
 class RkEventQueue;
+struct RkCanvasInfo;
 
+// TODO: define a common interface for window platform
 class RkWindowWin {
  public:
-        explicit RkWindowWin(const std::shared_ptr<RkNativeWindowInfo> &parent = nullptr);
-        explicit RkWindowWin(const RkNativeWindowInfo &parent);
+        explicit RkWindowWin(const std::shared_ptr<RkNativeWindowInfo> &parent = nullptr,
+                             Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+        explicit RkWindowWin(const RkNativeWindowInfo &parent,
+                             Rk::WindowFlags flags = Rk::WindowFlags::Widget);
         ~RkWindowWin();
         RkWindowWin(const RkWindowWin &other) = delete;
         RkWindowWin& operator=(const RkWindowWin &other) = delete;
@@ -42,31 +49,42 @@ class RkWindowWin {
         void show();
         std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo();
         void setTitle(const std::string &title);
-        std::pair<int, int> size() const;
-        void setSize(const std::pair<int, int> &size);
-        std::pair<int, int> position() const;
+        RkSize& size() const;
+        void setSize(const RkSize &size);
+        RkPoint& position() const;
         void setPosition(const std::pair<int, int> &position);
         RkWindowId id() const;
-
         void setBorderWidth(int width);
-        void setBorderColor(const std::tuple<int, int, int> &color);
-        void setBackgroundColor(const std::tuple<int, int, int> &background);
+        int borderWidth() const;
+        void setBorderColor(const RkColor &color);
+        const RkColor& borderColor() const;
+        void setBackgroundColor(const RkColor &color);
+        const RkColor& background() const;
+        void resizeCanvas();
+        std::shared_ptr<RkCanvasInfo> getCanvasInfo();
+        void update();
+        void setFocus(bool b);
+        bool hasFocus();
+        void setPointerShape(Rk::PointerShape shape);
         void setEventQueue(RkEventQueue* queue);
 
  protected:
         bool isWindowCreated() const;
         bool hasParent() const;
-        //        unsigned long pixelValue(const std::tuple<int, int, int> &color);
+        void createCanvasInfo();
+        void freeCanvasInfo();
 
  private:
         std::shared_ptr<RkNativeWindowInfo> parentWindowInfo;
         RkWindowId windowHandle;
-        mutable std::pair<int, int> windowPosition;
-        std::pair<int, int> windowSize;
+        mutable RkPoint windowPosition;
+        mutable RkSize windowSize;
         int borderWidth;
-        std::tuple<int, int, int> borderColor;
-        std::tuple<int, int, int> backgroundColor;
+        RkColor borderColor;
+        RkColor backgroundColor;
         RkEventQueue* eventQueue;
+        std::shared_ptr<RkCanvasInfo> canvasInfo;
+        Rk::WindowFlags windowFlags;
 };
 
 #endif // RK_WIDGET_WIN_H
