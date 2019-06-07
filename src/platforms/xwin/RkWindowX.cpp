@@ -26,7 +26,8 @@
 #include "RkEventQueue.h"
 #include "RkCanvasInfo.h"
 
-#include "X11/cursorfont.h"
+#include <X11/cursorfont.h>
+#include <cairo/cairo-xlib.h>
 
 RkWindowX::RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent, Rk::WindowFlags flags)
         : parentWindowInfo(parent)
