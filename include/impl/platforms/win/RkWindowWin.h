@@ -36,23 +36,21 @@ struct RkCanvasInfo;
 // TODO: define a common interface for window platform
 class RkWindowWin {
  public:
-        explicit RkWindowWin(const std::shared_ptr<RkNativeWindowInfo> &parent = nullptr,
-                             Rk::WindowFlags flags = Rk::WindowFlags::Widget);
-        explicit RkWindowWin(const RkNativeWindowInfo &parent,
-                             Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+        explicit RkWindowWin(const std::shared_ptr<RkNativeWindowInfo> &parent, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+        explicit RkWindowWin(const RkNativeWindowInfo &parent, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
         ~RkWindowWin();
         RkWindowWin(const RkWindowWin &other) = delete;
         RkWindowWin& operator=(const RkWindowWin &other) = delete;
         RkWindowWin(RkWindowWin &&other) = delete;
         RkWindowWin& operator=(RkWindowWin &&other) = delete;
         bool init();
-        void show();
+        void show(bool b = true);
         std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo();
         void setTitle(const std::string &title);
-        RkSize& size() const;
+        const RkSize& size() const;
         void setSize(const RkSize &size);
         RkPoint& position() const;
-        void setPosition(const std::pair<int, int> &position);
+        void setPosition(const RkPoint &position);
         RkWindowId id() const;
         void setBorderWidth(int width);
         int borderWidth() const;
@@ -79,8 +77,8 @@ class RkWindowWin {
         RkWindowId windowHandle;
         mutable RkPoint windowPosition;
         mutable RkSize windowSize;
-        int borderWidth;
-        RkColor borderColor;
+        int winBorderWidth;
+        RkColor winBorderColor;
         RkColor backgroundColor;
         RkEventQueue* eventQueue;
         std::shared_ptr<RkCanvasInfo> canvasInfo;

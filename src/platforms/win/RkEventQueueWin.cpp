@@ -35,7 +35,7 @@ RkEventQueueWin::~RkEventQueueWin()
 {
 }
 
-void RkEventQueueWin::getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> &eventsQueue)
+void RkEventQueueWin::getEvents(std::vector<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> &eventsQueue) 
 {
         MSG msg;
         while (PeekMessageA(&msg, nullptr, 0, 0, PM_REMOVE) > 0) {
@@ -43,35 +43,35 @@ void RkEventQueueWin::getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr
                 switch (msg.message)
                 {
                 case RK_WIN_MESSAGE_PAINT:
-                        event = RkEvent::paintEvent();
+                        //event = RkEvent::paintEvent();
                         break;
                 //case WM_PAINT:
                 //        OutputDebugString("getEvents [REDKITE]Event:paint");
                 //        event = RkEvent::paintEvent();
                 //        break;
                 case WM_KEYDOWN:
-                        event = RkEvent::keyPressEvent();
+                        //event = RkEvent::keyPressEvent();
                         break;
                 case WM_KEYUP:
-                        event = RkEvent::keyReleaseEvent();
+                        //event = RkEvent::keyReleaseEvent();
                         break;
                 case WM_LBUTTONDOWN:
                 case WM_RBUTTONDOWN:
                 case WM_MBUTTONDOWN:
-                        event = RkEvent::buttonPressEvent();
+                        //event = RkEvent::buttonPressEvent();
                         break;
                 case WM_LBUTTONUP:
                 case WM_RBUTTONUP:
                 case WM_MBUTTONUP:
-                        event = RkEvent::buttonReleaseEvent();
+                        //event = RkEvent::buttonReleaseEvent();
                         break;
                 case WM_SIZE:
-                        event = RkEvent::resizeEvent();
+                        //event = RkEvent::resizeEvent();
                         break;
                 case WM_QUIT:
                 case WM_CLOSE:
                 case WM_DESTROY:
-                        event = RkEvent::closeEvent();
+                        //event = RkEvent::closeEvent();
                         break;
                 default:
                         break;
@@ -81,6 +81,6 @@ void RkEventQueueWin::getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr
                 DispatchMessage (&msg);
 
                 if (event)
-                        eventsQueue.push({rk_id_from_win(msg.hwnd), event});
+                        eventsQueue.push_back({rk_id_from_win(msg.hwnd), event});
         }
 }

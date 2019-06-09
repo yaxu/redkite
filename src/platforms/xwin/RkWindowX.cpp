@@ -30,7 +30,7 @@
 #include <cairo/cairo-xlib.h>
 
 RkWindowX::RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent, Rk::WindowFlags flags)
-        : parentWindowInfo(parent)
+        : parentWindowInfo{arent}
         , xDisplay{parent ? parent->display : nullptr}
         , screenNumber{parent ? parent->screenNumber : 0}
         , xWindow{0}
@@ -46,7 +46,7 @@ RkWindowX::RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent, Rk::Wind
 }
 
 RkWindowX::RkWindowX(const RkNativeWindowInfo &parent, Rk::WindowFlags flags)
-        : parentWindowInfo(std::make_shared<RkNativeWindowInfo>())
+        : parentWindowInfo{std::make_shared<RkNativeWindowInfo>()}
         , xDisplay{parent.display}
         , screenNumber{parent.screenNumber}
         , xWindow{0}
@@ -162,7 +162,7 @@ bool RkWindowX::isWindowCreated() const
         return xDisplay != nullptr && xWindow;
 }
 
-RkSize& RkWindowX::size() const
+const RkSize& RkWindowX::size() const
 {
         if (isWindowCreated()) {
                 XWindowAttributes attributes;

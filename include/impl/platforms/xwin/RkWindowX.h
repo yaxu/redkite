@@ -36,7 +36,7 @@ struct RkCanvasInfo;
 // TODO: define a common interface for window platform
 class RkWindowX {
  public:
-        explicit RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent = nullptr, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
+        explicit RkWindowX(const std::shared_ptr<RkNativeWindowInfo> &parent, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
         explicit RkWindowX(const RkNativeWindowInfo &parent, Rk::WindowFlags flags = Rk::WindowFlags::Widget);
         ~RkWindowX();
         RkWindowX(const RkWindowX &other) = delete;
@@ -47,7 +47,7 @@ class RkWindowX {
         void show(bool b);
         std::shared_ptr<RkNativeWindowInfo> nativeWindowInfo();
         void setTitle(const std::string &title);
-        RkSize& size() const;
+        const RkSize& size() const;
         void setSize(const RkSize &size);
         RkPoint& position() const;
         void setPosition(const RkPoint &position);

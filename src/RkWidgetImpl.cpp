@@ -42,11 +42,11 @@ RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent
         : inf_ptr{widgetInterface}
         , parentWidget{parent}
 #ifdef RK_OS_WIN
-        , platformWindow{!parent ? std::make_unique<RkWindowWin>(nullptr, flags) : std::make_unique<RkWindowWin>(parent->nativeWindowInfo(), flags)}
+        , platformWindow{std::make_unique<RkWindowWin>((parentWidget ? parent->nativeWindowInfo() : nullptr), flags)}
 #elif RK_OS_MAC
-        , platformWindow{!parent ? std::make_unique<RkWindowMac>(nullptr, flags) : std::make_unique<RkWindowMac>(parent->nativeWindowInfo(), flags)}
+        , platformWindow{std::make_unique<RkWindowMac>((parentWidget ? parent->nativeWindowInfo() : nullptr), flags)}
 #else // X11
-        , platformWindow{!parent ? std::make_unique<RkWindowX>(nullptr, flags) : std::make_unique<RkWindowX>(parent->nativeWindowInfo(), flags)}
+		, platformWindow{std::make_unique<RkWindowX>((parentWidget ? parent->nativeWindowInfo() : nullptr), flags)}
 #endif
         , widgetClosed{false}
         , eventQueue{nullptr}

@@ -33,22 +33,22 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
         {
         case WM_DESTROY:
         {
-                auto event = RkEvent::closeEvent();
-                eventQueue->processEvent(rk_id_from_win(hWnd), event);
+                //auto event = RkEvent::closeEvent();
+                //eventQueue->processEvent(rk_id_from_win(hWnd), event);
                 return 0;
         }
         case WM_LBUTTONDOWN:
         case WM_RBUTTONDOWN:
         case WM_MBUTTONDOWN:
 		{
-                auto event = RkEvent::buttonPressEvent();
-                eventQueue->processEvent(rk_id_from_win(hWnd), event);
+                //auto event = RkMouseEvent
+                //eventQueue->processEvent(rk_id_from_win(hWnd), event);
                 return 0;
 		}
         case WM_PAINT:
         {
-                auto event = RkEvent::paintEvent();
-                eventQueue->processEvent(rk_id_from_win(hWnd), event);
+                //auto event = RkEvent::paintEvent();
+                //eventQueue->processEvent(rk_id_from_win(hWnd), event);
                 break;
         }
         default:

@@ -26,9 +26,9 @@
 
 #include "RkPlatform.h"
 
-#include <queue>
-
 class RkEvent;
+
+// TODO: define a common interface for platform event queue
 
 class RkEventQueueWin
 {
@@ -39,7 +39,7 @@ class RkEventQueueWin
         RkEventQueueWin& operator=(const RkEventQueueWin &other) = delete;
         RkEventQueueWin(RkEventQueueWin &&other) = delete;
         RkEventQueueWin& operator=(RkEventQueueWin &&other) = delete;
-        void getEvents(std::queue<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> &eventsQueue);
+		void getEvents(std::vector<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> &eventsQueue);
 };
 
 #endif // RK_EVENT_QUEUE_X_H

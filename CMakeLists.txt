@@ -10,8 +10,8 @@ if (CMAKE_SYSTEM_NAME MATCHES Windows)
   message(STATUS "Build Redkite for Windows")
   add_compile_options(-DRK_OS_WIN)
   add_compile_options(-DRK_FOR_SHARED)
-  set(CMAKE_C_COMPILER   /usr/bin/x86_64-w64-mingw32-gcc) # temporary
-  set(CMAKE_CXX_COMPILER /usr/bin/x86_64-w64-mingw32-g++) # temporary
+  #set(CMAKE_C_COMPILER   /usr/bin/x86_64-w64-mingw32-gcc) # temporary
+  #set(CMAKE_CXX_COMPILER /usr/bin/x86_64-w64-mingw32-g++) # temporary
 elseif(CMAKE_SYSTEM_NAME MATCHES Darwin)
   message(FATAL_ERROR "Redkite not implemented yet for Mac OS X")
 elseif (CMAKE_SYSTEM_NAME MATCHES Linux)
@@ -165,6 +165,7 @@ add_definitions(-fPIC)
 
 include_directories(${RK_INCLUDE_PATH})
 include_directories(${RK_INCLUDE_PATH}/impl)
+include_directories(../x86-windows/include)
 
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   include_directories(${RK_INCLUDE_PATH}/impl/platforms/win)
@@ -194,7 +195,7 @@ else()
   install(FILES ${RK_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/redkite)
 endif()
 
-add_subdirectory(tools)
+#add_subdirectory(tools)
 if (ENABLE_EXAMPLES)
   add_subdirectory(examples)
 endif (ENABLE_EXAMPLES)

@@ -27,10 +27,9 @@
 #include "RkEvent.h"
 #include "RkPlatform.h"
 
-#include <queue>
-
 class RkEvent;
 
+// TODO: define a common interface for platform event queue
 class RkEventQueueX
 {
  public:
