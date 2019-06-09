@@ -164,12 +164,24 @@ void RkWindowWin::setPosition(const RkPoint &position)
 
 void RkWindowWin::setBorderWidth(int width)
 {
-        winBorderWidth = width;
+	// IMPLEMENT
+		winBorderWidth = width;
+}
+
+int RkWindowWin::borderWidth() const
+{
+	//IMPLEMENT
+	return winBorderWidth;
 }
 
 void RkWindowWin::setBorderColor(const RkColor &color)
 {
         winBorderColor = color;
+}
+
+const RkColor& RkWindowWin::borderColor() const
+{
+	return winBorderColor;
 }
 
 void RkWindowWin::setBackgroundColor(const RkColor &background)
