@@ -29,9 +29,13 @@
 #ifdef RK_GRAPHICS_CAIRO_BACKEND
 
 #include <cairo/cairo.h>
-
 struct RkCanvasInfo {
         cairo_surface_t* cairo_surface;
+};
+#elif RK_GRAPHICS_DIRECT2D_BACKEND // Windows Direct2D graphics backend.
+#include <d2d1.h>
+struct RkCanvasInfo {
+        ID2D1Factory* d2d1Factory;
 };
 #else
 #error No graphics backend defined

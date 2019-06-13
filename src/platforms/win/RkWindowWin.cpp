@@ -212,11 +212,15 @@ void RkWindowWin::update()
 {
 }
 
-#ifdef RK_GRAPHICS_CAIRO_BACKEND
+#ifdef RK_DIRECT2D_GRAPHICS_BACKEND
 void RkWindowWin::createCanvasInfo()
 {
         canvasInfo = std::make_shared<RkCanvasInfo>();
-        canvasInfo->cairo_surface = cairo_win32_surface_create(GetDC(windowHandle.id));
+        canvasInfo->d2d1Factory = nullptr;
+        if (D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &canvasInfo->d2d1Factory) != S_OK) {
+                RK_LOG_ERROR("can't create D2D1 factory");
+                canvasInfo->d2d1Factory = nullptr;
+        }
 }
 
 void RkWindowWin::resizeCanvas()
