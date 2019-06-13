@@ -216,11 +216,7 @@ void RkWindowWin::update()
 void RkWindowWin::createCanvasInfo()
 {
         canvasInfo = std::make_shared<RkCanvasInfo>();
-        canvasInfo->d2d1Factory = nullptr;
-        if (D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &canvasInfo->d2d1Factory) != S_OK) {
-                RK_LOG_ERROR("can't create D2D1 factory");
-                canvasInfo->d2d1Factory = nullptr;
-        }
+        canvasInfo->windowHandle = windowHandle.id;
 }
 
 void RkWindowWin::resizeCanvas()

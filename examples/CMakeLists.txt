@@ -1,5 +1,4 @@
 set(RK_EXAMPLES_SOURCES ${RK_EXAMPLES_PATH}/hello.cpp)
-set(RK_EXAMPLES_SOURCES_MULTI ${RK_EXAMPLES_PATH}/hello_multi.cpp)
 set(RK_EXAMPLES_SOURCES_CHILD ${RK_EXAMPLES_PATH}/child.cpp)
 set(RK_EXAMPLES_SOURCES_PROPERTY ${RK_EXAMPLES_PATH}/property.cpp)
 set(RK_EXAMPLES_SOURCES_LABEL ${RK_EXAMPLES_PATH}/label.cpp)
@@ -34,17 +33,6 @@ else()
 #  target_link_libraries(hello "-lX11 -lpthread -lrt -lm -ldl")
 #  target_link_libraries(hello ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 endif()
-
-# ------------ Multithreading Example -------
-
-#add_executable(hello_multi
-#  ${RK_HEADERS}
-#  ${RK_EXAMPLES_SOURCES_MULTI})
-
-#add_dependencies(hello_multi redkite)
-#target_link_libraries(hello_multi redkite)
-#target_link_libraries(hello_multi "-lX11 -lpthread -lrt -lm -ldl")
-#target_link_libraries(hello_multi ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 
 # ------------ Child Example -------
 

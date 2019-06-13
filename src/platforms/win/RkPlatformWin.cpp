@@ -6,8 +6,9 @@
 
 std::string rk_winApiClassName = "";
 HINSTANCE rk_winApiInstance = nullptr;
+ID2D1Factory* rk_d2d1Factory = nullptr;
 
-RkNativeWindowInfo rk_from_native_win(HINSTANCE instance, LPCSTR className, HWND window)
+RkNativeWindowInfo rk_from_native_win(HWND window, HINSTANCE instance = nullptr, LPCSTR className = nullptr)
 {
         RkNativeWindowInfo info;
         info.instance = instance ? instance : rk_winApiInstance;
@@ -26,6 +27,7 @@ RkWindowId rk_id_from_win(HWND window)
 static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
         auto eventQueue = (RkEventQueue*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        auto d2d1Factory = (RkCanvasInfo)
         if (!eventQueue)
                 return DefWindowProc(hWnd, msg, wParam, lParam);
 
@@ -84,11 +86,16 @@ BOOL WINAPI DllMain(HINSTANCE hInstance,
         wc.lpszClassName = rk_winApiClassName.c_str();
         wc.hIconSm       = LoadIcon(NULL, IDI_APPLICATION);
 
+        if (D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, rk_d2d1Factory) != S_OK) {
+                RK_LOG_ERROR("can't create D2D1 factory");
+                return FALSE;
+        }
+
         if (!RegisterClassEx(&wc)) {
                 RK_LOG_ERROR("can't register window class");
                 return FALSE;
         }
-		RK_LOG_INFO("called: " << rk_winApiClassName);
+
         return TRUE;
 }
 #else // RK_FOR_SHARED
