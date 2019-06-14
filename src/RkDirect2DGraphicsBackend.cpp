@@ -29,13 +29,23 @@
 #include <math.h>
 
 RkDirect2DGraphicsBackend::RkDirect2DGraphicsBackend(RkCanvas *canvas)
-        : renderTarget{nullptr}
+        : renderTarget{canvas->renderTarget}
+        , tagetBrush{nullptr}
+        , strockeWidth{1}
+        , strockeStyle{nullptr}
 {
-        
+        if (!renderTarget) {
+                // User RkPen to set the default brush color.
+                renderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::LightSlateGray), &targetBrush);
+        }
 }
 
 void RkDirect2DGraphicsBackend::drawText(const std::string &text, int x, int y)
 {
+        // if (!canvas()->renderTarget)
+        //         return;
+        
+        // canvas()->renderTarget->DrawText(text.c_str(), text.size());
 }
 
 void RkDirect2DGraphicsBackend::drawImage(const std::string &file, int x, int y)
@@ -52,6 +62,12 @@ void RkDirect2DGraphicsBackend::drawEllipse(const RkPoint& p, int width, int hei
 
 void RkDirect2DGraphicsBackend::drawLine(const RkPoint &p1, const RkPoint &p2)
 {
+        if (renderTarget)
+                renderTarget->drawLine(D2D1::Point2F(static_cast<FLOAT>(p1->x()), static_cast<FLOAT>(p1->y())),
+                                       D2D1::Point2F(static_cast<FLOAT>(p1->x()), static_cast<FLOAT>(p1->y())),
+                                       targetBrush,
+                                       static_cast<FLOAT>(strokeWidth)
+                                       strockeStyle);
 }
 
 void RkDirect2DGraphicsBackend::drawRect(const RkRect &rect)
@@ -68,6 +84,8 @@ void RkDirect2DGraphicsBackend::fillRect(const RkRect &rect, const RkColor &colo
 
 void RkDirect2DGraphicsBackend::setPen(const RkPen &pen)
 {
+        strockerWidth = pen->width();
+        strokeStyle = nullptr; // TODO: use values from pen style;
 }
 
 void RkDirect2DGraphicsBackend::setFont(const RkFont &font)

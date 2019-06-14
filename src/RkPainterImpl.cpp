@@ -29,6 +29,8 @@ RkPainter::RkPainterImpl::RkPainterImpl(RkPainter* interface, RkCanvas* canvas)
         : inf_ptr{interface}
 #ifdef RK_GRAPHICS_CAIRO_BACKEND
         , backendGraphics{std::make_unique<RkCairoGraphicsBackend>(canvas)}
+#elif RK_GRAPHICS_CAIRO_BACKEND
+        , backendGraphics{std::make_unique<RkDirect2DGraphicsBackend>(canvas)}
 #else
 #error No graphics backend defined
 #endif

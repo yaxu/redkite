@@ -45,6 +45,7 @@ struct RK_EXPORT RkNativeWindowInfo {
 
 extern std::string RK_NO_EXPORT rk_winApiClassName;
 extern HINSTANCE RK_NO_EXPORT rk_winApiInstance;
+extern ID2D1Factory* RK_NO_EXPORT rk_d2d1Factory;
 
 RkNativeWindowInfo RK_EXPORT rk_from_native_win(HINSTANCE instance, LPCSTR className, HWND window);
 RkWindowId RK_EXPORT rk_id_from_win(HWND window);

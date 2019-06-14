@@ -26,23 +26,23 @@
 
 #include "RkGraphicsBackend.h"
 
-class RkDirect2DGraphicsBackend {
+class RkDirect2DGraphicsBackend final : public RkGraphicsBackend {
  public:
         RkCairoGraphicsBackend(RkCanvas* canvas);
         ~RkCairoGraphicsBackend();
-        void drawText(const std::string &text, int x, int y) final;
-        void drawImage(const std::string &file, int x, int y) final;
-        void drawImage(const RkImage &image, int x, int y) final;
-        void drawEllipse(const RkPoint& p, int width, int height) final;
-        void drawLine(const RkPoint &p1, const RkPoint &p2) final;
-        void drawRect(const RkRect &rect) final;
-        void drawPolyLine(const std::vector<RkPoint> &points) final;
-        void fillRect(const RkRect &rect, const RkColor &color) final;
-        void setPen(const RkPen &pen) final;
-        void setFont(const RkFont &font) final;
+        void drawText(const std::string &text, int x, int y);
+        void drawImage(const std::string &file, int x, int y);
+        void drawImage(const RkImage &image, int x, int y);
+        void drawEllipse(const RkPoint& p, int width, int height);
+        void drawLine(const RkPoint &p1, const RkPoint &p2);
+        void drawRect(const RkRect &rect);
+        void drawPolyLine(const std::vector<RkPoint> &points);
+        void fillRect(const RkRect &rect, const RkColor &color);
+        void setPen(const RkPen &pen);
+        void setFont(const RkFont &font);
         int getTextWidth(const std::string &text) const final;
-        void translate(const RkPoint &offset) final;
-        void rotate(rk_real angle) final;
+        void translate(const RkPoint &offset);
+        void rotate(rk_real angle);
 };
 
 #endif // RK_DIRECT2D_GRAPHICS_BACKEND_H

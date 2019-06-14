@@ -54,16 +54,35 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_LOG_DEBUG_LEVEL")
 endif()
 
-if (NOT RK_GRAPHICS_BACKEND)
-  message(STATUS "use default Cairo graphics backend")
-  set(RK_GRAPHICS_BACKEND "Cairo")
-#  find_package(Cairo REQUIRED)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND -DCAIRO_WIN32_STATIC_BUILD")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND -DCAIRO_WIN32_STATIC_BUILD")
-elseif (RK_GRAPHICS_BACKEND MATCHES Cairo)
-  find_package(Cairo REQUIRED)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_GRAPHICS_CAIRO_BACKEND")
+
+if (CMAKE_SYSTEM_NAME MATCHES Windows)
+    if (NOT RK_GRAPHICS_BACKEND)
+      message(STATUS "use default Direct2D graphics backend")
+      set(RK_GRAPHICS_BACKEND "Direct2D")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_GRAPHICS_BACKEND_DIRECT2D")
+      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_GRAPHICS_BACKEND_DIRECT2D")
+    elseif (RK_GRAPHICS_BACKEND MATCHES Direct2d)
+      message(STATUS "use Direct2d graphics backend")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_GRAPHICS_BACKEND_DIRECT2D")
+      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_GRAPHICS_BACKEND_DIRECT2D")
+    else ()
+      message(FATAL_ERROR "unsuported graphics backend ${RK_GRAPHICS_BACKEND}")
+    endif()
+else if(CMAKE_SYSTEM_NAME MATCHES Darwin)
+    message(FATAL_ERROR "not graphics backend implemented for ${CMAKE_SYSTEM_NAME}")
+else () # Default GNU/Linux
+    if (NOT RK_GRAPHICS_BACKEND)
+      message(STATUS "use default Cairo graphics backend")
+      set(RK_GRAPHICS_BACKEND "Cairo")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_GRAPHICS_BACKEND_CAIRO")
+      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_GRAPHICS_BACKEND_CAIRO")
+    elseif (RK_GRAPHICS_BACKEND MATCHES Cairo)
+      message(STATUS "use Cairo graphics backend")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_GRAPHICS_BACKEND_CAIRO")
+      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_GRAPHICS_BACKEND_CAIRO")
+    else ()
+      message(FATAL_ERROR "unsuported graphics backend ${RK_GRAPHICS_BACKEND}")
+    endif()
 endif()
 
 set(RK_HEADERS
@@ -97,16 +116,26 @@ set(RK_HEADERS_IMPL
   ${RK_INCLUDE_PATH}/impl/RkLineEditImpl.h
   ${RK_INCLUDE_PATH}/impl/RkProgressBarImpl.h
   ${RK_INCLUDE_PATH}/impl/RkCanvasInfo.h
+  ${RK_INCLUDE_PATH}/RkGraphicsBackend.h
   ${RK_INCLUDE_PATH}/impl/RkImageImpl.h
   ${RK_INCLUDE_PATH}/impl/RkPainterImpl.h)
 
 if (RK_GRAPHICS_BACKEND MATCHES Cairo)
   set(RK_GRAPHICS_BACKEND_HEADRES
     ${RK_INCLUDE_PATH}/impl/RkCairoGraphicsBackend.h
-    ${RK_INCLUDE_PATH}/impl/RkCairoImageBackendCanvas.h)
+    ${RK_INCLUDE_PATH}/impl/RkCairoImageCanvasBackend.h)
   set(RK_GRAPHICS_BACKEND_SOURCES
     ${RK_SRC_PATH}/RkCairoGraphicsBackend.cpp
     ${RK_SRC_PATH}/RkCairoImageBackendCanvas.cpp)
+elseif (RK_GRAPHICS_BACKEND MATCHES Direct2D)
+    set(RK_GRAPHICS_BACKEND_HEADRES
+    ${RK_INCLUDE_PATH}/impl/RkDirect2DGraphicsBackend.h
+    ${RK_INCLUDE_PATH}/impl/RkDirect2DImageCanvas.h)
+    set(RK_GRAPHICS_BACKEND_SOURCES
+    ${RK_SRC_PATH}/RkDirect2DGraphicsBackend.cpp
+    ${RK_SRC_PATH}/RkDirect2DImageCanvasBackend.cpp)
+else()
+  message(FATAL_ERROR "no graphics backed was defined")  
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES Windows)

@@ -35,8 +35,13 @@ struct RkCanvasInfo {
 #elif RK_GRAPHICS_DIRECT2D_BACKEND // Windows Direct2D graphics backend.
 #include <d2d1.h>
 struct RkCanvasInfo {
-        HWND windowHandle;
+        union
+        {
         
+        HWND windowHandle;
+        D2D1Factory* factory;
+        ID2D1HwndRenderTarget* renderTarget;
+        }
 };
 #else
 #error No graphics backend defined

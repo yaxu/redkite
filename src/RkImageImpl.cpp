@@ -22,9 +22,11 @@
  */
 
 #include "RkImageImpl.h"
-#ifdef RK_GRAPHICS_CAIRO_BACKEND
+#ifdef RK_GRAPHICS_BACKEND_CAIRO
 #include "RkCairoImageBackendCanvas.h"
-#else
+#elif RK_GRAPHICS_BACKEND_DIRECT2D
+#include "RkDirect2DImageBackendCanvas.h"
+else
 #error No graphics backend defined.
 #endif
 
@@ -35,8 +37,10 @@ RkImage::RkImageImpl::RkImageImpl(RkImage *interface,
                                   RkImage::Format format)
         : inf_ptr{interface}
         , imageFormat{format}
-#ifdef RK_GRAPHICS_CAIRO_BACKEND
+#ifdef RK_GRAPHICS_BACKEND_CAIRO
         , imageBackendCanvas{std::make_unique<RkCairoImageBackendCanvas>(RkSize(width, height), imageFormat, data)}
+#elif RK_GRAPHICS_BACKEND_DIRECT2D
+        , imageBackendCanvas{std::make_unique<RkDirect2dImageBackendCanvas>(RkSize(width, height), imageFormat, data)}
 #else
 #error No graphics backend defined
 #endif

@@ -25,6 +25,7 @@
 #define RK_CANVAS_H
 
 #include "Rk.h"
+#include "RkSize.h"
 
 struct RK_EXPORT RkCanvasInfo;
 
@@ -33,6 +34,7 @@ class RK_EXPORT RkCanvas {
         RkCanvas() = default;
         virtual ~RkCanvas() = default;
         virtual std::shared_ptr<RkCanvasInfo> getCanvasInfo() const = 0;
+        const RkSize &canvasSize() const = 0;
 };
 
 #endif // RK_CANVAS_H

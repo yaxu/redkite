@@ -89,6 +89,7 @@ bool RkWindowWin::init()
         if (eventQueue)
                 SetWindowLongPtr(windowHandle.id, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(eventQueue));
 
+        createCanvasInfo();
         return true;
 }
 
@@ -212,11 +213,18 @@ void RkWindowWin::update()
 {
 }
 
-#ifdef RK_DIRECT2D_GRAPHICS_BACKEND
+#ifdef RK_GRAPHICS_BACKEND_DIRECT2D
 void RkWindowWin::createCanvasInfo()
 {
-        canvasInfo = std::make_shared<RkCanvasInfo>();
+        if (!canvasInfo)
+                canvasInfo = std::make_shared<RkCanvasInfo>();
         canvasInfo->windowHandle = windowHandle.id;
+        if (rk_d2d1Factory && canvasInfo->renderTarget == nullptr) {
+                auto s = D2D1::SizeU(size().width(), size().heigt());
+                rk_d2d1Factory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(),
+                                                       D2D1::HwndRenderTargetProperties(windowHandle.id, s),
+                                                       canvasInfo->renderTarget);
+        }
 }
 
 void RkWindowWin::resizeCanvas()

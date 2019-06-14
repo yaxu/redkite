@@ -24,18 +24,11 @@
 #ifndef RK_CAIRO_GRAPHICS_BACKEND_H
 #define RK_CAIRO_GRAPHICS_BACKEND_H
 
-#include "Rk.h"
-#include "RkImage.h"
-#include "RkPoint.h"
-#include "RkPen.h"
-#include "RkRect.h"
-#include "RkFont.h"
+#include "RkGraphicsBackend.h"
 
 #include <cairo/cairo.h>
 
-class RkCanvas;
-
-class RkCairoGraphicsBackend {
+class RkCairoGraphicsBackend final: public RkGraphicsBackend {
  public:
         RkCairoGraphicsBackend(RkCanvas* canvas);
         ~RkCairoGraphicsBackend();
@@ -58,7 +51,6 @@ class RkCairoGraphicsBackend {
 
  private:
         cairo_t* cairoContext;
-        int fontSize;
 };
 
 #endif // RK_CAIRO_GRAPHICS_BACKEND_H

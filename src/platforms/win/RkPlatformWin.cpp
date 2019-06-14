@@ -6,7 +6,9 @@
 
 std::string rk_winApiClassName = "";
 HINSTANCE rk_winApiInstance = nullptr;
+#ifdef RK_DIRECT2D_GRAPHICS_BACKEND
 ID2D1Factory* rk_d2d1Factory = nullptr;
+#endif // RK_DIRECT2D_GRAPHICS_BACKEND
 
 RkNativeWindowInfo rk_from_native_win(HWND window, HINSTANCE instance = nullptr, LPCSTR className = nullptr)
 {
