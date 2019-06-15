@@ -88,9 +88,8 @@ void RkEventQueue::RkEventQueueImpl::removeWidget(RkWidget *widget)
 void RkEventQueue::RkEventQueueImpl::removeWidgetEvents(RkWidget *widget)
 {
         for (auto it = eventsQueue.begin(); it != eventsQueue.end();) {
-                if (it->first.id == widget->id().id) {
+                if (it->first.id == widget->id().id)
                         it = eventsQueue.erase(it);
-                }
                 else
                         ++it;
         }
@@ -108,7 +107,7 @@ void RkEventQueue::RkEventQueueImpl::postEvent(const RkWindowId &id, const std::
 
 void RkEventQueue::RkEventQueueImpl::postEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event)
 {
-        //        eventsQueue.push({info.window, event});
+        eventsQueue.push({info.window, event});
 }
 
 void RkEventQueue::RkEventQueueImpl::processEvent(RkWidget* widget, const std::shared_ptr<RkEvent> &event)
@@ -161,7 +160,7 @@ void RkEventQueue::RkEventQueueImpl::processActions()
         }
 
         for(const auto &act: q)
-                act();
+        act();
 }
 
 void RkEventQueue::RkEventQueueImpl::subscribeTimer(RkTimer *timer)

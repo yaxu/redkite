@@ -28,15 +28,14 @@
 #include "RkPlatform.h"
 
 #include <list>
-#include <queue>
 #include <mutex>
 
 #ifdef RK_OS_WIN
-        class RkEventQueueWin;
+class RkEventQueueWin;
 #elif RK_OS_MAC
-        class RkEventQueueMac;
+class RkEventQueueMac;
 #else // X11
-        class RkEventQueueX;
+class RkEventQueueX;
 #endif
 
 
@@ -73,7 +72,7 @@ class RkEventQueue::RkEventQueueImpl {
         std::list<RkWidget*> widgetList;
         std::vector<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> eventsQueue;
         std::vector<std::function<void(void)>> actionsQueue;
-        std::mutex actionsQueueMutex;
+        //        std::mutex actionsQueueMutex;
         int myData;
         std::vector<RkTimer*> timersList;
 

@@ -22,14 +22,20 @@
  */
 
 #include "RkPainterImpl.h"
+#ifdef RK_GRAPHICS_BACKEND_CAIRO
 #include "RkCairoGraphicsBackend.h"
+#elif RK_GRAPHICS_BACKEND_DIRECT2D
+#include "RkDirect2DGraphicsBackend.h"
+#else
+#error No graphics backend defined
+#endif
 #include "RkLog.h"
 
 RkPainter::RkPainterImpl::RkPainterImpl(RkPainter* interface, RkCanvas* canvas)
         : inf_ptr{interface}
-#ifdef RK_GRAPHICS_CAIRO_BACKEND
+#ifdef RK_GRAPHICS_BACKEND_CAIRO
         , backendGraphics{std::make_unique<RkCairoGraphicsBackend>(canvas)}
-#elif RK_GRAPHICS_CAIRO_BACKEND
+#elif RK_GRAPHICS_BACKEND_DIRECT2D
         , backendGraphics{std::make_unique<RkDirect2DGraphicsBackend>(canvas)}
 #else
 #error No graphics backend defined

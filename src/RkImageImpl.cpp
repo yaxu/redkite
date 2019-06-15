@@ -26,7 +26,7 @@
 #include "RkCairoImageBackendCanvas.h"
 #elif RK_GRAPHICS_BACKEND_DIRECT2D
 #include "RkDirect2DImageBackendCanvas.h"
-else
+#else
 #error No graphics backend defined.
 #endif
 
@@ -40,7 +40,7 @@ RkImage::RkImageImpl::RkImageImpl(RkImage *interface,
 #ifdef RK_GRAPHICS_BACKEND_CAIRO
         , imageBackendCanvas{std::make_unique<RkCairoImageBackendCanvas>(RkSize(width, height), imageFormat, data)}
 #elif RK_GRAPHICS_BACKEND_DIRECT2D
-        , imageBackendCanvas{std::make_unique<RkDirect2dImageBackendCanvas>(RkSize(width, height), imageFormat, data)}
+        , imageBackendCanvas{std::make_unique<RkDirect2DImageBackendCanvas>(RkSize(width, height), imageFormat, data)}
 #else
 #error No graphics backend defined
 #endif
@@ -100,8 +100,9 @@ void RkImage::RkImageImpl::createImage(const RkSize &size,
 {
         imageFormat = format;
 #ifdef RK_GRAPHICS_CAIRO_BACKEND
-        if (imageBackendCanvas)
-                imageBackendCanvas = std::make_unique<RkCairoImageBackendCanvas>(size, format, data);
+        imageBackendCanvas = std::make_unique<RkCairoImageBackendCanvas>(size, format, data);
+#elif RK_GRAPHICS_BACKEND_DIRECT2D
+        imageBackendCanvas = std::make_unique<RkDirect2DImageBackendCanvas>(size, format, data);
 #else
 #error No graphics backend defined
 #endif

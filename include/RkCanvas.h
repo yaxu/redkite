@@ -34,7 +34,6 @@ class RK_EXPORT RkCanvas {
         RkCanvas() = default;
         virtual ~RkCanvas() = default;
         virtual std::shared_ptr<RkCanvasInfo> getCanvasInfo() const = 0;
-        const RkSize &canvasSize() const = 0;
 };
 
 #endif // RK_CANVAS_H

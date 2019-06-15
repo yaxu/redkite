@@ -27,7 +27,7 @@ add_executable(hello ${RK_EXEC_OPTION}
 add_dependencies(hello redkite)
 target_link_libraries(hello redkite)
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
-  target_link_libraries(hello "-mwindows -lstdc++ -lm -lmingw32 -lcairo")
+  target_link_libraries(hello "-mwindows -lstdc++ -lm -lmingw32 -ld2d1")
 #  target_link_libraries(hello ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 else()
 #  target_link_libraries(hello "-lX11 -lpthread -lrt -lm -ldl")

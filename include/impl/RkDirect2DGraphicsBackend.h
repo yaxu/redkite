@@ -26,10 +26,14 @@
 
 #include "RkGraphicsBackend.h"
 
+class ID2D1HwndRenderTarget;
+class ID2D1SolidColorBrush;
+class ID2D1StrokeStyle;
+
 class RkDirect2DGraphicsBackend final : public RkGraphicsBackend {
  public:
-        RkCairoGraphicsBackend(RkCanvas* canvas);
-        ~RkCairoGraphicsBackend();
+        RkDirect2DGraphicsBackend(RkCanvas* canvas);
+        ~RkDirect2DGraphicsBackend();
         void drawText(const std::string &text, int x, int y);
         void drawImage(const std::string &file, int x, int y);
         void drawImage(const RkImage &image, int x, int y);
@@ -43,6 +47,12 @@ class RkDirect2DGraphicsBackend final : public RkGraphicsBackend {
         int getTextWidth(const std::string &text) const final;
         void translate(const RkPoint &offset);
         void rotate(rk_real angle);
+
+ private:
+        ID2D1HwndRenderTarget *renderTarget;
+        ID2D1SolidColorBrush *targetBrush;
+        int strokeWidth;
+        ID2D1StrokeStyle *strokeStyle;
 };
 
 #endif // RK_DIRECT2D_GRAPHICS_BACKEND_H

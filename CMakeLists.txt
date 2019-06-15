@@ -5,13 +5,14 @@ project(redkite VERSION 0.5.2)
 # Temporary, to remove
 set(CMAKE_SYSTEM_NAME Windows)
 set(CMAKE_SYSTEM_VERSION 1)
+set(CMAKE_BUILD_TYPE Debug)
 
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   message(STATUS "Build Redkite for Windows")
   add_compile_options(-DRK_OS_WIN)
   add_compile_options(-DRK_FOR_SHARED)
-  #set(CMAKE_C_COMPILER   /usr/bin/x86_64-w64-mingw32-gcc) # temporary
-  #set(CMAKE_CXX_COMPILER /usr/bin/x86_64-w64-mingw32-g++) # temporary
+#set(CMAKE_C_COMPILER   /usr/bin/x86_64-w64-mingw32-gcc) # temporary
+#set(CMAKE_CXX_COMPILER /usr/bin/x86_64-w64-mingw32-g++) # temporary
 elseif(CMAKE_SYSTEM_NAME MATCHES Darwin)
   message(FATAL_ERROR "Redkite not implemented yet for Mac OS X")
 elseif (CMAKE_SYSTEM_NAME MATCHES Linux)
@@ -54,21 +55,20 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_LOG_DEBUG_LEVEL")
 endif()
 
-
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
     if (NOT RK_GRAPHICS_BACKEND)
       message(STATUS "use default Direct2D graphics backend")
       set(RK_GRAPHICS_BACKEND "Direct2D")
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_GRAPHICS_BACKEND_DIRECT2D")
       set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_GRAPHICS_BACKEND_DIRECT2D")
-    elseif (RK_GRAPHICS_BACKEND MATCHES Direct2d)
+    elseif (RK_GRAPHICS_BACKEND MATCHES Direct2D)
       message(STATUS "use Direct2d graphics backend")
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DRK_GRAPHICS_BACKEND_DIRECT2D")
       set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRK_GRAPHICS_BACKEND_DIRECT2D")
     else ()
       message(FATAL_ERROR "unsuported graphics backend ${RK_GRAPHICS_BACKEND}")
     endif()
-else if(CMAKE_SYSTEM_NAME MATCHES Darwin)
+elseif(CMAKE_SYSTEM_NAME MATCHES Darwin)
     message(FATAL_ERROR "not graphics backend implemented for ${CMAKE_SYSTEM_NAME}")
 else () # Default GNU/Linux
     if (NOT RK_GRAPHICS_BACKEND)
@@ -116,7 +116,7 @@ set(RK_HEADERS_IMPL
   ${RK_INCLUDE_PATH}/impl/RkLineEditImpl.h
   ${RK_INCLUDE_PATH}/impl/RkProgressBarImpl.h
   ${RK_INCLUDE_PATH}/impl/RkCanvasInfo.h
-  ${RK_INCLUDE_PATH}/RkGraphicsBackend.h
+  ${RK_INCLUDE_PATH}/impl/RkGraphicsBackend.h
   ${RK_INCLUDE_PATH}/impl/RkImageImpl.h
   ${RK_INCLUDE_PATH}/impl/RkPainterImpl.h)
 
@@ -128,14 +128,14 @@ if (RK_GRAPHICS_BACKEND MATCHES Cairo)
     ${RK_SRC_PATH}/RkCairoGraphicsBackend.cpp
     ${RK_SRC_PATH}/RkCairoImageBackendCanvas.cpp)
 elseif (RK_GRAPHICS_BACKEND MATCHES Direct2D)
-    set(RK_GRAPHICS_BACKEND_HEADRES
+  set(RK_GRAPHICS_BACKEND_HEADRES
     ${RK_INCLUDE_PATH}/impl/RkDirect2DGraphicsBackend.h
-    ${RK_INCLUDE_PATH}/impl/RkDirect2DImageCanvas.h)
-    set(RK_GRAPHICS_BACKEND_SOURCES
+    ${RK_INCLUDE_PATH}/impl/RkDirect2DImageBackendCanvas.h)
+  set(RK_GRAPHICS_BACKEND_SOURCES
     ${RK_SRC_PATH}/RkDirect2DGraphicsBackend.cpp
-    ${RK_SRC_PATH}/RkDirect2DImageCanvasBackend.cpp)
+    ${RK_SRC_PATH}/RkDirect2DImageBackendCanvas.cpp)
 else()
-  message(FATAL_ERROR "no graphics backed was defined")  
+  message(FATAL_ERROR "no graphics backed was defined")
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES Windows)
@@ -206,7 +206,7 @@ elseif (CMAKE_SYSTEM_NAME MATCHES Darwin)
   include_directories(${RK_INCLUDE_PATH}/impl/platforms/mac)
 # not implemented yet
 else() # defualt GNU/Linux
-include_directories(${RK_INCLUDE_PATH}/impl/platforms/xwin)
+  include_directories(${RK_INCLUDE_PATH}/impl/platforms/xwin)
 endif()
 
 add_library(redkite STATIC

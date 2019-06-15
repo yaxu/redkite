@@ -29,10 +29,10 @@
 #include <math.h>
 
 RkDirect2DGraphicsBackend::RkDirect2DGraphicsBackend(RkCanvas *canvas)
-        : renderTarget{canvas->renderTarget}
-        , tagetBrush{nullptr}
-        , strockeWidth{1}
-        , strockeStyle{nullptr}
+        : renderTarget{canvas->getCanvasInfo()->renderTarget}
+        , targetBrush{nullptr}
+        , strokeWidth{1}
+        , strokeStyle{nullptr}
 {
         if (!renderTarget) {
                 // User RkPen to set the default brush color.
@@ -42,10 +42,6 @@ RkDirect2DGraphicsBackend::RkDirect2DGraphicsBackend(RkCanvas *canvas)
 
 void RkDirect2DGraphicsBackend::drawText(const std::string &text, int x, int y)
 {
-        // if (!canvas()->renderTarget)
-        //         return;
-        
-        // canvas()->renderTarget->DrawText(text.c_str(), text.size());
 }
 
 void RkDirect2DGraphicsBackend::drawImage(const std::string &file, int x, int y)
@@ -63,11 +59,11 @@ void RkDirect2DGraphicsBackend::drawEllipse(const RkPoint& p, int width, int hei
 void RkDirect2DGraphicsBackend::drawLine(const RkPoint &p1, const RkPoint &p2)
 {
         if (renderTarget)
-                renderTarget->drawLine(D2D1::Point2F(static_cast<FLOAT>(p1->x()), static_cast<FLOAT>(p1->y())),
-                                       D2D1::Point2F(static_cast<FLOAT>(p1->x()), static_cast<FLOAT>(p1->y())),
+                renderTarget->DrawLine(D2D1::Point2F(static_cast<FLOAT>(p1.x()), static_cast<FLOAT>(p1.y())),
+                                       D2D1::Point2F(static_cast<FLOAT>(p2.x()), static_cast<FLOAT>(p2.y())),
                                        targetBrush,
-                                       static_cast<FLOAT>(strokeWidth)
-                                       strockeStyle);
+                                       static_cast<FLOAT>(strokeWidth),
+                                       strokeStyle);
 }
 
 void RkDirect2DGraphicsBackend::drawRect(const RkRect &rect)
@@ -84,7 +80,7 @@ void RkDirect2DGraphicsBackend::fillRect(const RkRect &rect, const RkColor &colo
 
 void RkDirect2DGraphicsBackend::setPen(const RkPen &pen)
 {
-        strockerWidth = pen->width();
+        strokeWidth = pen.width();
         strokeStyle = nullptr; // TODO: use values from pen style;
 }
 

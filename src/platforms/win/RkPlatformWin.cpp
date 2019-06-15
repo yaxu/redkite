@@ -4,11 +4,22 @@
 
 #include <random>
 
-std::string rk_winApiClassName = "";
-HINSTANCE rk_winApiInstance = nullptr;
-#ifdef RK_DIRECT2D_GRAPHICS_BACKEND
-ID2D1Factory* rk_d2d1Factory = nullptr;
-#endif // RK_DIRECT2D_GRAPHICS_BACKEND
+static std::string rk_winApiClassName;
+static HINSTANCE rk_winApiInstance = nullptr;
+#ifdef RK_GRAPHICS_BACKEND_DIRECT2D
+#include <d2d1.h>
+static ID2D1Factory* rk_d2d1Factory = nullptr;
+#endif // RK_GRAPHICS_BACKEND_DIRECT2D
+
+HINSTANCE rk_win_api_instance()
+{
+        return rk_winApiInstance;
+}
+
+std::string rk_win_api_class_name()
+{
+        return rk_winApiClassName;
+}
 
 RkNativeWindowInfo rk_from_native_win(HWND window, HINSTANCE instance = nullptr, LPCSTR className = nullptr)
 {
@@ -26,10 +37,16 @@ RkWindowId rk_id_from_win(HWND window)
         return id;
 }
 
+#ifdef RK_GRAPHICS_BACKEND_DIRECT2D
+ID2D1Factory* RK_EXPORT rk_direct2d_factory()
+{
+        return rk_d2d1Factory;
+}
+#endif // RK_GRAPHICS_BACKEND_DIRECT2D
+
 static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
         auto eventQueue = (RkEventQueue*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-        auto d2d1Factory = (RkCanvasInfo)
         if (!eventQueue)
                 return DefWindowProc(hWnd, msg, wParam, lParam);
 
@@ -88,10 +105,12 @@ BOOL WINAPI DllMain(HINSTANCE hInstance,
         wc.lpszClassName = rk_winApiClassName.c_str();
         wc.hIconSm       = LoadIcon(NULL, IDI_APPLICATION);
 
-        if (D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, rk_d2d1Factory) != S_OK) {
+#ifdef RK_GRAPHICS_BACKEND_DIRECT2D
+        if (D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &rk_d2d1Factory) != S_OK) {
                 RK_LOG_ERROR("can't create D2D1 factory");
                 return FALSE;
         }
+#endif // RK_GRAPHICS_BACKEND_DIRECT2D
 
         if (!RegisterClassEx(&wc)) {
                 RK_LOG_ERROR("can't register window class");

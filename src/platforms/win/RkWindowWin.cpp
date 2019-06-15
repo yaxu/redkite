@@ -25,8 +25,6 @@
 #include "RkWindowWin.h"
 #include "RkCanvasInfo.h"
 
-#include <cairo/cairo-win32.h>
-
 RkWindowWin::RkWindowWin(const std::shared_ptr<RkNativeWindowInfo> &parent, Rk::WindowFlags flags)
         : parentWindowInfo{parent}
         , windowHandle{{nullptr}}
@@ -69,7 +67,7 @@ bool RkWindowWin::hasParent() const
 bool RkWindowWin::init()
 {
         windowHandle.id = CreateWindowExA(0,
-                                          hasParent() ? parentWindowInfo->className.c_str() : rk_winApiClassName.c_str(),
+                                          hasParent() ? parentWindowInfo->className.c_str() : rk_win_api_class_name().c_str(),
                                           "RkWidget",
                                           !hasParent() ? WS_OVERLAPPEDWINDOW : WS_CHILD | WS_CLIPCHILDREN | WS_VISIBLE | WS_BORDER,
                                           windowPosition.x(),
@@ -78,7 +76,7 @@ bool RkWindowWin::init()
                                           windowSize.height(),
                                           !hasParent() ? nullptr : parentWindowInfo->window,
                                           nullptr,
-                                          hasParent() ? parentWindowInfo->instance : rk_winApiInstance,
+                                          hasParent() ? parentWindowInfo->instance : rk_win_api_instance(),
                                           nullptr);
 
         if (!windowHandle.id) {
@@ -105,9 +103,9 @@ std::shared_ptr<RkNativeWindowInfo> RkWindowWin::nativeWindowInfo()
 {
         if (isWindowCreated()) {
                 auto info = std::make_shared<RkNativeWindowInfo>();
-                info->className = hasParent() ? parentWindowInfo->className : rk_winApiClassName;
+                info->className = hasParent() ? parentWindowInfo->className : rk_win_api_class_name();
                 info->window    = windowHandle.id;
-                info->instance  = hasParent() ? parentWindowInfo->instance : rk_winApiInstance;
+                info->instance  = hasParent() ? parentWindowInfo->instance : rk_win_api_instance();
                 return info;
         }
 
@@ -203,7 +201,7 @@ const RkColor& RkWindowWin::background() const
 	return backgroundColor;
 }
 
-std::shared_ptr<RkCanvasInfo> getCanvasInfo()
+std::shared_ptr<RkCanvasInfo> RkWindowWin::getCanvasInfo()
 {
 	// IMPLEMENT
 	return nullptr;
@@ -219,11 +217,11 @@ void RkWindowWin::createCanvasInfo()
         if (!canvasInfo)
                 canvasInfo = std::make_shared<RkCanvasInfo>();
         canvasInfo->windowHandle = windowHandle.id;
-        if (rk_d2d1Factory && canvasInfo->renderTarget == nullptr) {
-                auto s = D2D1::SizeU(size().width(), size().heigt());
-                rk_d2d1Factory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(),
-                                                       D2D1::HwndRenderTargetProperties(windowHandle.id, s),
-                                                       canvasInfo->renderTarget);
+        if (rk_direct2d_factory() && canvasInfo->renderTarget == nullptr) {
+                auto s = D2D1::SizeU(size().width(), size().height());
+                rk_direct2d_factory()->CreateHwndRenderTarget(D2D1::RenderTargetProperties(),
+                                                              D2D1::HwndRenderTargetProperties(windowHandle.id, s),
+                                                              &canvasInfo->renderTarget);
         }
 }
 
@@ -231,14 +229,9 @@ void RkWindowWin::resizeCanvas()
 {
 }
 
-std::shared_ptr<RkCanvasInfo> RkWindowWin::getCanvasInfo()
-{
-        return canvasInfo;
-}
-
 void RkWindowWin::freeCanvasInfo()
 {
-        cairo_surface_destroy(canvasInfo->cairo_surface);
+        // TODO: implement
 }
 #else
 #error No graphics backend defined

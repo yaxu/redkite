@@ -21,8 +21,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_CAIRO_GRAPHICS_BACKEND_H
-#define RK_CAIRO_GRAPHICS_BACKEND_H
+#ifndef RK_GRAPHICS_BACKEND_H
+#define RK_GRAPHICS_BACKEND_H
 
 #include "Rk.h"
 #include "RkImage.h"
@@ -35,8 +35,8 @@ class RkCanvas;
 
 class RkGraphicsBackend {
  public:
-        RkCairoGraphicsBackend(RkCanvas* canvas);
-        virtual ~RkCairoGraphicsBackend();
+        RkGraphicsBackend() = default;
+        virtual ~RkGraphicsBackend() = default;
         virtual void drawText(const std::string &text, int x, int y) = 0;
         virtual void drawImage(const std::string &file, int x, int y) = 0;
         virtual void drawImage(const RkImage &image, int x, int y) = 0;
@@ -52,4 +52,4 @@ class RkGraphicsBackend {
         virtual void rotate(rk_real angle) = 0;
 };
 
-#endif // RK_CAIRO_GRAPHICS_BACKEND_H
+#endif // RK_GRAPHICS_BACKEND_H
