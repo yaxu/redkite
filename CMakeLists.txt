@@ -10,7 +10,7 @@ set(CMAKE_BUILD_TYPE Debug)
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   message(STATUS "Build Redkite for Windows")
   add_compile_options(-DRK_OS_WIN)
-  add_compile_options(-DRK_FOR_SHARED)
+#  add_compile_options(-DRK_FOR_SHARED)
 #set(CMAKE_C_COMPILER   /usr/bin/x86_64-w64-mingw32-gcc) # temporary
 #set(CMAKE_CXX_COMPILER /usr/bin/x86_64-w64-mingw32-g++) # temporary
 elseif(CMAKE_SYSTEM_NAME MATCHES Darwin)

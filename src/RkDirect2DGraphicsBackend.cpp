@@ -90,6 +90,8 @@ void RkDirect2DGraphicsBackend::setFont(const RkFont &font)
 
 int RkDirect2DGraphicsBackend::getTextWidth(const std::string &text) const
 {
+	// IMPLEMENT
+	return 0;
 }
 
 void RkDirect2DGraphicsBackend::translate(const RkPoint &offset)

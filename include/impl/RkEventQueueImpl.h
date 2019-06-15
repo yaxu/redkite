@@ -72,7 +72,7 @@ class RkEventQueue::RkEventQueueImpl {
         std::list<RkWidget*> widgetList;
         std::vector<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> eventsQueue;
         std::vector<std::function<void(void)>> actionsQueue;
-        //        std::mutex actionsQueueMutex;
+        std::mutex actionsQueueMutex;
         int myData;
         std::vector<RkTimer*> timersList;
 

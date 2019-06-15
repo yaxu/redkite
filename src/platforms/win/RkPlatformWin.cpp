@@ -85,6 +85,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance,
                     LPVOID lpvReserved)
 {
         rk_winApiInstance = hInstance;
+		RK_LOG_DEBUG("instance:" << rk_winApiInstance);
         WNDCLASSEX wc;
         wc.cbSize        = sizeof(WNDCLASSEX);
         wc.style         = 0;
@@ -134,6 +135,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    int nCmdShow)
 {
         rk_winApiInstance = hInstance;
+		RK_LOG_DEBUG("instance:" << rk_winApiInstance);
         WNDCLASSEX wc;
         wc.cbSize        = sizeof(WNDCLASSEX);
         wc.style         = 0;
@@ -153,6 +155,14 @@ int WINAPI WinMain(HINSTANCE hInstance,
         rk_winApiClassName = "Redkite_" + std::to_string(mean);
         wc.lpszClassName = rk_winApiClassName.c_str();
         wc.hIconSm       = LoadIcon(NULL, IDI_APPLICATION);
+		
+		
+#ifdef RK_GRAPHICS_BACKEND_DIRECT2D
+        if (D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &rk_d2d1Factory) != S_OK) {
+                RK_LOG_ERROR("can't create D2D1 factory");
+                return FALSE;
+        }
+#endif // RK_GRAPHICS_BACKEND_DIRECT2D
 
         if (!RegisterClassEx(&wc)) {
                 RK_LOG_ERROR("can't register window class");

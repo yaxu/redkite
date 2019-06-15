@@ -16,6 +16,8 @@ RkDirect2DImageBackendCanvas::~RkDirect2DImageBackendCanvas()
 
 int RkDirect2DImageBackendCanvas::pixelLength(RkImage::Format format) const
 {
+	// Implement.
+	return 0;
 }
 
 const RkSize& RkDirect2DImageBackendCanvas::size() const

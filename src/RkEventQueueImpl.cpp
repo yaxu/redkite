@@ -107,7 +107,7 @@ void RkEventQueue::RkEventQueueImpl::postEvent(const RkWindowId &id, const std::
 
 void RkEventQueue::RkEventQueueImpl::postEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event)
 {
-        eventsQueue.push({info.window, event});
+        eventsQueue.push_back({info.window, event});
 }
 
 void RkEventQueue::RkEventQueueImpl::processEvent(RkWidget* widget, const std::shared_ptr<RkEvent> &event)

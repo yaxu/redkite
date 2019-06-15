@@ -17,7 +17,9 @@ else()
 endif()
 
 if (RK_GRAPHICS_BACKEND MATCHES Cairo)
-  set(RK_GRAPHICS_BACKEND_LINK_LIBS "-lcairo")
+set(RK_GRAPHICS_BACKEND_LINK_LIBS "-lcairo")
+elseif(RK_GRAPHICS_BACKEND MATCHES Direct2D)
+#set(RK_GRAPHICS_BACKEND_LINK_LIBS "-ld2d1")
 endif()
 
 add_executable(hello ${RK_EXEC_OPTION}
@@ -27,8 +29,8 @@ add_executable(hello ${RK_EXEC_OPTION}
 add_dependencies(hello redkite)
 target_link_libraries(hello redkite)
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
-  target_link_libraries(hello "-mwindows -lstdc++ -lm -lmingw32 -ld2d1")
-#  target_link_libraries(hello ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+  target_link_libraries(hello "-mwindows -lm")
+  target_link_libraries(hello ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 else()
 #  target_link_libraries(hello "-lX11 -lpthread -lrt -lm -ldl")
 #  target_link_libraries(hello ${RK_GRAPHICS_BACKEND_LINK_LIBS})
