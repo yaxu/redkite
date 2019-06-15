@@ -203,8 +203,7 @@ const RkColor& RkWindowWin::background() const
 
 std::shared_ptr<RkCanvasInfo> RkWindowWin::getCanvasInfo()
 {
-	// IMPLEMENT
-	return nullptr;
+	return canvasInfo;
 }
 
 void RkWindowWin::update()

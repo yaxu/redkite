@@ -43,7 +43,7 @@ void RkEventQueueWin::getEvents(std::vector<std::pair<RkWindowId, std::shared_pt
                 switch (msg.message)
                 {
                 case RK_WIN_MESSAGE_PAINT:
-                        //event = RkEvent::paintEvent();
+					    event = std::make_shared<RkPaintEvent>();
                         break;
                 //case WM_PAINT:
                 //        OutputDebugString("getEvents [REDKITE]Event:paint");
@@ -58,12 +58,12 @@ void RkEventQueueWin::getEvents(std::vector<std::pair<RkWindowId, std::shared_pt
                 case WM_LBUTTONDOWN:
                 case WM_RBUTTONDOWN:
                 case WM_MBUTTONDOWN:
-                        //event = RkEvent::buttonPressEvent();
+					     event = std::make_shared<RkMouseEvent>();
                         break;
                 case WM_LBUTTONUP:
                 case WM_RBUTTONUP:
                 case WM_MBUTTONUP:
-                        //event = RkEvent::buttonReleaseEvent();
+						event = std::make_shared<RkMouseEvent>();
                         break;
                 case WM_SIZE:
                         //event = RkEvent::resizeEvent();
@@ -71,7 +71,7 @@ void RkEventQueueWin::getEvents(std::vector<std::pair<RkWindowId, std::shared_pt
                 case WM_QUIT:
                 case WM_CLOSE:
                 case WM_DESTROY:
-                        //event = RkEvent::closeEvent();
+					    event = std::make_shared<RkCloseEvent>();
                         break;
                 default:
                         break;

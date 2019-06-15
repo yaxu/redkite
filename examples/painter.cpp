@@ -28,6 +28,8 @@
 #include "RkLog.h"
 #include "RkEvent.h"
 
+#pragma comment(lib, "d2d1")
+
 class  PainterExample: public RkWidget {
   public:
         PainterExample(RkMain *app)
@@ -44,7 +46,12 @@ class  PainterExample: public RkWidget {
   protected:
         void paintEvent(const std::shared_ptr<RkPaintEvent> &event) final
         {
-                RK_UNUSED(event);
+			 RK_LOG_INFO("called");
+			 RkPainter painter(this);
+			 RK_LOG_INFO("called1");
+			 painter.drawLine({10, 10}, {100, 100});
+			 RK_LOG_INFO("called2");
+                /*RK_UNUSED(event);
                 if (startDraw) {
 
                         if (image.width() != width() || image.height() != height()) {
@@ -94,8 +101,9 @@ class  PainterExample: public RkWidget {
                         painter.drawRect(RkRect(50, y, 100, 25));
                         RkPainter paint(this);
                         paint.drawImage(image, 0, 0);
+						*/
                 }
-        }
+				
 
         void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) final
         {
@@ -116,7 +124,7 @@ class  PainterExample: public RkWidget {
   private:
         RkPoint clickPoint;
         bool startDraw;
-        RkImage image;
+//        RkImage image;
 };
 
 int main(int arc, char **argv)

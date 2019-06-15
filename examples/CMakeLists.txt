@@ -19,7 +19,7 @@ endif()
 if (RK_GRAPHICS_BACKEND MATCHES Cairo)
 set(RK_GRAPHICS_BACKEND_LINK_LIBS "-lcairo")
 elseif(RK_GRAPHICS_BACKEND MATCHES Direct2D)
-#set(RK_GRAPHICS_BACKEND_LINK_LIBS "-ld2d1")
+set(RK_GRAPHICS_BACKEND_LINK_LIBS "-ld2d1")
 endif()
 
 add_executable(hello ${RK_EXEC_OPTION}
@@ -30,7 +30,6 @@ add_dependencies(hello redkite)
 target_link_libraries(hello redkite)
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   target_link_libraries(hello "-mwindows -lm")
-  target_link_libraries(hello ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 else()
 #  target_link_libraries(hello "-lX11 -lpthread -lrt -lm -ldl")
 #  target_link_libraries(hello ${RK_GRAPHICS_BACKEND_LINK_LIBS})
@@ -86,15 +85,18 @@ endif()
 
 # ------------ Painter Exmaple -------
 
-#add_executable(painter
-#  ${RK_HEADERS}
-#  ${RK_EXAMPLES_SOURCES_PAINTER})
+add_executable(painter ${RK_EXEC_OPTION}
+  ${RK_HEADERS}
+  ${RK_EXAMPLES_SOURCES_PAINTER})
 
-#add_dependencies(painter redkite)
-#target_link_libraries(painter redkite)
-#target_link_libraries(painter "-lX11 -lrt -lm -ldl")
-#target_link_libraries(painter ${RK_GRAPHICS_BACKEND_LINK_LIBS})
-
+add_dependencies(painter redkite)
+target_link_libraries(painter redkite)
+if (CMAKE_SYSTEM_NAME MATCHES Windows)
+ target_link_libraries(hello "-mwindows -lm")
+else ()
+ target_link_libraries(painter ${RK_LINK_}"-lX11 -lrt -lm -ldl")
+ target_link_libraries(painter ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+endif()
 # ------------ Action Exmaple -------
 
 #add_executable(action
