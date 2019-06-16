@@ -39,12 +39,27 @@ RkDirect2DGraphicsBackend::RkDirect2DGraphicsBackend(RkCanvas *canvas)
         if (renderTarget) {
 			RK_LOG_INFO("called");
                 // User RkPen to set the default brush color.
-                renderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::LightSlateGray), &targetBrush);
+                auto res = renderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Green), &targetBrush);
+				if (!SUCCEEDED(res)) {
+					RK_LOG_ERROR("can't create brush");
+				} else {
+					renderTarget->BeginDraw();
+					// TODO: use window background color.
+					renderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
+				}
         }
 }
 
 RkDirect2DGraphicsBackend::~RkDirect2DGraphicsBackend()
 {
+	if (renderTarget) {
+
+		auto res = renderTarget->EndDraw();
+		if (res == D2DERR_RECREATE_TARGET)
+			RK_LOG_INFO("D2DERR_RECREATE_TARGET");
+	}
+	if (targetBrush)
+		targetBrush->Release();
 }
 
 void RkDirect2DGraphicsBackend::drawText(const std::string &text, int x, int y)
@@ -66,12 +81,10 @@ void RkDirect2DGraphicsBackend::drawEllipse(const RkPoint& p, int width, int hei
 void RkDirect2DGraphicsBackend::drawLine(const RkPoint &p1, const RkPoint &p2)
 {
 	if (renderTarget) {
-		RK_LOG_INFO("called");
-		renderTarget->DrawLine(D2D1::Point2F(static_cast<FLOAT>(p1.x()), static_cast<FLOAT>(p1.y())),
+			renderTarget->DrawLine(D2D1::Point2F(static_cast<FLOAT>(p1.x()), static_cast<FLOAT>(p1.y())),
 			D2D1::Point2F(static_cast<FLOAT>(p2.x()), static_cast<FLOAT>(p2.y())),
 			targetBrush,
-			static_cast<FLOAT>(strokeWidth),
-			strokeStyle);
+			static_cast<FLOAT>(strokeWidth));
 	}
 }
 

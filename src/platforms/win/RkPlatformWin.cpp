@@ -49,7 +49,7 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
         auto eventQueue = (RkEventQueue*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
         if (!eventQueue)
                 return DefWindowProc(hWnd, msg, wParam, lParam);
-
+		bool handled = false;
         switch(msg)
         {
         case WM_DESTROY:
@@ -68,16 +68,20 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
 		}
         case WM_PAINT:
         {
+			    RK_LOG_INFO("WM_PAINT");
 				auto event = std::make_shared<RkPaintEvent>();
                 eventQueue->processEvent(rk_id_from_win(hWnd), event);
 				ValidateRect(hWnd, NULL);
+				handled = true;
                 break;
         }
         default:
                 break;
         }
 
-        return DefWindowProc(hWnd, msg, wParam, lParam);
+		if (!handled)
+			return DefWindowProc(hWnd, msg, wParam, lParam);
+		return 0;
 }
 
 #ifdef RK_FOR_SHARED

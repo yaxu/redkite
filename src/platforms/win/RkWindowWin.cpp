@@ -218,9 +218,12 @@ void RkWindowWin::createCanvasInfo()
         canvasInfo->windowHandle = windowHandle.id;
         if (rk_direct2d_factory() && canvasInfo->renderTarget == nullptr) {
                 auto s = D2D1::SizeU(size().width(), size().height());
-                rk_direct2d_factory()->CreateHwndRenderTarget(D2D1::RenderTargetProperties(),
+				RK_LOG_DEBUG("size: " << size().width() << ", " << size().height());
+                auto res = rk_direct2d_factory()->CreateHwndRenderTarget(D2D1::RenderTargetProperties(),
                                                               D2D1::HwndRenderTargetProperties(windowHandle.id, s),
                                                               &canvasInfo->renderTarget);
+				if (!SUCCEEDED(res))
+					RK_LOG_ERROR("can't create render target");
         }
 }
 
