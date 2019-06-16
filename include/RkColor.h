@@ -101,6 +101,21 @@ class RK_EXPORT RkColor {
                alphaValue = alpha;
        }
 
+       unsigned int getRgb() const
+       {
+               return (static_cast<unsigend int>(redValue) << 24)
+                       | static_cast<unsigend int>(greenValue << 16)
+                       | static_cast<unsigend int>(blueValue << 8);
+       }
+
+       unsigned int getRgba() const
+       {
+               return (static_cast<unsigend int>(redValue) << 24)
+                       | static_cast<unsigend int>(greenValue << 16)
+                       | static_cast<unsigend int>(blueValue << 8)
+                       | static_cast<unsigend int>(alphaValue);
+       }
+
  private:
         unsigned short redValue;
         unsigned short greenValue;

@@ -29,7 +29,7 @@
 RkDirect2DGraphicsBackend::RkDirect2DGraphicsBackend(RkCanvas *canvas)
         : renderTarget{canvas->getCanvasInfo()->renderTarget}
         , targetBrush{nullptr}
-        , strokeWidth{1}
+        , strokeWidth{1.0f}
         , strokeStyle{nullptr}
 {
         if (renderTarget) {
@@ -53,18 +53,38 @@ RkDirect2DGraphicsBackend::~RkDirect2DGraphicsBackend()
 
 void RkDirect2DGraphicsBackend::drawText(const std::string &text, int x, int y)
 {
+        // TODO: impement
+        /*        if (renderTarget) {
+                renderTarget->DrawText(
+                         static_cast<WCHAR*>(text.c_str()),
+                         text.size() / sizeof(WCHAR),
+                         IDWriteTextFormat      *textFormat,
+                         D2D1::RectF(x, y, textFormat->FontSize())
+                         targetBrush,
+                         D2D1_DRAW_TEXT_OPTIONS_NONE,
+                           DWRITE_MEASURING_MODE  measuringMode
+                         );
+                         }*/
 }
 
 void RkDirect2DGraphicsBackend::drawImage(const std::string &file, int x, int y)
 {
+        // TODO: impement
 }
 
 void RkDirect2DGraphicsBackend::drawImage(const RkImage &image, int x, int y)
 {
+        // TODO: impement
 }
 
 void RkDirect2DGraphicsBackend::drawEllipse(const RkPoint& p, int width, int height)
 {
+        if (renderTarget) {
+                renderTarget->DrawEllipse(D2D1::Ellipse(D2D1::Point2F(p.x(), p.y()), width / 2, height / 2),
+                                          targetBrush,
+                                          strokeWidth,
+                                          strokeStyle);
+        }
 }
 
 void RkDirect2DGraphicsBackend::drawLine(const RkPoint &p1, const RkPoint &p2)
@@ -75,42 +95,97 @@ void RkDirect2DGraphicsBackend::drawLine(const RkPoint &p1, const RkPoint &p2)
                                        D2D1::Point2F(static_cast<FLOAT>(p2.x()) + 0.5f,
                                                      static_cast<FLOAT>(p2.y()) + 0.5f),
                                        targetBrush,
-                                       static_cast<FLOAT>(strokeWidth));
+                                       strokeWidth,
+                                       strokeStyle);
 	}
 }
 
 void RkDirect2DGraphicsBackend::drawRect(const RkRect &rect)
 {
+        if (renderTarget) {
+                auto rectF = D2D1::RectF(rect.left(), rect.top(), rect.right(), rect.bottom());
+                renderTarget->DrawRect(rectF, targetBrush, strokeWidth, strokeStyle);
+	}
 }
 
 void RkDirect2DGraphicsBackend::drawPolyLine(const std::vector<RkPoint> &points)
 {
+        if (renderTarget) {
+                // TODO: use ID2D1PathGeometry instead drawLine().
+                bool first = true;
+                RkPoint currPoint;
+                for (const auto &point: points) {
+                        if (first) {
+                                currPoint = point;
+                                first = false;
+                        } else if (currPoint != point) {
+                                drawLine(currPoint, point);
+                                currPoint = point;
+                        }
+                }
+        }
 }
 
 void RkDirect2DGraphicsBackend::fillRect(const RkRect &rect, const RkColor &color)
 {
+        if (renderTarget)
+                renderTarget->FillRectangle(D2D1::RectF(rect.left(), rect.top(), rect.right(), rect.bottom()),
+                                            targetBrush);
 }
 
 void RkDirect2DGraphicsBackend::setPen(const RkPen &pen)
 {
-        strokeWidth = pen.width();
-        strokeStyle = nullptr; // TODO: use values from pen style.
+        strokeWidth = static_cast<FLOAT>(pen.width());
+        if (targetBrush)
+                targetBrush->SetColor(D2D1::ColorF(pen.color().rgb(),
+                                                   static_cast<FLOAT>(pen.color().alpha()) / 255));
+        FLOAT dashLine[] = {12.0f, 8.0f};
+        FLOAT dotLine[] = {1.0f, 2.0f};
+
+        if (strokeStyle) {
+                strokeStyle->Release();
+                strokeStyle = nullptr;
+        }
+
+        auto prop = D2D1::StrokeStyleProperties(D2D1_CAP_STYLE_FLAT,
+                                                D2D1_CAP_STYLE_FLAT,
+                                                D2D1_CAP_STYLE_ROUND,
+                                                D2D1_LINE_JOIN_MITER,
+                                                10.0f,
+                                                D2D1_DASH_STYLE_CUSTOM,
+                                                0.0f);
+        switch (pen.style())
+        {
+        case RkPen::PenStyle::DashLine:
+                rk_direct2d_factory()->CreateStrokeStyle(prop, dashLine, ARRAYSIZE(dashLine), &strokeStyle);
+                break;
+        case RkPen::PenStyle::DotLine:
+                rk_direct2d_factory()->CreateStrokeStyle(prop, dotLine, ARRAYSIZE(dotLine), &strokeStyle);
+                break;
+        case RkPen::PenStyle::NoLine:
+        case RkPen::PenStyle::SolidLine:
+        default:
+                break;
+        }
 }
 
 void RkDirect2DGraphicsBackend::setFont(const RkFont &font)
 {
+        // TODO: implement
 }
 
 int RkDirect2DGraphicsBackend::getTextWidth(const std::string &text) const
 {
-	// IMPLEMENT
+	// TODO: impement
 	return 0;
 }
 
 void RkDirect2DGraphicsBackend::translate(const RkPoint &offset)
 {
+        // TODO: impement
 }
 
 void RkDirect2DGraphicsBackend::rotate(rk_real angle)
 {
+        // TODO: impement
 }
