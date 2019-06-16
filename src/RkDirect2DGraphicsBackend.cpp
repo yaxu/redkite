@@ -25,6 +25,7 @@
 #include "RkCanvas.h"
 #include "RkCanvasInfo.h"
 #include "RkLog.h"
+#include "RkPlatform.h"
 
 RkDirect2DGraphicsBackend::RkDirect2DGraphicsBackend(RkCanvas *canvas)
         : renderTarget{canvas->getCanvasInfo()->renderTarget}
@@ -104,7 +105,7 @@ void RkDirect2DGraphicsBackend::drawRect(const RkRect &rect)
 {
         if (renderTarget) {
                 auto rectF = D2D1::RectF(rect.left(), rect.top(), rect.right(), rect.bottom());
-                renderTarget->DrawRect(rectF, targetBrush, strokeWidth, strokeStyle);
+                renderTarget->DrawRectangle(rectF, targetBrush, strokeWidth, strokeStyle);
 	}
 }
 
@@ -137,7 +138,7 @@ void RkDirect2DGraphicsBackend::setPen(const RkPen &pen)
 {
         strokeWidth = static_cast<FLOAT>(pen.width());
         if (targetBrush)
-                targetBrush->SetColor(D2D1::ColorF(pen.color().rgb(),
+			targetBrush->SetColor(D2D1::ColorF(pen.color().rgb(),
                                                    static_cast<FLOAT>(pen.color().alpha()) / 255));
         FLOAT dashLine[] = {12.0f, 8.0f};
         FLOAT dotLine[] = {1.0f, 2.0f};

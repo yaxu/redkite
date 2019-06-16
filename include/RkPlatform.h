@@ -28,7 +28,6 @@
 #include "RkLog.h"
 
 #ifdef RK_OS_WIN
-#define WINVER 0x0501
 #include <windows.h>
 
 struct RK_EXPORT RkWindowId {

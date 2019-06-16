@@ -51,7 +51,7 @@ class RkDirect2DGraphicsBackend final : public RkGraphicsBackend {
  private:
         ID2D1HwndRenderTarget *renderTarget;
         ID2D1SolidColorBrush *targetBrush;
-        FLOAT strokeWidth;
+        float strokeWidth;
         ID2D1StrokeStyle *strokeStyle;
 };
 

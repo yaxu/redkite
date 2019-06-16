@@ -49,7 +49,18 @@ class  PainterExample: public RkWidget {
 			 RK_LOG_INFO("called");
 			 RkPainter painter(this);
 			 RK_LOG_INFO("called1");
+			 RkPen pen(RkColor(255, 0, 0));
+			 pen.setWidth(1);
+			 pen.setStyle(RkPen::PenStyle::DashLine);
+			 painter.setPen(pen);
 			 painter.drawLine({10, 10}, {100, 100});
+			 painter.drawCircle(50, 50, 40);
+			 painter.fillRect({50, 50, 20, 20}, background());
+			 pen.setStyle(RkPen::PenStyle::DotLine);
+			 pen.setColor({0, 55, 123});
+			 painter.setPen(pen);
+			 painter.drawRect({10, 10, 10, 10});
+
 			 RK_LOG_INFO("called2");
                 /*RK_UNUSED(event);
                 if (startDraw) {
