@@ -215,16 +215,19 @@ void RkWindowWin::update()
 void RkWindowWin::createCanvasInfo()
 {
         canvasInfo = std::make_shared<RkCanvasInfo>();
-        canvasInfo->windowHandle = windowHandle.id;
+       // canvasInfo->windowHandle = windowHandle.id;
         if (rk_direct2d_factory() && canvasInfo->renderTarget == nullptr) {
+			    ID2D1HwndRenderTarget *target;
                 RECT rect;
                 GetClientRect(windowHandle.id, &rect);
                 auto s = D2D1::SizeU(rect.right - rect.left, rect.bottom - rect.top);
                 auto res = rk_direct2d_factory()->CreateHwndRenderTarget(D2D1::RenderTargetProperties(),
                                                                          D2D1::HwndRenderTargetProperties(windowHandle.id, s),
-                                                                         &canvasInfo->renderTarget);
-                if (!SUCCEEDED(res))
-                        RK_LOG_ERROR("can't create render target");
+                                                                         &target);
+				if (!SUCCEEDED(res))
+					RK_LOG_ERROR("can't create render target");
+				else
+					canvasInfo->renderTarget = static_cast<ID2D1RenderTarget*>(target);
         }
 }
 
@@ -235,7 +238,7 @@ void RkWindowWin::resizeCanvas()
 		GetClientRect(windowHandle.id, &rect);
 		auto s = D2D1::SizeU(rect.right - rect.left, rect.bottom - rect.top);
 		if (canvasInfo->renderTarget)
-			canvasInfo->renderTarget->Resize(s);
+			reinterpret_cast<ID2D1HwndRenderTarget*>(canvasInfo->renderTarget)->Resize(s);
 	}
 }
 

@@ -1,6 +1,7 @@
 #include "RkDirect2DImageBackendCanvas.h"
 #include "RkCanvasInfo.h"
 #include "RkLog.h"
+#include "RkPlatform.h"
 
 RkDirect2DImageBackendCanvas::RkDirect2DImageBackendCanvas(const RkSize &size,
                                                      RkImage::Format format,
@@ -8,6 +9,7 @@ RkDirect2DImageBackendCanvas::RkDirect2DImageBackendCanvas(const RkSize &size,
         : canvasInfo{nullptr}
         , imageSize{size}
 {
+	
 }
 
 RkDirect2DImageBackendCanvas::~RkDirect2DImageBackendCanvas()

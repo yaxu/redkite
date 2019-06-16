@@ -34,8 +34,9 @@ struct RkCanvasInfo {
 #elif RK_GRAPHICS_BACKEND_DIRECT2D
 #include <d2d1.h>
 struct RkCanvasInfo {
-        HWND windowHandle;
-        ID2D1HwndRenderTarget* renderTarget;
+        //HWND windowHandle;
+        ID2D1RenderTarget* renderTarget;
+		//ID2D1BitmapRenderTarget* bitmapRenderT
 };
 #else
 #error No graphics backend defined

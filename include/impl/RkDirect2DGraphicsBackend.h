@@ -26,7 +26,7 @@
 
 #include "RkGraphicsBackend.h"
 
-class ID2D1HwndRenderTarget;
+struct ID2D1RenderTarget;
 class ID2D1SolidColorBrush;
 class ID2D1StrokeStyle;
 
@@ -49,7 +49,7 @@ class RkDirect2DGraphicsBackend final : public RkGraphicsBackend {
         void rotate(rk_real angle);
 
  private:
-        ID2D1HwndRenderTarget *renderTarget;
+        ID2D1RenderTarget *renderTarget;
         ID2D1SolidColorBrush *targetBrush;
         float strokeWidth;
         ID2D1StrokeStyle *strokeStyle;
