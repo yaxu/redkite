@@ -35,11 +35,11 @@ RkEventQueueWin::~RkEventQueueWin()
 {
 }
 
-void RkEventQueueWin::getEvents(std::vector<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> &eventsQueue) 
+void RkEventQueueWin::getEvents(std::vector<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> &eventsQueue)
 {
         MSG msg;
         while (PeekMessageA(&msg, nullptr, 0, 0, PM_REMOVE) > 0) {
-                std::shared_ptr<RkEvent> event = nullptr;
+                /*std::shared_ptr<RkEvent> event = nullptr;
                 switch (msg.message)
                 {
                 case RK_WIN_MESSAGE_PAINT:
@@ -71,16 +71,16 @@ void RkEventQueueWin::getEvents(std::vector<std::pair<RkWindowId, std::shared_pt
                 case WM_QUIT:
                 case WM_CLOSE:
                 case WM_DESTROY:
-					    event = std::make_shared<RkCloseEvent>();
+                        event = std::make_shared<RkCloseEvent>();
                         break;
                 default:
                         break;
-                }
+                        }*/
 
                 TranslateMessage (&msg);
                 DispatchMessage (&msg);
 
-                if (event)
-                        eventsQueue.push_back({rk_id_from_win(msg.hwnd), event});
+                //                if (event)
+                //        eventsQueue.push_back({rk_id_from_win(msg.hwnd), event});
         }
 }

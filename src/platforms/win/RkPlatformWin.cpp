@@ -49,38 +49,35 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
         auto eventQueue = (RkEventQueue*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
         if (!eventQueue)
                 return DefWindowProc(hWnd, msg, wParam, lParam);
-		bool handled = false;
+
         switch(msg)
         {
         case WM_DESTROY:
         {
-			    auto event = std::make_shared<RkCloseEvent>();
-                eventQueue->processEvent(rk_id_from_win(hWnd), event);
+                eventQueue->processEvent(rk_id_from_win(hWnd), std::make_shared<RkCloseEvent>());
                 return 0;
         }
         case WM_LBUTTONDOWN:
         case WM_RBUTTONDOWN:
         case WM_MBUTTONDOWN:
-		{
-                auto event = std::make_shared<RkMouseEvent>();
-                eventQueue->processEvent(rk_id_from_win(hWnd), event);
+	{
+                eventQueue->processEvent(rk_id_from_win(hWnd), std::make_shared<RkMouseEvent>());
                 return 0;
-		}
+        }
+        case WM_SIZE:
+                eventQueue->processEvent(rk_id_from_win(hWnd), std::make_shared<RkResizeEvent>());
+                return 0;
         case WM_PAINT:
         {
-				auto event = std::make_shared<RkPaintEvent>();
-                eventQueue->processEvent(rk_id_from_win(hWnd), event);
-				ValidateRect(hWnd, NULL);
-				handled = true;
-                break;
+                eventQueue->processEvent(rk_id_from_win(hWnd), std::make_shared<RkPaintEvent>());
+                ValidateRect(hWnd, NULL);
+                return 0;
         }
         default:
                 break;
         }
 
-		if (!handled)
-			return DefWindowProc(hWnd, msg, wParam, lParam);
-		return 0;
+        return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
 #ifdef RK_FOR_SHARED
@@ -139,7 +136,6 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    int nCmdShow)
 {
         rk_winApiInstance = hInstance;
-		RK_LOG_DEBUG("instance:" << rk_winApiInstance);
         WNDCLASSEX wc;
         wc.cbSize        = sizeof(WNDCLASSEX);
         wc.style         = 0;
@@ -159,8 +155,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
         rk_winApiClassName = "Redkite_" + std::to_string(mean);
         wc.lpszClassName = rk_winApiClassName.c_str();
         wc.hIconSm       = LoadIcon(NULL, IDI_APPLICATION);
-		
-		
+
 #ifdef RK_GRAPHICS_BACKEND_DIRECT2D
         if (D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &rk_d2d1Factory) != S_OK) {
                 RK_LOG_ERROR("can't create D2D1 factory");

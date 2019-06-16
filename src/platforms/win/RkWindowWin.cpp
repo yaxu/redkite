@@ -73,8 +73,8 @@ bool RkWindowWin::init()
                                           !hasParent() ? WS_OVERLAPPEDWINDOW : WS_CHILD | WS_CLIPCHILDREN | WS_VISIBLE | WS_BORDER,
                                           windowPosition.x(),
                                           windowPosition.y(),
-			                              windowSize.width(),
-			                              windowSize.height(),
+                                          windowSize.width(),
+                                          windowSize.height(),
                                           !hasParent() ? nullptr : parentWindowInfo->window,
                                           nullptr,
                                           hasParent() ? parentWindowInfo->instance : rk_win_api_instance(),
@@ -87,7 +87,7 @@ bool RkWindowWin::init()
 
         if (eventQueue)
                 SetWindowLongPtr(windowHandle.id, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(eventQueue));
-		createCanvasInfo();
+        createCanvasInfo();
         return true;
 }
 
@@ -128,7 +128,7 @@ const RkSize& RkWindowWin::size() const
         if (isWindowCreated()) {
                 RECT rect;
                 GetWindowRect(windowHandle.id, &rect);
-				windowSize = {rect.right - rect.left, rect.bottom - rect.top};
+                windowSize = {rect.right - rect.left, rect.bottom - rect.top};
         }
         return windowSize;
 }
@@ -139,7 +139,7 @@ void RkWindowWin::setSize(const RkSize &size)
                 windowSize = size;
                 if (isWindowCreated())
                         SetWindowPos(windowHandle.id, 0, 0, 0, size.width(), size.height(), SWP_NOMOVE | SWP_NOZORDER);
-			resizeCanvas();
+                resizeCanvas();
         }
 }
 
@@ -165,7 +165,7 @@ void RkWindowWin::setPosition(const RkPoint &position)
 void RkWindowWin::setBorderWidth(int width)
 {
 	// IMPLEMENT
-		winBorderWidth = width;
+        winBorderWidth = width;
 }
 
 int RkWindowWin::borderWidth() const
@@ -217,14 +217,14 @@ void RkWindowWin::createCanvasInfo()
         canvasInfo = std::make_shared<RkCanvasInfo>();
         canvasInfo->windowHandle = windowHandle.id;
         if (rk_direct2d_factory() && canvasInfo->renderTarget == nullptr) {
-			    RECT rect;
-				GetClientRect(windowHandle.id, &rect);
+                RECT rect;
+                GetClientRect(windowHandle.id, &rect);
                 auto s = D2D1::SizeU(rect.right - rect.left, rect.bottom - rect.top);
                 auto res = rk_direct2d_factory()->CreateHwndRenderTarget(D2D1::RenderTargetProperties(),
-                                                              D2D1::HwndRenderTargetProperties(windowHandle.id, s),
-                                                              &canvasInfo->renderTarget);
-				if (!SUCCEEDED(res))
-					RK_LOG_ERROR("can't create render target");
+                                                                         D2D1::HwndRenderTargetProperties(windowHandle.id, s),
+                                                                         &canvasInfo->renderTarget);
+                if (!SUCCEEDED(res))
+                        RK_LOG_ERROR("can't create render target");
         }
 }
 
@@ -241,10 +241,10 @@ void RkWindowWin::resizeCanvas()
 
 void RkWindowWin::freeCanvasInfo()
 {
-		if (canvasInfo && canvasInfo->renderTarget) {
-			canvasInfo->renderTarget->Release();
-			canvasInfo = nullptr;
-		}
+        if (canvasInfo && canvasInfo->renderTarget) {
+                canvasInfo->renderTarget->Release();
+                canvasInfo = nullptr;
+        }
 }
 #else
 #error No graphics backend defined
@@ -258,7 +258,7 @@ void RkWindowWin::setFocus(bool b)
 bool RkWindowWin::hasFocus()
 {
         // IMPLEMENT
-		return false;
+        return false;
 }
 
 void RkWindowWin::setPointerShape(Rk::PointerShape shape)
