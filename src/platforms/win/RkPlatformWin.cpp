@@ -68,7 +68,6 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
 		}
         case WM_PAINT:
         {
-			    RK_LOG_INFO("WM_PAINT");
 				auto event = std::make_shared<RkPaintEvent>();
                 eventQueue->processEvent(rk_id_from_win(hWnd), event);
 				ValidateRect(hWnd, NULL);

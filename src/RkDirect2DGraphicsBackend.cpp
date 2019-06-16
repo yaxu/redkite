@@ -40,6 +40,7 @@ RkDirect2DGraphicsBackend::RkDirect2DGraphicsBackend(RkCanvas *canvas)
 			RK_LOG_INFO("called");
                 // User RkPen to set the default brush color.
                 auto res = renderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Green), &targetBrush);
+
 				if (!SUCCEEDED(res)) {
 					RK_LOG_ERROR("can't create brush");
 				} else {
@@ -81,10 +82,10 @@ void RkDirect2DGraphicsBackend::drawEllipse(const RkPoint& p, int width, int hei
 void RkDirect2DGraphicsBackend::drawLine(const RkPoint &p1, const RkPoint &p2)
 {
 	if (renderTarget) {
-			renderTarget->DrawLine(D2D1::Point2F(static_cast<FLOAT>(p1.x()), static_cast<FLOAT>(p1.y())),
-			D2D1::Point2F(static_cast<FLOAT>(p2.x()), static_cast<FLOAT>(p2.y())),
+			renderTarget->DrawLine(D2D1::Point2F(static_cast<FLOAT>(p1.x()) + 0.5f, static_cast<FLOAT>(p1.y()) + 0.5f),
+			D2D1::Point2F(static_cast<FLOAT>(p2.x()) + 0.5f, static_cast<FLOAT>(p2.y()) + 0.5f),
 			targetBrush,
-			static_cast<FLOAT>(strokeWidth));
+			static_cast<FLOAT>(strokeWidth));		
 	}
 }
 

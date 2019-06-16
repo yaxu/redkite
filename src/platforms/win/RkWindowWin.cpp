@@ -57,6 +57,7 @@ RkWindowWin::RkWindowWin(const RkNativeWindowInfo &parent, Rk::WindowFlags flags
 
 RkWindowWin::~RkWindowWin()
 {
+	freeCanvasInfo();
 }
 
 bool RkWindowWin::hasParent() const
@@ -72,8 +73,8 @@ bool RkWindowWin::init()
                                           !hasParent() ? WS_OVERLAPPEDWINDOW : WS_CHILD | WS_CLIPCHILDREN | WS_VISIBLE | WS_BORDER,
                                           windowPosition.x(),
                                           windowPosition.y(),
-                                          windowSize.width(),
-                                          windowSize.height(),
+			                              windowSize.width(),
+			                              windowSize.height(),
                                           !hasParent() ? nullptr : parentWindowInfo->window,
                                           nullptr,
                                           hasParent() ? parentWindowInfo->instance : rk_win_api_instance(),
@@ -86,8 +87,7 @@ bool RkWindowWin::init()
 
         if (eventQueue)
                 SetWindowLongPtr(windowHandle.id, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(eventQueue));
-
-        createCanvasInfo();
+		createCanvasInfo();
         return true;
 }
 
@@ -139,6 +139,7 @@ void RkWindowWin::setSize(const RkSize &size)
                 windowSize = size;
                 if (isWindowCreated())
                         SetWindowPos(windowHandle.id, 0, 0, 0, size.width(), size.height(), SWP_NOMOVE | SWP_NOZORDER);
+			resizeCanvas();
         }
 }
 
@@ -213,12 +214,12 @@ void RkWindowWin::update()
 #ifdef RK_GRAPHICS_BACKEND_DIRECT2D
 void RkWindowWin::createCanvasInfo()
 {
-        if (!canvasInfo)
-                canvasInfo = std::make_shared<RkCanvasInfo>();
+        canvasInfo = std::make_shared<RkCanvasInfo>();
         canvasInfo->windowHandle = windowHandle.id;
         if (rk_direct2d_factory() && canvasInfo->renderTarget == nullptr) {
-                auto s = D2D1::SizeU(size().width(), size().height());
-				RK_LOG_DEBUG("size: " << size().width() << ", " << size().height());
+			    RECT rect;
+				GetClientRect(windowHandle.id, &rect);
+                auto s = D2D1::SizeU(rect.right - rect.left, rect.bottom - rect.top);
                 auto res = rk_direct2d_factory()->CreateHwndRenderTarget(D2D1::RenderTargetProperties(),
                                                               D2D1::HwndRenderTargetProperties(windowHandle.id, s),
                                                               &canvasInfo->renderTarget);
@@ -229,11 +230,21 @@ void RkWindowWin::createCanvasInfo()
 
 void RkWindowWin::resizeCanvas()
 {
+	if (isWindowCreated() && canvasInfo) {
+		RECT rect;
+		GetClientRect(windowHandle.id, &rect);
+		auto s = D2D1::SizeU(rect.right - rect.left, rect.bottom - rect.top);
+		if (canvasInfo->renderTarget)
+			canvasInfo->renderTarget->Resize(s);
+	}
 }
 
 void RkWindowWin::freeCanvasInfo()
 {
-        // TODO: implement
+		if (canvasInfo && canvasInfo->renderTarget) {
+			canvasInfo->renderTarget->Release();
+			canvasInfo = nullptr;
+		}
 }
 #else
 #error No graphics backend defined
