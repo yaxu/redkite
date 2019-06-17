@@ -76,18 +76,39 @@ void RkDirect2DGraphicsBackend::drawImage(const std::string &file, int x, int y)
 void RkDirect2DGraphicsBackend::drawImage(const RkImage &image, int x, int y)
 {
         if (renderTarget) {
+			RK_LOG_INFO("D1:");
+			RK_LOG_INFO("W: " << image.width());
+			RK_LOG_INFO("H: " << image.height());
                 ID2D1BitmapRenderTarget *bitmapRenderTarget = nullptr;
+				if (!image.getCanvasInfo())
+					RK_LOG_ERROR("info null");
+				if (!image.getCanvasInfo()->renderTarget)
+					RK_LOG_ERROR("info null");
                 auto target = image.getCanvasInfo()->renderTarget;
-                /*                auto pixelFormat = D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM,
+                auto pixelFormat = D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM,
                                                      D2D1_ALPHA_MODE_UNKNOWN);
                 auto sf = D2D1::SizeF(image.width(), image.height());
-                auto su = D2D1::SizeF(image.width(), image.height());*/
-                target->CreateCompatibleRenderTarget(&bitmapRenderTarget);
+                auto su = D2D1::SizeU(image.width(), image.height());
+
+				/*STDMETHOD(CreateCompatibleRenderTarget)(
+					&sf,
+					&su,
+					&pixelFormat,
+					D2D1_COMPATIBLE_RENDER_TARGET_OPTIONS options,
+					_COM_Outptr_ ID2D1BitmapRenderTarget **bitmapRenderTarget
+					) PURE;
+				*/
+                target->CreateCompatibleRenderTarget(&sf, &su, &pixelFormat, D2D1_COMPATIBLE_RENDER_TARGET_OPTIONS_NONE, &bitmapRenderTarget);
+				RK_LOG_INFO("D2:");
                 ID2D1Bitmap *bitmap;
                 bitmapRenderTarget->GetBitmap(&bitmap);
+				RK_LOG_INFO("D3:");
                 renderTarget->DrawBitmap(bitmap);
+				RK_LOG_INFO("D4:");
                 bitmap->Release();
+				RK_LOG_INFO("D5:");
                 bitmapRenderTarget->Release();
+				RK_LOG_INFO("D6:");
         }
 }
 

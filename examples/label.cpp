@@ -25,6 +25,9 @@
 #include "RkLabel.h"
 #include "RkLog.h"
 
+#pragma comment(lib, "d2d1")
+#pragma comment(lib, "d3d11")
+
 /**
  * Generated with png2c
  * File name: label.png
@@ -3184,7 +3187,7 @@ int main(int arc, char **argv)
         label->setBackgroundColor(200, 200, 200);
         label->show();
 
-        label = new RkLabel(widget);
+        /*label = new RkLabel(widget);
         label->setTitle("Label with image");
         label->setImage(RkImage(100, 94, rk_image));
         label->setX(10 + 100 + 5);
@@ -3202,7 +3205,7 @@ int main(int arc, char **argv)
         label->setY(10 + 94 + 5);
         label->setSize(100, 94);
         label->setBackgroundColor(200, 200, 200);
-        label->show();
+        label->show();*/
 
         widget->show();
 

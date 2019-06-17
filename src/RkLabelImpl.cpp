@@ -56,19 +56,21 @@ void RkLabel::RkLabelImpl::drawLabel()
 {
         if (labelText.empty() && labelImage.isNull())
                 return;
-
+		RK_LOG_INFO("CALLED0");
         RkImage img(size());
+		RK_LOG_INFO("CALLED");
         RkPainter painter(&img);
-        painter.fillRect(rect(), background());
-        if (!labelImage.isNull())
-                painter.drawImage(labelImage, 0, 0);
-        if (!labelText.empty()) {
+		RK_LOG_INFO("CALLED1");
+		painter.fillRect(rect(), {100, 0, 0});
+        //if (!labelImage.isNull())
+        //        painter.drawImage(labelImage, 0, 0);
+        /*if (!labelText.empty()) {
                 auto pen = painter.pen();
                 pen.setColor(textColor());
                 painter.setPen(pen);
                 painter.setFont(font());
                 painter.drawText(inf_ptr->rect(), labelText);
-        }
+        }*/
 
         RkPainter paint(inf_ptr);
         paint.drawImage(img, 0, 0);

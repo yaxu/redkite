@@ -63,14 +63,18 @@ endif()
 
 # ------------ Label Example -------
 
-#add_executable(label
-#  ${RK_HEADERS}
-#  ${RK_EXAMPLES_SOURCES_LABEL})
+add_executable(label ${RK_EXEC_OPTION}
+  ${RK_HEADERS}
+  ${RK_EXAMPLES_SOURCES_LABEL})
 
-#add_dependencies(label redkite)
-#target_link_libraries(label redkite)
-#target_link_libraries(label "-lX11 -lrt -lm -ldl")
-#target_link_libraries(label ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+add_dependencies(label redkite)
+target_link_libraries(label redkite)
+if (CMAKE_SYSTEM_NAME MATCHES Windows)
+ target_link_libraries(hello "-mwindows -lm")
+else ()
+ target_link_libraries(label "-lX11 -lrt -lm -ldl")
+ target_link_libraries(label ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+endif()
 
 #------------- Widget Colors --------
 

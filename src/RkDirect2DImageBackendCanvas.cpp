@@ -14,6 +14,7 @@ RkDirect2DImageBackendCanvas::RkDirect2DImageBackendCanvas(const RkSize &size,
         , context3D{nullptr}
         , offscreenTexture{nullptr}
 {
+	RK_LOG_INFO("h:1");
         if (imageSize.width() > 0 && imageSize.height() > 0) {
                 canvasInfo = std::make_shared<RkCanvasInfo>();
                 if (data == nullptr)
@@ -23,6 +24,7 @@ RkDirect2DImageBackendCanvas::RkDirect2DImageBackendCanvas(const RkSize &size,
         }
 
         if (canvasInfo) {
+			RK_LOG_INFO("h:2");
                 D3D_FEATURE_LEVEL featureLevels[] = {
                         D3D_FEATURE_LEVEL_11_1,
                         D3D_FEATURE_LEVEL_11_0,
@@ -32,17 +34,22 @@ RkDirect2DImageBackendCanvas::RkDirect2DImageBackendCanvas(const RkSize &size,
                         D3D_FEATURE_LEVEL_9_2,
                         D3D_FEATURE_LEVEL_9_1};
 
-                D3D11CreateDevice(nullptr,
+                auto hr = D3D11CreateDevice(
+					              nullptr,
                                   D3D_DRIVER_TYPE_HARDWARE,
-                                  0,
-                                  D3D11_CREATE_DEVICE_BGRA_SUPPORT,
+					              nullptr,
+					              0,
                                   featureLevels,
                                   ARRAYSIZE(featureLevels),
                                   D3D11_SDK_VERSION,
                                   &device3D,
-                                  featureLevels,
+                                  nullptr,
                                   &context3D);
 
+				if (!SUCCEEDED(hr)) {
+					RK_LOG_ERROR("error on creating 3device");
+				}
+				RK_LOG_INFO("h:3");
                 D3D11_TEXTURE2D_DESC texDesc;
                 texDesc.ArraySize = 1;
                 texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
@@ -55,13 +62,24 @@ RkDirect2DImageBackendCanvas::RkDirect2DImageBackendCanvas(const RkSize &size,
                 texDesc.SampleDesc.Count = 1;
                 texDesc.SampleDesc.Quality = 0;
                 texDesc.Usage = D3D11_USAGE_DEFAULT;
-                device3D->CreateTexture2D(&texDesc, nullptr, &offscreenTexture);
+	
+                hr = device3D->CreateTexture2D(&texDesc, nullptr, &offscreenTexture);
+				if (!SUCCEEDED(hr)) {
+					RK_LOG_ERROR("error on create texture");
+				}
+				RK_LOG_INFO("h:4");
                 IDXGISurface *pDxgiSurface = nullptr;
                 offscreenTexture->QueryInterface(&pDxgiSurface);
-                auto props = D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_DEFAULT,
-                                                          D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_UNKNOWN),
-                                                          96, 96);
-                rk_direct2d_factory()->CreateDxgiSurfaceRenderTarget(pDxgiSurface, &props, &canvasInfo->renderTarget);
+				DXGI_SURFACE_DESC desc;
+				pDxgiSurface->GetDesc(&desc);
+				FLOAT dpiX;
+				FLOAT dpiY;
+				rk_direct2d_factory()->GetDesktopDpi(&dpiX, &dpiY);
+				auto props = D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_DEFAULT, D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED), 0, 0);
+                hr = rk_direct2d_factory()->CreateDxgiSurfaceRenderTarget(pDxgiSurface, &props, &canvasInfo->renderTarget);
+				if (!SUCCEEDED(hr))
+					RK_LOG_ERROR("error on creating render target");
+				RK_LOG_INFO("h:5");
         }
 }
 
