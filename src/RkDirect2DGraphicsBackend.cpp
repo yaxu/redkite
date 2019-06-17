@@ -75,7 +75,20 @@ void RkDirect2DGraphicsBackend::drawImage(const std::string &file, int x, int y)
 
 void RkDirect2DGraphicsBackend::drawImage(const RkImage &image, int x, int y)
 {
-        // TODO: impement
+        if (renderTarget) {
+                ID2D1BitmapRenderTarget *bitmapRenderTarget = nullptr;
+                auto target = image.getCanvasInfo()->renderTarget;
+                /*                auto pixelFormat = D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM,
+                                                     D2D1_ALPHA_MODE_UNKNOWN);
+                auto sf = D2D1::SizeF(image.width(), image.height());
+                auto su = D2D1::SizeF(image.width(), image.height());*/
+                target->CreateCompatibleRenderTarget(&bitmapRenderTarget);
+                ID2D1Bitmap *bitmap;
+                bitmapRenderTarget->GetBitmap(&bitmap);
+                renderTarget->DrawBitmap(bitmap);
+                bitmap->Release();
+                bitmapRenderTarget->Release();
+        }
 }
 
 void RkDirect2DGraphicsBackend::drawEllipse(const RkPoint& p, int width, int height)

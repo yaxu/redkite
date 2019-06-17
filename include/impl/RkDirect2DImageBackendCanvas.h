@@ -26,6 +26,10 @@
 
 #include "RkImage.h"
 
+class ID3D11Device;
+class ID3D11DeviceContext;
+class ID3D11Texture2D;
+
 class RkDirect2DImageBackendCanvas {
  public:
         RkDirect2DImageBackendCanvas(const RkSize &size,
@@ -46,6 +50,9 @@ class RkDirect2DImageBackendCanvas {
         std::shared_ptr<RkCanvasInfo> canvasInfo;
         std::vector<unsigned char> imageData;
         RkSize imageSize;
+        ID3D11Device *device3D;
+        ID3D11DeviceContext *context3D;
+        ID3D11Texture2D *offscreenTexture;
 };
 
 #endif // RK_DIRECT2D_IMAGE_BACKEND_CANVAS_H
