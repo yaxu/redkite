@@ -23,7 +23,7 @@ RkDirect2DImageBackendCanvas::RkDirect2DImageBackendCanvas(const RkSize &size,
                         imageData.assign(data, data + imageSize.width() * imageSize.height() * 4);
         }
 
-       /* if (canvasInfo) {
+        if (canvasInfo) {
 			RK_LOG_INFO("h:2");
                 D3D_FEATURE_LEVEL featureLevels[] = {
                         D3D_FEATURE_LEVEL_11_1,
@@ -72,7 +72,7 @@ RkDirect2DImageBackendCanvas::RkDirect2DImageBackendCanvas(const RkSize &size,
                 offscreenTexture->QueryInterface(&pDxgiSurface);
 				DXGI_SURFACE_DESC desc;
 				pDxgiSurface->GetDesc(&desc);
-				auto props = D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_HARDWARE, D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED), 0, 0);
+				auto props = D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_DEFAULT, D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED), 0, 0);
 				ID2D1RenderTarget *target;
                 hr = rk_direct2d_factory()->CreateDxgiSurfaceRenderTarget(pDxgiSurface, &props, &target);
 				ID2D1BitmapRenderTarget *bitmapRenderTarget;
@@ -81,7 +81,7 @@ RkDirect2DImageBackendCanvas::RkDirect2DImageBackendCanvas(const RkSize &size,
 				if (!SUCCEEDED(hr))
 					RK_LOG_ERROR("error on creating render target");
 				RK_LOG_INFO("h:5");
-        }*/
+        }
 }
 
 RkDirect2DImageBackendCanvas::~RkDirect2DImageBackendCanvas()

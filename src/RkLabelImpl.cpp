@@ -77,7 +77,7 @@ void RkLabel::RkLabelImpl::drawLabel()
 			painter.drawText(inf_ptr->rect(), labelText);
 	}*/
   
-	/*RkImage img(size());
+	RkImage img(size());
 	{
 		RkPainter painter(&img);
 		RkPen pen(RkColor(255, 0, 0));
@@ -86,20 +86,17 @@ void RkLabel::RkLabelImpl::drawLabel()
 		painter.setPen(pen);
 		painter.drawLine({ 10, 10 }, { 100, 100 });
 		painter.drawCircle(50, 50, 40);
-		painter.fillRect({ 50, 50, 20, 20 }, background());
+		//painter.fillRect({ 50, 50, 20, 20 }, background());
 		pen.setStyle(RkPen::PenStyle::DotLine);
 		pen.setColor({ 0, 55, 123 });
 		painter.setPen(pen);
 		painter.drawRect({ 10, 10, 10, 10 });
 	}
 		RkPainter paint(inf_ptr);
-		RkPen pen(RkColor(0, 255, 0));
+		/*RkPen pen(RkColor(0, 255, 0));
 		pen.setWidth(1);
 		pen.setStyle(RkPen::PenStyle::DashLine);
-		paint.setPen(pen);
-		paint.drawImage(img, 0, 0);*/
-
-	RkPainter painter(inf_ptr);
-	painter.drawImage(labelImage, 0, 0);
+		paint.setPen(pen);*/
+		paint.drawImage(img, 0, 0);
 }
 

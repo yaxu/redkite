@@ -76,7 +76,7 @@ void RkDirect2DGraphicsBackend::drawImage(const std::string &file, int x, int y)
 void RkDirect2DGraphicsBackend::drawImage(const RkImage &image, int x, int y)
 {
 	if (renderTarget) {
-			/*RK_LOG_INFO("D1:");
+			RK_LOG_INFO("D1:");
 			RK_LOG_INFO("W: " << image.width());
 			RK_LOG_INFO("H: " << image.height());
 				if (!image.getCanvasInfo())
@@ -86,14 +86,16 @@ void RkDirect2DGraphicsBackend::drawImage(const RkImage &image, int x, int y)
                 auto target = reinterpret_cast<ID2D1BitmapRenderTarget*>(image.getCanvasInfo()->renderTarget);
                 ID2D1Bitmap *bitmap;
                 auto hr = target->GetBitmap(&bitmap);
-				auto bsize = bitmap->GetSize();*/
+				auto bsize = bitmap->GetSize();
 				ID2D1Bitmap* localBitmap;
-				auto prop = D2D1::BitmapProperties(D2D1::PixelFormat(DXGI_FORMAT_R8G8B8A8_UNORM, D2D1_ALPHA_MODE_FORCE_DWORD), 96, 96);
-				auto hr = renderTarget->CreateBitmap(D2D1::SizeU(image.width(), image.height()), prop, &localBitmap);
+				auto prop = D2D1::BitmapProperties(D2D1::PixelFormat(DXGI_FORMAT_R8G8B8A8_UNORM, D2D1_ALPHA_MODE_IGNORE));
+			    hr = renderTarget->CreateBitmap(D2D1::SizeU(image.width(), image.height()), prop, &localBitmap);
 				auto p = D2D1::Point2U(0, 0);
 				auto dr = D2D1::RectU(0, 0, image.width(), image.height());
-				localBitmap->CopyFromMemory(&dr, image.data(), image.width());
-				renderTarget->DrawBitmap(localBitmap, D2D1::RectF(0.0f, 0.0f, 30, 30));
+				//localBitmap->CopyFromMemory(&dr, image.data(), image.width() * 4);
+				localBitmap->CopyFromRenderTarget(&p, target, &dr);
+				//localBitmap->CopyFromBitmap(&p, bitmap, &dr);
+				renderTarget->DrawBitmap(localBitmap, D2D1::RectF(0.0f, 0.0f, image.width(), image.height()));
 				hr = renderTarget->EndDraw();
 				
 				//renderTarget->FillRectangle(D2D1::RectF(10, 10, 20, 20), targetBrush);
