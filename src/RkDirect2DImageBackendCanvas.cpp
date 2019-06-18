@@ -23,7 +23,7 @@ RkDirect2DImageBackendCanvas::RkDirect2DImageBackendCanvas(const RkSize &size,
                         imageData.assign(data, data + imageSize.width() * imageSize.height() * 4);
         }
 
-        if (canvasInfo) {
+       /* if (canvasInfo) {
 			RK_LOG_INFO("h:2");
                 D3D_FEATURE_LEVEL featureLevels[] = {
                         D3D_FEATURE_LEVEL_11_1,
@@ -38,7 +38,7 @@ RkDirect2DImageBackendCanvas::RkDirect2DImageBackendCanvas(const RkSize &size,
 					              nullptr,
                                   D3D_DRIVER_TYPE_HARDWARE,
 					              nullptr,
-					              0,
+					              D3D11_CREATE_DEVICE_BGRA_SUPPORT | D3D11_CREATE_DEVICE_DEBUG,
                                   featureLevels,
                                   ARRAYSIZE(featureLevels),
                                   D3D11_SDK_VERSION,
@@ -72,15 +72,16 @@ RkDirect2DImageBackendCanvas::RkDirect2DImageBackendCanvas(const RkSize &size,
                 offscreenTexture->QueryInterface(&pDxgiSurface);
 				DXGI_SURFACE_DESC desc;
 				pDxgiSurface->GetDesc(&desc);
-				FLOAT dpiX;
-				FLOAT dpiY;
-				rk_direct2d_factory()->GetDesktopDpi(&dpiX, &dpiY);
-				auto props = D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_DEFAULT, D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED), 0, 0);
-                hr = rk_direct2d_factory()->CreateDxgiSurfaceRenderTarget(pDxgiSurface, &props, &canvasInfo->renderTarget);
+				auto props = D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_HARDWARE, D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED), 0, 0);
+				ID2D1RenderTarget *target;
+                hr = rk_direct2d_factory()->CreateDxgiSurfaceRenderTarget(pDxgiSurface, &props, &target);
+				ID2D1BitmapRenderTarget *bitmapRenderTarget;
+				hr = target->CreateCompatibleRenderTarget(&bitmapRenderTarget);
+				canvasInfo->renderTarget = static_cast<ID2D1RenderTarget*>(bitmapRenderTarget);
 				if (!SUCCEEDED(hr))
 					RK_LOG_ERROR("error on creating render target");
 				RK_LOG_INFO("h:5");
-        }
+        }*/
 }
 
 RkDirect2DImageBackendCanvas::~RkDirect2DImageBackendCanvas()
@@ -89,7 +90,7 @@ RkDirect2DImageBackendCanvas::~RkDirect2DImageBackendCanvas()
                 canvasInfo->renderTarget->Release();
         if (offscreenTexture)
                 offscreenTexture->Release();
-        if (context3D)
+        if (context3D) 
                 context3D->Release();
         if (device3D)
                 device3D->Release();

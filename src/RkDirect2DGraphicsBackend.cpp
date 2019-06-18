@@ -75,40 +75,35 @@ void RkDirect2DGraphicsBackend::drawImage(const std::string &file, int x, int y)
 
 void RkDirect2DGraphicsBackend::drawImage(const RkImage &image, int x, int y)
 {
-        if (renderTarget) {
-			RK_LOG_INFO("D1:");
+	if (renderTarget) {
+			/*RK_LOG_INFO("D1:");
 			RK_LOG_INFO("W: " << image.width());
 			RK_LOG_INFO("H: " << image.height());
-                ID2D1BitmapRenderTarget *bitmapRenderTarget = nullptr;
 				if (!image.getCanvasInfo())
 					RK_LOG_ERROR("info null");
 				if (!image.getCanvasInfo()->renderTarget)
 					RK_LOG_ERROR("info null");
-                auto target = image.getCanvasInfo()->renderTarget;
-                auto pixelFormat = D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM,
-                                                     D2D1_ALPHA_MODE_UNKNOWN);
-                auto sf = D2D1::SizeF(image.width(), image.height());
-                auto su = D2D1::SizeU(image.width(), image.height());
-
-				/*STDMETHOD(CreateCompatibleRenderTarget)(
-					&sf,
-					&su,
-					&pixelFormat,
-					D2D1_COMPATIBLE_RENDER_TARGET_OPTIONS options,
-					_COM_Outptr_ ID2D1BitmapRenderTarget **bitmapRenderTarget
-					) PURE;
-				*/
-                target->CreateCompatibleRenderTarget(&sf, &su, &pixelFormat, D2D1_COMPATIBLE_RENDER_TARGET_OPTIONS_NONE, &bitmapRenderTarget);
-				RK_LOG_INFO("D2:");
+                auto target = reinterpret_cast<ID2D1BitmapRenderTarget*>(image.getCanvasInfo()->renderTarget);
                 ID2D1Bitmap *bitmap;
-                bitmapRenderTarget->GetBitmap(&bitmap);
-				RK_LOG_INFO("D3:");
-                renderTarget->DrawBitmap(bitmap);
+                auto hr = target->GetBitmap(&bitmap);
+				auto bsize = bitmap->GetSize();*/
+				ID2D1Bitmap* localBitmap;
+				auto prop = D2D1::BitmapProperties(D2D1::PixelFormat(DXGI_FORMAT_R8G8B8A8_UNORM, D2D1_ALPHA_MODE_FORCE_DWORD), 96, 96);
+				auto hr = renderTarget->CreateBitmap(D2D1::SizeU(image.width(), image.height()), prop, &localBitmap);
+				auto p = D2D1::Point2U(0, 0);
+				auto dr = D2D1::RectU(0, 0, image.width(), image.height());
+				localBitmap->CopyFromMemory(&dr, image.data(), image.width());
+				renderTarget->DrawBitmap(localBitmap, D2D1::RectF(0.0f, 0.0f, 30, 30));
+				hr = renderTarget->EndDraw();
+				
+				//renderTarget->FillRectangle(D2D1::RectF(10, 10, 20, 20), targetBrush);
+
+				//renderTarget->EndDraw();
+				
 				RK_LOG_INFO("D4:");
-                bitmap->Release();
+                //bitmap->Release();
+				//localBitmap->Release();
 				RK_LOG_INFO("D5:");
-                bitmapRenderTarget->Release();
-				RK_LOG_INFO("D6:");
         }
 }
 
