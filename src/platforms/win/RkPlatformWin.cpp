@@ -7,8 +7,8 @@
 static std::string rk_winApiClassName;
 static HINSTANCE rk_winApiInstance = nullptr;
 #ifdef RK_GRAPHICS_BACKEND_DIRECT2D
-#include <d2d1.h>
-static ID2D1Factory* rk_d2d1Factory = nullptr;
+#include <d2d1_1.h>
+static ID2D1Factory1* rk_d2d1Factory = nullptr;
 #endif // RK_GRAPHICS_BACKEND_DIRECT2D
 
 HINSTANCE rk_win_api_instance()
@@ -38,7 +38,7 @@ RkWindowId rk_id_from_win(HWND window)
 }
 
 #ifdef RK_GRAPHICS_BACKEND_DIRECT2D
-ID2D1Factory* RK_EXPORT rk_direct2d_factory()
+ID2D1Factory1* RK_EXPORT rk_direct2d_factory()
 {
         return rk_d2d1Factory;
 }

@@ -26,9 +26,11 @@
 
 #include "RkGraphicsBackend.h"
 
-struct ID2D1RenderTarget;
-class ID2D1SolidColorBrush;
-class ID2D1StrokeStyle;
+struct ID2D1DeviceContext;
+struct ID2D1SolidColorBrush;
+struct ID2D1StrokeStyle;
+struct IDXGISwapChain1;
+struct ID2D1Bitmap1;
 
 class RkDirect2DGraphicsBackend final : public RkGraphicsBackend {
  public:
@@ -49,7 +51,9 @@ class RkDirect2DGraphicsBackend final : public RkGraphicsBackend {
         void rotate(rk_real angle);
 
  private:
-        ID2D1RenderTarget *renderTarget;
+        ID2D1DeviceContext *deviceContext;
+		IDXGISwapChain1 *swapChain;
+		ID2D1Bitmap1  *d2dTargetBitmap;
         ID2D1SolidColorBrush *targetBrush;
         float strokeWidth;
         ID2D1StrokeStyle *strokeStyle;

@@ -215,38 +215,53 @@ void RkWindowWin::update()
 void RkWindowWin::createCanvasInfo()
 {
         canvasInfo = std::make_shared<RkCanvasInfo>();
-       // canvasInfo->windowHandle = windowHandle.id;
-        if (rk_direct2d_factory() && canvasInfo->renderTarget == nullptr) {
-			    ID2D1HwndRenderTarget *target;
-                RECT rect;
-                GetClientRect(windowHandle.id, &rect);
-                auto s = D2D1::SizeU(rect.right - rect.left, rect.bottom - rect.top);
-                auto res = rk_direct2d_factory()->CreateHwndRenderTarget(D2D1::RenderTargetProperties(),
-                                                                         D2D1::HwndRenderTargetProperties(windowHandle.id, s),
-                                                                         &target);
-				if (!SUCCEEDED(res))
-					RK_LOG_ERROR("can't create render target");
-				else
-					canvasInfo->renderTarget = static_cast<ID2D1RenderTarget*>(target);
-        }
+		canvasInfo->window = windowHandle.id;
+		D3D_FEATURE_LEVEL featureLevels[] = {
+				D3D_FEATURE_LEVEL_11_1,
+				D3D_FEATURE_LEVEL_11_0,
+				D3D_FEATURE_LEVEL_10_1,
+				D3D_FEATURE_LEVEL_10_0,
+				D3D_FEATURE_LEVEL_9_3,
+				D3D_FEATURE_LEVEL_9_2,
+				D3D_FEATURE_LEVEL_9_1};
+
+		auto hr = D3D11CreateDevice(
+			nullptr,
+			D3D_DRIVER_TYPE_HARDWARE,
+			nullptr,
+			D3D11_CREATE_DEVICE_BGRA_SUPPORT | D3D11_CREATE_DEVICE_DEBUG,
+			featureLevels,
+			ARRAYSIZE(featureLevels),
+			D3D11_SDK_VERSION,
+			&canvasInfo->device3D,
+			nullptr,
+			nullptr);
+
+		canvasInfo->device3D->QueryInterface(&canvasInfo->dxgiDevice);
+		hr = rk_direct2d_factory()->CreateDevice(canvasInfo->dxgiDevice, &canvasInfo->device2D);
+		RK_LOG_DEBUG(hr);
 }
 
 void RkWindowWin::resizeCanvas()
 {
-	if (isWindowCreated() && canvasInfo) {
+	/*if (isWindowCreated() && canvasInfo) {
 		RECT rect;
 		GetClientRect(windowHandle.id, &rect);
 		auto s = D2D1::SizeU(rect.right - rect.left, rect.bottom - rect.top);
 		if (canvasInfo->renderTarget)
 			reinterpret_cast<ID2D1HwndRenderTarget*>(canvasInfo->renderTarget)->Resize(s);
-	}
+	}*/
 }
 
 void RkWindowWin::freeCanvasInfo()
 {
-        if (canvasInfo && canvasInfo->renderTarget) {
-                canvasInfo->renderTarget->Release();
-                canvasInfo = nullptr;
+        if (canvasInfo) {
+			canvasInfo->device2D->Release();
+			canvasInfo->dxgiDevice->Release();
+			canvasInfo->device3D->Release();
+			delete canvasInfo->device2D;
+			delete canvasInfo->dxgiDevice;
+			delete canvasInfo->device3D;
         }
 }
 #else

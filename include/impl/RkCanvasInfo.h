@@ -32,11 +32,14 @@ struct RkCanvasInfo {
         cairo_surface_t* cairo_surface;
 };
 #elif RK_GRAPHICS_BACKEND_DIRECT2D
-#include <d2d1.h>
+#include <d2d1_1.h>
+#include <d3d11.h>
+#include <dxgi1_2.h>
 struct RkCanvasInfo {
-        //HWND windowHandle;
-        ID2D1RenderTarget* renderTarget;
-		//ID2D1BitmapRenderTarget* bitmapRenderT
+	HWND window;
+	ID3D11Device* device3D;
+	ID2D1Device* device2D;
+	IDXGIDevice1 *dxgiDevice;
 };
 #else
 #error No graphics backend defined

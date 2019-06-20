@@ -35,15 +35,15 @@ struct RK_EXPORT RkWindowId {
     HWND id;
 };
 
-class ID2D1Factory;
+class ID2D1Factory1;
 struct RK_EXPORT RkNativeWindowInfo {
         RkNativeWindowInfo(HWND arg = nullptr) : window(arg) {}
         HINSTANCE instance;
         std::string className;
         HWND window;
 #ifdef RK_DIRECT2D_GRAPHICS_BACKEND
-        ID2D1Factory* factory;
-#endif // RK_DIRECT2D_GRAPHICS_BACKEND
+        ID2D1Factory1* factory;
+#endif // RK_GRAPHICS_BACKEND_DIRECT2D
 };
 
 HINSTANCE RK_EXPORT rk_win_api_instance();
@@ -51,7 +51,7 @@ std::string RK_EXPORT rk_win_api_class_name();
 RkNativeWindowInfo RK_EXPORT rk_from_native_win(HINSTANCE instance, LPCSTR className, HWND window);
 RkWindowId RK_EXPORT rk_id_from_win(HWND window);
 #ifdef RK_GRAPHICS_BACKEND_DIRECT2D
-ID2D1Factory* RK_EXPORT rk_direct2d_factory();
+ID2D1Factory1* RK_EXPORT rk_direct2d_factory();
 #endif // RK_DIRECT2D_GRAPHICS_BACKEND
 
 

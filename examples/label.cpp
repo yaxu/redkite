@@ -3180,7 +3180,7 @@ int main(int arc, char **argv)
 
         auto label = new RkLabel(widget);
         label->setTitle("Label with text"); // for debugging only, no effect on label.
-		label->setImage(RkImage(100, 94, rk_image));
+		//label->setImage(RkImage(100, 94, rk_image));
         label->setText("Text");
         label->setX(10);
         label->setY(10);

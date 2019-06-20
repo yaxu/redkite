@@ -14,7 +14,7 @@ RkDirect2DImageBackendCanvas::RkDirect2DImageBackendCanvas(const RkSize &size,
         , context3D{nullptr}
         , offscreenTexture{nullptr}
 {
-	RK_LOG_INFO("h:1");
+	/*RK_LOG_INFO("h:1");
         if (imageSize.width() > 0 && imageSize.height() > 0) {
                 canvasInfo = std::make_shared<RkCanvasInfo>();
                 if (data == nullptr)
@@ -44,7 +44,7 @@ RkDirect2DImageBackendCanvas::RkDirect2DImageBackendCanvas(const RkSize &size,
                                   D3D11_SDK_VERSION,
                                   &device3D,
                                   nullptr,
-                                  &context3D);
+                                  nullptr);
 
 				if (!SUCCEEDED(hr)) {
 					RK_LOG_ERROR("error on creating 3device");
@@ -72,7 +72,7 @@ RkDirect2DImageBackendCanvas::RkDirect2DImageBackendCanvas(const RkSize &size,
                 offscreenTexture->QueryInterface(&pDxgiSurface);
 				DXGI_SURFACE_DESC desc;
 				pDxgiSurface->GetDesc(&desc);
-				auto props = D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_DEFAULT, D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED), 0, 0);
+				auto props = D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE_DEFAULT, D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED), 96, 96);
 				ID2D1RenderTarget *target;
                 hr = rk_direct2d_factory()->CreateDxgiSurfaceRenderTarget(pDxgiSurface, &props, &target);
 				ID2D1BitmapRenderTarget *bitmapRenderTarget;
@@ -81,19 +81,19 @@ RkDirect2DImageBackendCanvas::RkDirect2DImageBackendCanvas(const RkSize &size,
 				if (!SUCCEEDED(hr))
 					RK_LOG_ERROR("error on creating render target");
 				RK_LOG_INFO("h:5");
-        }
+        }*/
 }
 
 RkDirect2DImageBackendCanvas::~RkDirect2DImageBackendCanvas()
 {
-        if (canvasInfo && canvasInfo->renderTarget)
+     /*   if (canvasInfo && canvasInfo->renderTarget)
                 canvasInfo->renderTarget->Release();
         if (offscreenTexture)
                 offscreenTexture->Release();
         if (context3D) 
                 context3D->Release();
         if (device3D)
-                device3D->Release();
+                device3D->Release();*/
 }
 
 int RkDirect2DImageBackendCanvas::pixelLength(RkImage::Format format) const
