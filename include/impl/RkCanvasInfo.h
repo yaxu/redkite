@@ -25,6 +25,7 @@
 #define RK_CANVAS_INFO_H
 
 #include "Rk.h"
+#include "RkSize.h"
 
 #ifdef RK_GRAPHICS_BACKEND_CAIRO
 #include <cairo/cairo.h>
@@ -40,6 +41,8 @@ struct RkCanvasInfo {
 	ID3D11Device* device3D;
 	ID2D1Device* device2D;
 	IDXGIDevice1 *dxgiDevice;
+	RkSize size;
+	ID2D1Bitmap1  *d2dTargetBitmap;
 };
 #else
 #error No graphics backend defined
