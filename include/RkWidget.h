@@ -108,6 +108,7 @@ class RK_EXPORT RkWidget: public RkCanvas {
           const RkFont& font() const;
           void setFont(const RkFont &font);
           std::shared_ptr<RkCanvasInfo> getCanvasInfo() const final;
+          RkCanvas::Type canvasType() const final;
           RkRect rect() const;
           void update();
           void close();

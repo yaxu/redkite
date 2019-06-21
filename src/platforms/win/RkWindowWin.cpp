@@ -215,31 +215,39 @@ void RkWindowWin::update()
 void RkWindowWin::createCanvasInfo()
 {
         canvasInfo = std::make_shared<RkCanvasInfo>();
-		canvasInfo->window = windowHandle.id;
-		D3D_FEATURE_LEVEL featureLevels[] = {
-				D3D_FEATURE_LEVEL_11_1,
-				D3D_FEATURE_LEVEL_11_0,
-				D3D_FEATURE_LEVEL_10_1,
-				D3D_FEATURE_LEVEL_10_0,
-				D3D_FEATURE_LEVEL_9_3,
-				D3D_FEATURE_LEVEL_9_2,
-				D3D_FEATURE_LEVEL_9_1};
+        canvasInfo->window = windowHandle.id;
+        D3D_FEATURE_LEVEL featureLevels[] = {
+                D3D_FEATURE_LEVEL_11_1,
+                D3D_FEATURE_LEVEL_11_0,
+                D3D_FEATURE_LEVEL_10_1,
+                D3D_FEATURE_LEVEL_10_0,
+                D3D_FEATURE_LEVEL_9_3,
+                D3D_FEATURE_LEVEL_9_2,
+                D3D_FEATURE_LEVEL_9_1};
 
-		auto hr = D3D11CreateDevice(
-			nullptr,
-			D3D_DRIVER_TYPE_HARDWARE,
-			nullptr,
-			D3D11_CREATE_DEVICE_BGRA_SUPPORT | D3D11_CREATE_DEVICE_DEBUG,
-			featureLevels,
-			ARRAYSIZE(featureLevels),
-			D3D11_SDK_VERSION,
-			&canvasInfo->device3D,
-			nullptr,
-			nullptr);
-
-		canvasInfo->device3D->QueryInterface(&canvasInfo->dxgiDevice);
-		hr = rk_direct2d_factory()->CreateDevice(canvasInfo->dxgiDevice, &canvasInfo->device2D);
-		RK_LOG_DEBUG(hr);
+       auto hr =  D3D11CreateDevice(
+                                    nullptr,
+                                    D3D_DRIVER_TYPE_HARDWARE,
+                                    nullptr,
+                                    D3D11_CREATE_DEVICE_BGRA_SUPPORT | D3D11_CREATE_DEVICE_DEBUG,
+                                    featureLevels,
+                                    ARRAYSIZE(featureLevels),
+                                    D3D11_SDK_VERSION,
+                                    &canvasInfo->device3D,
+                                    nullptr,
+                                    nullptr);
+       if (!SUCCEEDED(hr)) {
+               RK_LOG_ERROR("can't create 3D device");
+               canvasInfo = nullptr;
+       } else {
+               canvasInfo->device3D->QueryInterface(&canvasInfo->dxgiDevice);
+               hr = rk_direct2d_factory()->CreateDevice(canvasInfo->dxgiDevice, &canvasInfo->device2D);
+               if (!SUCCEEDED(hr)) {
+                       RK_LOG_ERROR("can't create 2D device");
+                       canvasInfo->device3D->Release();
+                       canvasInfo = nullptr;
+               }
+       }
 }
 
 void RkWindowWin::resizeCanvas()
@@ -256,12 +264,10 @@ void RkWindowWin::resizeCanvas()
 void RkWindowWin::freeCanvasInfo()
 {
         if (canvasInfo) {
-			canvasInfo->device2D->Release();
-			canvasInfo->dxgiDevice->Release();
-			canvasInfo->device3D->Release();
-			delete canvasInfo->device2D;
-			delete canvasInfo->dxgiDevice;
-			delete canvasInfo->device3D;
+                canvasInfo->device2D->Release();
+                canvasInfo->dxgiDevice->Release();
+                canvasInfo->device3D->Release();
+                canvasInfo = nullptr;
         }
 }
 #else

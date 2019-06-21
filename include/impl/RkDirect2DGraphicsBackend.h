@@ -52,8 +52,8 @@ class RkDirect2DGraphicsBackend final : public RkGraphicsBackend {
 
  private:
         ID2D1DeviceContext *deviceContext;
-		IDXGISwapChain1 *swapChain;
-		ID2D1Bitmap1  *d2dTargetBitmap;
+        IDXGISwapChain1 *swapChain;
+        ID2D1Bitmap1  *d2dTargetBitmap;
         ID2D1SolidColorBrush *targetBrush;
         float strokeWidth;
         ID2D1StrokeStyle *strokeStyle;

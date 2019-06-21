@@ -31,100 +31,151 @@
 
 RkDirect2DGraphicsBackend::RkDirect2DGraphicsBackend(RkCanvas *canvas)
         : deviceContext{nullptr}
+        , swapChain{nullptr};
+        , d2dTargetBitmap{nullptr};
         , targetBrush{nullptr}
         , strokeWidth{1.0f}
         , strokeStyle{nullptr}
 {
-        if (canvas->getCanvasInfo() && canvas->getCanvasInfo()->device2D) {
-			    canvas->getCanvasInfo()->device2D->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, &deviceContext);
-
-				if (canvas->getCanvasInfo()->window == 0) {
-					DXGI_SWAP_CHAIN_DESC1 swapChainDesc = { 0 };
-					swapChainDesc.Width = 0;
-					swapChainDesc.Height = 0;
-					swapChainDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-					swapChainDesc.Stereo = false;
-					swapChainDesc.SampleDesc.Count = 1;
-					swapChainDesc.SampleDesc.Quality = 0;
-					swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-					swapChainDesc.BufferCount = 2;
-					swapChainDesc.Scaling = DXGI_SCALING_NONE;
-					swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
-					swapChainDesc.Flags = 0;
-
-					IDXGIAdapter *dxgiAdapter;
-					canvas->getCanvasInfo()->dxgiDevice->GetAdapter(&dxgiAdapter);
-					IDXGIFactory2 *dxgiFactory;
-					dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory));
-					dxgiFactory->CreateSwapChainForHwnd(
-						canvas->getCanvasInfo()->device3D,
-						canvas->getCanvasInfo()->window,
-						&swapChainDesc,
-						nullptr,
-						nullptr,
-						&swapChain
-					);
-
-					//canvas->getCanvasInfo()->dxgiDevice->SetMaximumFrameLatency(1);
-
-					ID3D11Texture2D *backBuffer;
-					swapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
-					D2D1_PIXEL_FORMAT pixel = { DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_IGNORE };
-					D2D1_BITMAP_PROPERTIES1 bitmapProperties =
-						D2D1::BitmapProperties1(
-							D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
-							pixel);
-
-					IDXGISurface *dxgiBackBuffer;
-					swapChain->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer));
-
-					deviceContext->CreateBitmapFromDxgiSurface(
-						dxgiBackBuffer,
-						&bitmapProperties,
-						&d2dTargetBitmap
-					);
-				}
-				else {
-					IDXGISurface *dxgiBackBuffer;
-					canvas->getCanvasInfo()->device3D->QueryInterface(&dxgiBackBuffer);
-					D2D1_PIXEL_FORMAT pixel = { DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_IGNORE };
-					D2D1_BITMAP_PROPERTIES1 bitmapProperties =
-						D2D1::BitmapProperties1(
-							D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
-							pixel);
-					deviceContext->CreateBitmapFromDxgiSurface(
-						dxgiBackBuffer,
-						&bitmapProperties,
-						&canvas->getCanvasInfo()->d2dTargetBitmap
-					);
-
-					std::vector<char> v(canvas->getCanvasInfo()->size.width() * canvas->getCanvasInfo()->size.height() * 4, 80);
-					D2D1_RECT_U dstRect = D2D1::RectU(0, 0, canvas->getCanvasInfo()->size.width(),  canvas->getCanvasInfo()->size.height());
-					canvas->getCanvasInfo()->d2dTargetBitmap->CopyFromMemory(&dstRect, v.data(), canvas->getCanvasInfo()->size.width() * 4);
-				}
-
-				deviceContext->SetTarget(d2dTargetBitmap);
-                auto hr = deviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &targetBrush);
-                if (!SUCCEEDED(hr)) {
-                        RK_LOG_ERROR("can't create brush");
-                } else {
-					deviceContext->BeginDraw();
-					deviceContext->Clear(D2D1::ColorF(D2D1::ColorF::White));
+        if (validateCanvase(canvas)) {
+                auto res = prepareContext();
+                if (!res) {
+                        auto hr = deviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &targetBrush);
+                        if (!SUCCEEDED(hr)) {
+                                RK_LOG_ERROR("can't create brush");
+                                releaseContextResources();
+                        } else {
+                                deviceContext->BeginDraw();
+                                deviceContext->Clear(D2D1::ColorF(D2D1::ColorF::White));
+                        }
                 }
         }
+}
+
+bool RkDirect2DGraphicsBackend::validateCanvase(RkCanvas *canvas)
+{
+        if (canvas->type() != RkCanvas::Type::Window) {
+                RK_LOG_ERROR("unsuported canvase");
+                return false;
+        } else if (!canvas->getCanvasInfo() || !canvas->getCanvasInfo()->device2D) {
+                RK_LOG_ERROR("canvas is not ready for drawing");
+                return false;
+        }
+        
+        return true;
+}
+
+bool RkDirect2DGraphicsBackend::prepareContext()
+{
+        auto hr = canvas->getCanvasInfo()->device2D->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, &deviceContext);
+        if (!SUCCEEDED(hr)) {
+                RK_LOG_ERROR("can't create device context");
+                return false;
+        }
+                
+        DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {0};
+        swapChainDesc.Width = 0;
+        swapChainDesc.Height = 0;
+        swapChainDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+        swapChainDesc.Stereo = false;
+        swapChainDesc.SampleDesc.Count = 1;
+        swapChainDesc.SampleDesc.Quality = 0;
+        swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+        swapChainDesc.BufferCount = 2;
+        swapChainDesc.Scaling = DXGI_SCALING_NONE;
+        swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+        swapChainDesc.Flags = 0;
+                        
+        IDXGIAdapter *dxgiAdapter = nullptr;
+        canvas->getCanvasInfo()->dxgiDevice->GetAdapter(&dxgiAdapter);
+        if (!dxgiAdapter) {
+                RK_LOG_ERROR("can't get DXGI adaptor");
+                releaseContextResources();
+                return false;
+        }
+
+        IDXGIFactory2 *dxgiFactory = nullptr;
+        dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory));
+        if (!dxgiFactory) {
+                RK_LOG_ERROR("can't get DXGI factory");
+                releaseContextResources();
+                return false;
+        }
+        hr = dxgiFactory->CreateSwapChainForHwnd(canvas->getCanvasInfo()->device3D,
+                                                 canvas->getCanvasInfo()->window,
+                                                 &swapChainDesc,
+                                                 nullptr,
+                                                 nullptr,
+                                                 &swapChain);
+        if (!SUCCEEDED(hr)) {
+                RK_LOG_ERROR("can't get DXGI factory");
+                releaseContextResources();
+                return false;
+        }
+
+        canvas->getCanvasInfo()->dxgiDevice->SetMaximumFrameLatency(1);
+        /*                ID3D11Texture2D *backBuffer= nullptr;
+                          swapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
+                          if (!backBuffer) {
+                          RK_LOG_ERROR("can't get texture back buffer");
+                          swapChain->Release();
+                          deviceContext->Release();
+                          return;
+                          }*/
+
+        D2D1_PIXEL_FORMAT pixelFormat = {DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_IGNORE};
+        auto bitmapProperties = D2D1::BitmapProperties1(D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW, pixelFormat);
+        IDXGISurface *dxgiBackBuffer = nullptr;
+        swapChain->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer));
+        if (!dxgiBackBuffer) {
+                RK_LOG_ERROR("can't get DXGI surface buffer");
+                releaseContextResources();
+                return false;
+        }
+        hr = deviceContext->CreateBitmapFromDxgiSurface(dxgiBackBuffer, &bitmapProperties, &d2dTargetBitmap);
+        if (!SUCCEEDED(hr)) {
+                RK_LOG_ERROR("can't create Bitmap from DXGI surface");
+                releaseContextResources();
+                return false;
+        }
+
+        deviceContext->SetTarget(d2dTargetBitmap);
+        return true;
 }
 
 RkDirect2DGraphicsBackend::~RkDirect2DGraphicsBackend()
 {
 	if (deviceContext) {
 		deviceContext->EndDraw();
-		swapChain->Present(1, 0);
-		swapChain->Release();
-		d2dTargetBitmap->Release();
-		deviceContext->Release();
+                if (swapChain)
+                        swapChain->Present(1, 0);
+                releaseContextResources();
 	}
-	if (targetBrush)
+}
+
+void RkDirect2DGraphicsBackend::releaseContextResources()
+{
+        if (swapChain) {
+                swapChain->Release();
+                swapChain = nullptr;
+        }
+        if (d2dTargetBitmap) {
+                d2dTargetBitmap->Release();
+                d2dTargetBitmap = nullptr;
+        }
+        if (deviceContext) {
+                deviceContext->Release();
+                deviceContext = nullptr;
+        }
+        if (targetBrush) {
 		targetBrush->Release();
+                targetBrush = nullptr;
+        }
+
+        if (strokeStyle) {
+                strokeStyle->Release();
+                strokeStyle = nullptr;
+        }
 }
 
 void RkDirect2DGraphicsBackend::drawText(const std::string &text, int x, int y)
@@ -150,26 +201,25 @@ void RkDirect2DGraphicsBackend::drawImage(const std::string &file, int x, int y)
 
 void RkDirect2DGraphicsBackend::drawImage(const RkImage &image, int x, int y)
 {
-	deviceContext->DrawBitmap(image.getCanvasInfo()->d2dTargetBitmap);
+        //	deviceContext->DrawBitmap(image.getCanvasInfo()->d2dTargetBitmap);
 }
 
 void RkDirect2DGraphicsBackend::drawEllipse(const RkPoint& p, int width, int height)
 {
-        if (deviceContext) {
+        if (deviceContext)
                 deviceContext->DrawEllipse(D2D1::Ellipse(D2D1::Point2F(p.x(), p.y()), width / 2, height / 2),
-                                          targetBrush,
-                                          strokeWidth,
-                                          strokeStyle);
-        }
+                                           targetBrush,
+                                           strokeWidth,
+                                           strokeStyle);
 }
 
 void RkDirect2DGraphicsBackend::drawLine(const RkPoint &p1, const RkPoint &p2)
 {
 	if (deviceContext) {
                 deviceContext->DrawLine(D2D1::Point2F(static_cast<FLOAT>(p1.x()) + 0.5f,
-                                                     static_cast<FLOAT>(p1.y()) + 0.5f),
-                                       D2D1::Point2F(static_cast<FLOAT>(p2.x()) + 0.5f,
-                                                     static_cast<FLOAT>(p2.y()) + 0.5f),
+                                                      static_cast<FLOAT>(p1.y()) + 0.5f),
+                                        D2D1::Point2F(static_cast<FLOAT>(p2.x()) + 0.5f,
+                                                      static_cast<FLOAT>(p2.y()) + 0.5f),
                                        targetBrush,
                                        strokeWidth,
                                        strokeStyle);
@@ -206,15 +256,14 @@ void RkDirect2DGraphicsBackend::fillRect(const RkRect &rect, const RkColor &colo
 {
         if (deviceContext)
                 deviceContext->FillRectangle(D2D1::RectF(rect.left(), rect.top(), rect.right(), rect.bottom()),
-                                            targetBrush);
+                                             targetBrush);
 }
 
 void RkDirect2DGraphicsBackend::setPen(const RkPen &pen)
 {
         strokeWidth = static_cast<FLOAT>(pen.width());
         if (targetBrush)
-			targetBrush->SetColor(D2D1::ColorF(pen.color().rgb(),
-                                                   static_cast<FLOAT>(pen.color().alpha()) / 255));
+                targetBrush->SetColor(D2D1::ColorF(pen.color().rgb(), static_cast<FLOAT>(pen.color().alpha()) / 255));
         FLOAT dashLine[] = {12.0f, 8.0f};
         FLOAT dotLine[] = {1.0f, 2.0f};
 

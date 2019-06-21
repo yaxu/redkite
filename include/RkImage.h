@@ -69,6 +69,7 @@ class RK_EXPORT RkImage : public RkCanvas {
          }
         void fill(const RkColor &color);
         std::shared_ptr<RkCanvasInfo> getCanvasInfo() const;
+        RkCanvas::Type type() const;
         unsigned char* data() const;
         std::vector<unsigned char> dataCopy() const;
         Format format() const;

@@ -493,6 +493,11 @@ std::shared_ptr<RkCanvasInfo> RkWidget::getCanvasInfo() const
         return o_ptr->getCanvasInfo();
 }
 
+RkCanvas::Type RkWidget::canvasType() const
+{
+        return RkCanvas::Type::Window;
+}
+
 RkRect RkWidget::rect() const
 {
         return o_ptr->rect();

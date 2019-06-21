@@ -33,14 +33,20 @@
 
 RkPainter::RkPainterImpl::RkPainterImpl(RkPainter* interface, RkCanvas* canvas)
         : inf_ptr{interface}
+        , backendGraphics{nullptr}
+{
+
 #ifdef RK_GRAPHICS_BACKEND_CAIRO
-        , backendGraphics{std::make_unique<RkCairoGraphicsBackend>(canvas)}
+        backendGraphics{std::make_unique<RkCairoGraphicsBackend>(canvas)}
 #elif RK_GRAPHICS_BACKEND_DIRECT2D
-        , backendGraphics{std::make_unique<RkDirect2DGraphicsBackend>(canvas)}
+        if (canvas->type() == RkCanvas::Type::Window)
+                backendGraphics = std::make_unique<RkDirect2DGraphicsBackend>(canvas);
+        else if (canvas->type() == RkCanvas::Type::Image)
+                backendGraphics = std::make_unique<RkGDIImageGraphicsBackend>(canvas);
 #else
 #error No graphics backend defined
 #endif
-{
+
         backendGraphics->setPen(painterPen);
         backendGraphics->setFont(painterFont);
 }

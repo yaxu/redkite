@@ -31,9 +31,14 @@ struct RK_EXPORT RkCanvasInfo;
 
 class RK_EXPORT RkCanvas {
  public:
+        enum class Type:int {
+                Widget = 0,
+                Image = 1,
+        };
         RkCanvas() = default;
         virtual ~RkCanvas() = default;
         virtual std::shared_ptr<RkCanvasInfo> getCanvasInfo() const = 0;
+        virtual Type type() = 0;
 };
 
 #endif // RK_CANVAS_H
