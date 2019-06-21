@@ -26,13 +26,7 @@
 
 #include "RkPainter.h"
 
-#ifdef RK_GRAPHICS_BACKEND_CAIRO
-class RkCairoGraphicsBackend;
-#elif RK_GRAPHICS_BACKEND_DIRECT2D
-class RkDirect2DGraphicsBackend;
-#else
-#error No graphics backend defined
-#endif
+class RkGraphicsBackend;
 
 class RkPainter::RkPainterImpl {
  public:
@@ -56,13 +50,7 @@ class RkPainter::RkPainterImpl {
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkPainter)
-#ifdef RK_GRAPHICS_BACKEND_CAIRO
-        std::unique_ptr<RkCairoGraphicsBackend> backendGraphics;
-#elif RK_GRAPHICS_BACKEND_DIRECT2D
-        std::unique_ptr<RkDirect2DGraphicsBackend> backendGraphics;
-#else
-#error No graphics backend defined
-#endif
+        std::shared_ptr<RkGraphicsBackend> backendGraphics;
         RkPen painterPen;
         RkFont painterFont;
 };

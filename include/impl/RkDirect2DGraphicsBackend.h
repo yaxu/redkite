@@ -50,6 +50,11 @@ class RkDirect2DGraphicsBackend final : public RkGraphicsBackend {
         void translate(const RkPoint &offset);
         void rotate(rk_real angle);
 
+ protected:
+	 void releaseContextResources();
+	 bool validateCanvas(RkCanvas *canvas) const;
+	 bool prepareContext(RkCanvas *canvas);
+
  private:
         ID2D1DeviceContext *deviceContext;
         IDXGISwapChain1 *swapChain;

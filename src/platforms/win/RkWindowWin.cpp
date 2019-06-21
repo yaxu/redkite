@@ -253,21 +253,15 @@ void RkWindowWin::createCanvasInfo()
 
 void RkWindowWin::resizeCanvas()
 {
-	/*if (isWindowCreated() && canvasInfo) {
-		RECT rect;
-		GetClientRect(windowHandle.id, &rect);
-		auto s = D2D1::SizeU(rect.right - rect.left, rect.bottom - rect.top);
-		if (canvasInfo->renderTarget)
-			reinterpret_cast<ID2D1HwndRenderTarget*>(canvasInfo->renderTarget)->Resize(s);
-	}*/
+// No need to be implemented for Direct2D.
 }
 
 void RkWindowWin::freeCanvasInfo()
 {
         if (canvasInfo) {
-                canvasInfo->device2D->Release();
-                canvasInfo->dxgiDevice->Release();
-                canvasInfo->device3D->Release();
+                canvasInfo->direct2DInfo.device2D->Release();
+                canvasInfo->direct2DInfo.dxgiDevice->Release();
+                canvasInfo->direct2DInfo.device3D->Release();
                 canvasInfo = nullptr;
         }
 }

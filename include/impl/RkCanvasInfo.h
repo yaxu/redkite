@@ -47,7 +47,7 @@ struct RkDirect2DDeviceInfo {
 
 union RkCanvasInfo
 {
-        RkDirect3DDeviceInfo direct2DInfo;
+        RkDirect2DDeviceInfo direct2DInfo;
 };
 #else
 #error No graphics backend defined

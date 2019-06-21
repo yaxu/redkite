@@ -21,72 +21,73 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "RkGDIGraphicsBackend.h"
+#include "RkGDIImageGraphicsBackend.h"
 #include "RkCanvas.h"
 #include "RkCanvasInfo.h"
 #include "RkLog.h"
 #include "RkPlatform.h"
 
-RkGDIGraphicsBackend::RkGDIGraphicsBackend(RkCanvas *canvas)
+RkGDIImageGraphicsBackend::RkGDIImageGraphicsBackend(RkCanvas *canvas)
 {
 }
 
-RkGDIGraphicsBackend::~RkGDIGraphicsBackend()
-}
-
-void RkGDIGraphicsBackend::drawText(const std::string &text, int x, int y)
+RkGDIImageGraphicsBackend::~RkGDIImageGraphicsBackend()
 {
 }
 
-void RkGDIGraphicsBackend::drawImage(const std::string &file, int x, int y)
+void RkGDIImageGraphicsBackend::drawText(const std::string &text, int x, int y)
 {
 }
 
-void RkGDIGraphicsBackend::drawImage(const RkImage &image, int x, int y)
+void RkGDIImageGraphicsBackend::drawImage(const std::string &file, int x, int y)
 {
 }
 
-void RkGDIGraphicsBackend::drawEllipse(const RkPoint& p, int width, int height)
+void RkGDIImageGraphicsBackend::drawImage(const RkImage &image, int x, int y)
 {
 }
 
-void RkGDIGraphicsBackend::drawLine(const RkPoint &p1, const RkPoint &p2)
+void RkGDIImageGraphicsBackend::drawEllipse(const RkPoint& p, int width, int height)
 {
 }
 
-void RkGDIGraphicsBackend::drawRect(const RkRect &rect)
+void RkGDIImageGraphicsBackend::drawLine(const RkPoint &p1, const RkPoint &p2)
 {
 }
 
-void RkGDIGraphicsBackend::drawPolyLine(const std::vector<RkPoint> &points)
+void RkGDIImageGraphicsBackend::drawRect(const RkRect &rect)
 {
 }
 
-void RkGDIGraphicsBackend::fillRect(const RkRect &rect, const RkColor &color)
+void RkGDIImageGraphicsBackend::drawPolyLine(const std::vector<RkPoint> &points)
 {
 }
 
-void RkGDIGraphicsBackend::setPen(const RkPen &pen)
+void RkGDIImageGraphicsBackend::fillRect(const RkRect &rect, const RkColor &color)
 {
 }
 
-void RkGDIGraphicsBackend::setFont(const RkFont &font)
+void RkGDIImageGraphicsBackend::setPen(const RkPen &pen)
+{
+}
+
+void RkGDIImageGraphicsBackend::setFont(const RkFont &font)
 {
         // TODO: implement
 }
 
-int RkGDIGraphicsBackend::getTextWidth(const std::string &text) const
+int RkGDIImageGraphicsBackend::getTextWidth(const std::string &text) const
 {
 	// TODO: impement
 	return 0;
 }
 
-void RkGDIGraphicsBackend::translate(const RkPoint &offset)
+void RkGDIImageGraphicsBackend::translate(const RkPoint &offset)
 {
         // TODO: impement
 }
 
-void RkGDIGraphicsBackend::rotate(rk_real angle)
+void RkGDIImageGraphicsBackend::rotate(rk_real angle)
 {
         // TODO: impement
 }

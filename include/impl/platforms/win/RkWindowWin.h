@@ -31,7 +31,7 @@
 #include "RkColor.h"
 
 class RkEventQueue;
-struct RkCanvasInfo;
+union RkCanvasInfo;
 
 // TODO: define a common interface for window platform
 class RkWindowWin {

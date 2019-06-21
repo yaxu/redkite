@@ -104,3 +104,8 @@ bool RkImage::isNull() const
 {
         return o_ptr->isNull();
 }
+
+RkCanvas::Type RkImage::canvasType() const
+{
+	return RkCanvas::Type::Image;
+}

@@ -130,10 +130,13 @@ if (RK_GRAPHICS_BACKEND MATCHES Cairo)
 elseif (RK_GRAPHICS_BACKEND MATCHES Direct2D)
   set(RK_GRAPHICS_BACKEND_HEADRES
     ${RK_INCLUDE_PATH}/impl/RkDirect2DGraphicsBackend.h
-    ${RK_INCLUDE_PATH}/impl/RkDirect2DImageBackendCanvas.h)
+	${RK_INCLUDE_PATH}/impl/RkGDIImageGraphicsBackend.h
+    ${RK_INCLUDE_PATH}/impl/RkGDIImageBackendCanvas.h)
   set(RK_GRAPHICS_BACKEND_SOURCES
     ${RK_SRC_PATH}/RkDirect2DGraphicsBackend.cpp
-    ${RK_SRC_PATH}/RkDirect2DImageBackendCanvas.cpp)
+	${RK_SRC_PATH}/RkGDIImageGraphicsBackend.cpp
+    ${RK_SRC_PATH}/RkGDIImageBackendCanvas.cpp)
+
 else()
   message(FATAL_ERROR "no graphics backed was defined")
 endif()

@@ -26,7 +26,7 @@
 #ifdef RK_GRAPHICS_BACKEND_CAIRO
 class RkCairoImageBackendCanvas;
 #elif RK_GRAPHICS_BACKEND_DIRECT2D
-class RkDirect2DImageBackendCanvas;
+class RkGDIImageBackendCanvas;
 #else
 #error No graphics backend defined.
 #endif
@@ -58,7 +58,7 @@ class RkImage::RkImageImpl {
 #ifdef RK_GRAPHICS_CAIRO_BACKEND
         std::unique_ptr<RkCairoImageBackendCanvas> imageBackendCanvas;
 #elif RK_GRAPHICS_BACKEND_DIRECT2D
-        std::unique_ptr<RkDirect2DImageBackendCanvas> imageBackendCanvas;
+        std::unique_ptr<RkGDIImageBackendCanvas> imageBackendCanvas;
 #else
 #error No graphics backend defined
 #endif

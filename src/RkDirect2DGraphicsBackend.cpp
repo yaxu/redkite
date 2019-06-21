@@ -31,15 +31,15 @@
 
 RkDirect2DGraphicsBackend::RkDirect2DGraphicsBackend(RkCanvas *canvas)
         : deviceContext{nullptr}
-        , swapChain{nullptr};
-        , d2dTargetBitmap{nullptr};
+        , swapChain{nullptr}
+        , d2dTargetBitmap{nullptr}
         , targetBrush{nullptr}
         , strokeWidth{1.0f}
         , strokeStyle{nullptr}
 {
-        if (validateCanvase(canvas)) {
-                auto res = prepareContext();
-                if (!res) {
+        if (validateCanvas(canvas)) {
+                auto res = prepareContext(canvas);
+                if (res) {
                         auto hr = deviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &targetBrush);
                         if (!SUCCEEDED(hr)) {
                                 RK_LOG_ERROR("can't create brush");
@@ -52,21 +52,57 @@ RkDirect2DGraphicsBackend::RkDirect2DGraphicsBackend(RkCanvas *canvas)
         }
 }
 
-bool RkDirect2DGraphicsBackend::validateCanvase(RkCanvas *canvas)
+
+RkDirect2DGraphicsBackend::~RkDirect2DGraphicsBackend()
 {
-        if (canvas->type() != RkCanvas::Type::Window) {
+	if (deviceContext) {
+		deviceContext->EndDraw();
+		if (swapChain)
+			swapChain->Present(1, 0);
+		releaseContextResources();
+	}
+}
+
+void RkDirect2DGraphicsBackend::releaseContextResources()
+{
+	if (swapChain) {
+		swapChain->Release();
+		swapChain = nullptr;
+	}
+	if (d2dTargetBitmap) {
+		d2dTargetBitmap->Release();
+		d2dTargetBitmap = nullptr;
+	}
+	if (deviceContext) {
+		deviceContext->Release();
+		deviceContext = nullptr;
+	}
+	if (targetBrush) {
+		targetBrush->Release();
+		targetBrush = nullptr;
+	}
+
+	if (strokeStyle) {
+		strokeStyle->Release();
+		strokeStyle = nullptr;
+	}
+}
+
+bool RkDirect2DGraphicsBackend::validateCanvas(RkCanvas *canvas) const
+{
+        if (canvas->canvasType() != RkCanvas::Type::Window) {
                 RK_LOG_ERROR("unsuported canvase");
                 return false;
-        } else if (!canvas->getCanvasInfo() || !canvas->getCanvasInfo()->device2DInfo.device2D) {
+        } else if (!canvas->getCanvasInfo() || !canvas->getCanvasInfo()->direct2DInfo.device2D) {
                 RK_LOG_ERROR("canvas is not ready for drawing");
                 return false;
         }
         return true;
 }
 
-bool RkDirect2DGraphicsBackend::prepareContext()
+bool RkDirect2DGraphicsBackend::prepareContext(RkCanvas *canvas)
 {
-        auto deviceInfo = canvas->getCanvasInfo()->device2DInfo;
+        auto deviceInfo = canvas->getCanvasInfo()->direct2DInfo;
         auto hr = deviceInfo.device2D->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, &deviceContext);
         if (!SUCCEEDED(hr)) {
                 RK_LOG_ERROR("can't create device context");
@@ -119,7 +155,7 @@ bool RkDirect2DGraphicsBackend::prepareContext()
         if (!backBuffer) {
                 RK_LOG_ERROR("can't get texture back buffer");
                 releaseContextResources();
-                return;
+                return false;
         }
 
         D2D1_PIXEL_FORMAT pixelFormat = {DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_IGNORE};
@@ -140,41 +176,6 @@ bool RkDirect2DGraphicsBackend::prepareContext()
 
         deviceContext->SetTarget(d2dTargetBitmap);
         return true;
-}
-
-RkDirect2DGraphicsBackend::~RkDirect2DGraphicsBackend()
-{
-	if (deviceContext) {
-		deviceContext->EndDraw();
-                if (swapChain)
-                        swapChain->Present(1, 0);
-                releaseContextResources();
-	}
-}
-
-void RkDirect2DGraphicsBackend::releaseContextResources()
-{
-        if (swapChain) {
-                swapChain->Release();
-                swapChain = nullptr;
-        }
-        if (d2dTargetBitmap) {
-                d2dTargetBitmap->Release();
-                d2dTargetBitmap = nullptr;
-        }
-        if (deviceContext) {
-                deviceContext->Release();
-                deviceContext = nullptr;
-        }
-        if (targetBrush) {
-		targetBrush->Release();
-                targetBrush = nullptr;
-        }
-
-        if (strokeStyle) {
-                strokeStyle->Release();
-                strokeStyle = nullptr;
-        }
 }
 
 void RkDirect2DGraphicsBackend::drawText(const std::string &text, int x, int y)

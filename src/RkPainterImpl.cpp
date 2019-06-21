@@ -22,11 +22,12 @@
  */
 
 #include "RkPainterImpl.h"
+#include "RkGraphicsBackend.h"
 #ifdef RK_GRAPHICS_BACKEND_CAIRO
 #include "RkCairoGraphicsBackend.h"
 #elif RK_GRAPHICS_BACKEND_DIRECT2D
 #include "RkDirect2DGraphicsBackend.h"
-#include "RGDIImageGraphicsBackend.h"
+#include "RkGDIImageGraphicsBackend.h"
 #else
 #error No graphics backend defined
 #endif
@@ -40,10 +41,10 @@ RkPainter::RkPainterImpl::RkPainterImpl(RkPainter* interface, RkCanvas* canvas)
 #ifdef RK_GRAPHICS_BACKEND_CAIRO
         backendGraphics{std::make_unique<RkCairoGraphicsBackend>(canvas)}
 #elif RK_GRAPHICS_BACKEND_DIRECT2D
-        if (canvas->type() == RkCanvas::Type::Window)
-                backendGraphics = std::make_unique<RkDirect2DGraphicsBackend>(canvas);
-        else if (canvas->type() == RkCanvas::Type::Image)
-                backendGraphics = std::make_unique<RkGDIImageGraphicsBackend>(canvas);
+        if (canvas->canvasType() == RkCanvas::Type::Window)
+                backendGraphics = std::dynamic_pointer_cast<RkGraphicsBackend>(std::make_shared<RkDirect2DGraphicsBackend>(canvas));
+        else if (canvas->canvasType() == RkCanvas::Type::Image)
+                backendGraphics = std::dynamic_pointer_cast<RkGraphicsBackend>(std::make_shared<RkGDIImageGraphicsBackend>(canvas));
 #else
 #error No graphics backend defined
 #endif
