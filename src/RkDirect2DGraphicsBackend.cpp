@@ -57,22 +57,22 @@ bool RkDirect2DGraphicsBackend::validateCanvase(RkCanvas *canvas)
         if (canvas->type() != RkCanvas::Type::Window) {
                 RK_LOG_ERROR("unsuported canvase");
                 return false;
-        } else if (!canvas->getCanvasInfo() || !canvas->getCanvasInfo()->device2D) {
+        } else if (!canvas->getCanvasInfo() || !canvas->getCanvasInfo()->device2DInfo.device2D) {
                 RK_LOG_ERROR("canvas is not ready for drawing");
                 return false;
         }
-        
         return true;
 }
 
 bool RkDirect2DGraphicsBackend::prepareContext()
 {
-        auto hr = canvas->getCanvasInfo()->device2D->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, &deviceContext);
+        auto deviceInfo = canvas->getCanvasInfo()->device2DInfo;
+        auto hr = deviceInfo.device2D->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, &deviceContext);
         if (!SUCCEEDED(hr)) {
                 RK_LOG_ERROR("can't create device context");
                 return false;
         }
-                
+
         DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {0};
         swapChainDesc.Width = 0;
         swapChainDesc.Height = 0;
@@ -85,9 +85,9 @@ bool RkDirect2DGraphicsBackend::prepareContext()
         swapChainDesc.Scaling = DXGI_SCALING_NONE;
         swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
         swapChainDesc.Flags = 0;
-                        
+
         IDXGIAdapter *dxgiAdapter = nullptr;
-        canvas->getCanvasInfo()->dxgiDevice->GetAdapter(&dxgiAdapter);
+        deviceInfo.dxgiDevice->GetAdapter(&dxgiAdapter);
         if (!dxgiAdapter) {
                 RK_LOG_ERROR("can't get DXGI adaptor");
                 releaseContextResources();
@@ -101,8 +101,8 @@ bool RkDirect2DGraphicsBackend::prepareContext()
                 releaseContextResources();
                 return false;
         }
-        hr = dxgiFactory->CreateSwapChainForHwnd(canvas->getCanvasInfo()->device3D,
-                                                 canvas->getCanvasInfo()->window,
+        hr = dxgiFactory->CreateSwapChainForHwnd(deviceInfo.device3D,
+                                                 deviceInfo.window,
                                                  &swapChainDesc,
                                                  nullptr,
                                                  nullptr,
@@ -113,15 +113,14 @@ bool RkDirect2DGraphicsBackend::prepareContext()
                 return false;
         }
 
-        canvas->getCanvasInfo()->dxgiDevice->SetMaximumFrameLatency(1);
-        /*                ID3D11Texture2D *backBuffer= nullptr;
-                          swapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
-                          if (!backBuffer) {
-                          RK_LOG_ERROR("can't get texture back buffer");
-                          swapChain->Release();
-                          deviceContext->Release();
-                          return;
-                          }*/
+        deviceInfo.dxgiDevice->SetMaximumFrameLatency(1);
+        ID3D11Texture2D *backBuffer= nullptr;
+        swapChain->GetBuffer(0, IID_PPV_ARGS(&backBuffer));
+        if (!backBuffer) {
+                RK_LOG_ERROR("can't get texture back buffer");
+                releaseContextResources();
+                return;
+        }
 
         D2D1_PIXEL_FORMAT pixelFormat = {DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_IGNORE};
         auto bitmapProperties = D2D1::BitmapProperties1(D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW, pixelFormat);

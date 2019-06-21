@@ -36,13 +36,18 @@ struct RkCanvasInfo {
 #include <d2d1_1.h>
 #include <d3d11.h>
 #include <dxgi1_2.h>
-struct RkCanvasInfo {
-	HWND window;
-	ID3D11Device* device3D;
-	ID2D1Device* device2D;
-	IDXGIDevice1 *dxgiDevice;
-	RkSize size;
-	ID2D1Bitmap1  *d2dTargetBitmap;
+
+struct RkDirect2DDeviceInfo {
+        HWND window;
+        ID3D11Device* device3D;
+        ID2D1Device* device2D;
+        IDXGIDevice1 *dxgiDevice;
+        ID2D1Bitmap1  *d2dTargetBitmap;
+};
+
+union RkCanvasInfo
+{
+        RkDirect3DDeviceInfo direct2DInfo;
 };
 #else
 #error No graphics backend defined
