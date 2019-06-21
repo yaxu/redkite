@@ -26,6 +26,7 @@
 #include "RkCairoGraphicsBackend.h"
 #elif RK_GRAPHICS_BACKEND_DIRECT2D
 #include "RkDirect2DGraphicsBackend.h"
+#include "RGDIImageGraphicsBackend.h"
 #else
 #error No graphics backend defined
 #endif

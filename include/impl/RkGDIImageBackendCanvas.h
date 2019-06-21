@@ -1,5 +1,5 @@
 /**
- * File name: RkDirect2DImageBackendCanvas.h
+ * File name: RkGDIImageBackendCanvas.h
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)
@@ -26,16 +26,12 @@
 
 #include "RkImage.h"
 
-class ID3D11Device;
-class ID3D11DeviceContext;
-class ID3D11Texture2D;
-
-class RkDirect2DImageBackendCanvas {
+class RkGDIImageBackendCanvas {
  public:
-        RkDirect2DImageBackendCanvas(const RkSize &size,
-                                  RkImage::Format format,
-                                  const unsigned char *data);
-        ~RkDirect2DImageBackendCanvas();
+        RkGDIImageBackendCanvas(const RkSize &size,
+                                RkImage::Format format,
+                                const unsigned char *data);
+        ~RkGDIImageBackendCanvas();
         const RkSize& size() const;
         bool isNull() const;
         unsigned char* data();
@@ -50,9 +46,6 @@ class RkDirect2DImageBackendCanvas {
         std::shared_ptr<RkCanvasInfo> canvasInfo;
         std::vector<unsigned char> imageData;
         RkSize imageSize;
-        ID3D11Device *device3D;
-        ID3D11DeviceContext *context3D;
-        ID3D11Texture2D *offscreenTexture;
 };
 
 #endif // RK_DIRECT2D_IMAGE_BACKEND_CANVAS_H
