@@ -28,9 +28,6 @@
 #include "RkLog.h"
 #include "RkEvent.h"
 
-#pragma comment(lib, "d2d1")
-#pragma comment(lib, "d3d11")
-
 class  PainterExample: public RkWidget {
   public:
         PainterExample(RkMain *app)

@@ -2,9 +2,6 @@
 #include "RkWidget.h"
 #include "RkLog.h"
 
-#pragma comment(lib, "d2d1")
-#pragma comment(lib, "d3d11")
-
 int main(int arc, char **argv)
 {
 	RK_LOG_INFO("called");

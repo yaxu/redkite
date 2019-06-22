@@ -25,9 +25,6 @@
 #include "RkLabel.h"
 #include "RkLog.h"
 
-#pragma comment(lib, "d2d1")
-#pragma comment(lib, "d3d11")
-
 /**
  * Generated with png2c
  * File name: label.png
