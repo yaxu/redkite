@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.7)
 
-project(redkite VERSION 0.5.2)
+project(redkite VERSION 0.9.0)
 
 # Temporary, to remove
 set(CMAKE_SYSTEM_NAME Windows)
@@ -47,7 +47,7 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set (CMAKE_INSTALL_PREFIX "/usr/local" CACHE PATH "default install path" FORCE)
 endif()
 
-option(ENABLE_EXAMPLES    "Build examples" ON)
+option(ENABLE_EXAMPLES    "Build examples" OFF)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   message(STATUS "enable logging")
@@ -197,11 +197,6 @@ add_definitions(-fPIC)
 
 include_directories(${RK_INCLUDE_PATH})
 include_directories(${RK_INCLUDE_PATH}/impl)
-#include_directories(../cairo_x86-windows/include)
-#link_directories(../cairo_x86-windows/lib)
-include_directories(../cairo_x64-windows/include)
-link_directories(../cairo_x64-windows/lib)
-
 
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
   include_directories(${RK_INCLUDE_PATH}/impl/platforms/win)
@@ -231,7 +226,7 @@ else()
   install(FILES ${RK_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/redkite)
 endif()
 
-#add_subdirectory(tools)
+add_subdirectory(tools)
 if (ENABLE_EXAMPLES)
   add_subdirectory(examples)
 endif (ENABLE_EXAMPLES)

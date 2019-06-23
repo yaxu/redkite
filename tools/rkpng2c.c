@@ -26,7 +26,7 @@
  * It converts a PNG image to C array enconded in ARGB32 format.
  */
 
-#define RK_VERSION_STR "1.0.0"
+#define RKPNG2C_VERSION_STR "1.0.1"
 
 #include <stdio.h>
 #include <libgen.h>
@@ -36,7 +36,7 @@ int main(int argc , char **argv)
 {
         if (argc != 4) {
                 printf("Redkite GUI toolkit\n");
-                printf("rkpng2c version %s\n", RK_VERSION_STR);
+                printf("rkpng2c version %s\n", RKPNG2C_VERSION_STR);
                 printf("Converts a PNG to C array encoded in ARGB32\n");
                 printf("Copyright (C) 2019 Iurie Nistor (http://quamplex.com/redkite)\n");
                 printf("License GPLv2\n");
@@ -58,7 +58,7 @@ int main(int argc , char **argv)
 
         const unsigned char *buff = cairo_image_surface_get_data(image);
         fprintf(fptr, "/**\n"
-                      " * Generated with png2c\n"
+                      " * Generated with rkpng2c\n"
                       " * File name: %s\n"
                       " * Image size name: %dx%d\n"
                       " */\n"
