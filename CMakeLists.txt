@@ -47,7 +47,7 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set (CMAKE_INSTALL_PREFIX "/usr/local" CACHE PATH "default install path" FORCE)
 endif()
 
-option(ENABLE_EXAMPLES    "Build examples" OFF)
+option(ENABLE_EXAMPLES    "Build examples" ON)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   message(STATUS "enable logging")

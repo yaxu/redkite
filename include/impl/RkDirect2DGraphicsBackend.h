@@ -31,6 +31,8 @@ struct ID2D1SolidColorBrush;
 struct ID2D1StrokeStyle;
 struct IDXGISwapChain1;
 struct ID2D1Bitmap1;
+struct IDXGIAdapter;
+struct IDXGIFactory2;
 
 class RkDirect2DGraphicsBackend final : public RkGraphicsBackend {
  public:
@@ -60,6 +62,8 @@ class RkDirect2DGraphicsBackend final : public RkGraphicsBackend {
         IDXGISwapChain1 *swapChain;
         ID2D1Bitmap1  *d2dTargetBitmap;
         ID2D1SolidColorBrush *targetBrush;
+		IDXGIAdapter *dxgiAdapter;
+		IDXGIFactory2 *dxgiFactory;
         float strokeWidth;
         ID2D1StrokeStyle *strokeStyle;
 };

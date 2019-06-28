@@ -34,6 +34,8 @@ RkDirect2DGraphicsBackend::RkDirect2DGraphicsBackend(RkCanvas *canvas)
         , swapChain{nullptr}
         , d2dTargetBitmap{nullptr}
         , targetBrush{nullptr}
+		, dxgiAdapter{nullptr}
+		, dxgiFactory{nullptr}
         , strokeWidth{1.0f}
         , strokeStyle{nullptr}
 {
@@ -55,6 +57,7 @@ RkDirect2DGraphicsBackend::RkDirect2DGraphicsBackend(RkCanvas *canvas)
 
 RkDirect2DGraphicsBackend::~RkDirect2DGraphicsBackend()
 {
+	RK_LOG_INFO("called");
 	if (deviceContext) {
 		deviceContext->EndDraw();
 		if (swapChain)
@@ -65,6 +68,17 @@ RkDirect2DGraphicsBackend::~RkDirect2DGraphicsBackend()
 
 void RkDirect2DGraphicsBackend::releaseContextResources()
 {
+    RK_LOG_INFO("called");
+	if (dxgiFactory) {
+        dxgiFactory->Release();
+        dxgiFactory= nullptr;
+	}
+
+	if (dxgiAdapter) {
+            dxgiAdapter->Release();
+            dxgiAdapter = nullptr;
+	}
+	
 	if (swapChain) {
 		swapChain->Release();
 		swapChain = nullptr;
@@ -122,7 +136,6 @@ bool RkDirect2DGraphicsBackend::prepareContext(RkCanvas *canvas)
         swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
         swapChainDesc.Flags = 0;
 
-        IDXGIAdapter *dxgiAdapter = nullptr;
         deviceInfo.dxgiDevice->GetAdapter(&dxgiAdapter);
         if (!dxgiAdapter) {
                 RK_LOG_ERROR("can't get DXGI adaptor");
@@ -130,7 +143,6 @@ bool RkDirect2DGraphicsBackend::prepareContext(RkCanvas *canvas)
                 return false;
         }
 
-        IDXGIFactory2 *dxgiFactory = nullptr;
         dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory));
         if (!dxgiFactory) {
                 RK_LOG_ERROR("can't get DXGI factory");
@@ -144,7 +156,7 @@ bool RkDirect2DGraphicsBackend::prepareContext(RkCanvas *canvas)
                                                  nullptr,
                                                  &swapChain);
         if (!SUCCEEDED(hr)) {
-                RK_LOG_ERROR("can't get DXGI factory");
+                RK_LOG_ERROR("can't create swap chian");
                 releaseContextResources();
                 return false;
         }
