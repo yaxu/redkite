@@ -1,4 +1,4 @@
-/**
+]/**
  * File name: RkWidget.cpp
  * Project: Redkite (A small GUI toolkit)
  *
@@ -563,10 +563,10 @@ Rk::PointerShape RkWidget::pointerShape() const
 
 bool RkWidget::flickering() const
 {
-#ifdef RK_GRAPHICS_BACKEND_DIRECT2D	
-		return false;
+#ifdef RK_GRAPHICS_BACKEND_DIRECT2D
+        return false;
 #else
-		return true;
+        return true;
 #endif
 }
 

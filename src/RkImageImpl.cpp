@@ -40,7 +40,8 @@ RkImage::RkImageImpl::RkImageImpl(RkImage *interface,
 #ifdef RK_GRAPHICS_BACKEND_CAIRO
         , imageBackendCanvas{std::make_unique<RkCairoImageBackendCanvas>(RkSize(width, height), imageFormat, data)}
 #elif RK_GRAPHICS_BACKEND_DIRECT2D
-          // USE GDI+ for in memory rendering instead of Direct2D. Direct2D is only for Windows.
+          // USE GDI+ for in memory rendering instead of Direct2D.
+          // Direct2D is only for Windows.
         , imageBackendCanvas{std::make_unique<RkGDIImageBackendCanvas>(RkSize(width, height), imageFormat, data)}
 #else
 #error No graphics backend defined

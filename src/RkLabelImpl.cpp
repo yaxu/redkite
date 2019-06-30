@@ -55,42 +55,42 @@ void RkLabel::RkLabelImpl::setImage(const RkImage &image)
 
 void RkLabel::RkLabelImpl::drawLabel()
 {
-		if (labelText.empty() && labelImage.isNull())
-			return;
-		RK_LOG_INFO("HERE");
-		if (inf_ptr->flickering()) {
-			drawWithBufferImage();
-		} else {
-			RkPainter painter(inf_ptr);
-			if (!labelImage.isNull()) {
-				painter.drawImage(labelImage, 0, 0);
-			}
-			if (!labelText.empty()) {
-					auto pen = painter.pen();
-					pen.setColor(textColor());
-					painter.setPen(pen);
-					painter.setFont(font());
-					painter.drawText(inf_ptr->rect(), labelText);
-			}
-		}
+        if (labelText.empty() && labelImage.isNull())
+                return;
+
+        if (inf_ptr->flickering()) {
+                drawWithBufferImage();
+        } else {
+                RkPainter painter(inf_ptr);
+                if (!labelImage.isNull()) {
+                        painter.drawImage(labelImage, 0, 0);
+                }
+                if (!labelText.empty()) {
+                        auto pen = painter.pen();
+                        pen.setColor(textColor());
+                        painter.setPen(pen);
+                        painter.setFont(font());
+                        painter.drawText(inf_ptr->rect(), labelText);
+                }
+        }
 }
 
 void RkLabel::RkLabelImpl::drawWithBufferImage()
 {
-		RkImage img(size());
-		{
-			RkPainter painter(&img);
-			if (!labelImage.isNull())
-					painter.drawImage(labelImage, 0, 0);
-			if (!labelText.empty()) {
-					auto pen = painter.pen();
-					pen.setColor(textColor());
-					painter.setPen(pen);
-					painter.setFont(font());
-					painter.drawText(inf_ptr->rect(), labelText);
-			}
-		}
-		RkPainter paint(inf_ptr);
-		paint.drawImage(img, 0, 0);
+        RkImage img(size());
+        {
+                RkPainter painter(&img);
+                if (!labelImage.isNull())
+                        painter.drawImage(labelImage, 0, 0);
+                if (!labelText.empty()) {
+                        auto pen = painter.pen();
+                        pen.setColor(textColor());
+                        painter.setPen(pen);
+                        painter.setFont(font());
+                        painter.drawText(inf_ptr->rect(), labelText);
+                }
+        }
+        RkPainter paint(inf_ptr);
+        paint.drawImage(img, 0, 0);
 }
 

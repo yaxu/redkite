@@ -58,7 +58,6 @@ RkDirect2DGraphicsBackend::RkDirect2DGraphicsBackend(RkCanvas *canvas)
 
 RkDirect2DGraphicsBackend::~RkDirect2DGraphicsBackend()
 {
-	RK_LOG_INFO("called");
 	if (deviceContext) {
 		deviceContext->EndDraw();
 		if (swapChain)
@@ -69,28 +68,27 @@ RkDirect2DGraphicsBackend::~RkDirect2DGraphicsBackend()
 
 void RkDirect2DGraphicsBackend::releaseContextResources()
 {
-    RK_LOG_INFO("called");
 	if (dxgiFactory) {
-        dxgiFactory->Release();
-        dxgiFactory= nullptr;
+                dxgiFactory->Release();
+                dxgiFactory= nullptr;
 	}
 
 	if (dxgiAdapter) {
-            dxgiAdapter->Release();
-            dxgiAdapter = nullptr;
+                dxgiAdapter->Release();
+                dxgiAdapter = nullptr;
 	}
-	
+
 	if (dxgiBackBuffer)
-	{
-            dxgiBackBuffer->Release();
-            dxgiBackBuffer = nullptr;
-	}
-	
+                {
+                        dxgiBackBuffer->Release();
+                        dxgiBackBuffer = nullptr;
+                }
+
 	if (backBuffer) {
-            backBuffer->Release();
-            backBuffer = nullptr;
+                backBuffer->Release();
+                backBuffer = nullptr;
 	}
-	
+
 	if (swapChain) {
 		swapChain->Release();
 		swapChain = nullptr;
@@ -187,7 +185,7 @@ bool RkDirect2DGraphicsBackend::prepareContext(RkCanvas *canvas)
                 releaseContextResources();
                 return false;
         }
-		
+
         D2D1_PIXEL_FORMAT pixelFormat = {DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED};
         auto bitmapProperties = D2D1::BitmapProperties1(D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW, pixelFormat);
         hr = deviceContext->CreateBitmapFromDxgiSurface(dxgiBackBuffer, &bitmapProperties, &d2dTargetBitmap);
@@ -197,26 +195,14 @@ bool RkDirect2DGraphicsBackend::prepareContext(RkCanvas *canvas)
                 return false;
         }
 
-        
         deviceContext->SetTarget(d2dTargetBitmap);
-		deviceContext->BeginDraw();
+        deviceContext->BeginDraw();
         return true;
 }
 
 void RkDirect2DGraphicsBackend::drawText(const std::string &text, int x, int y)
 {
         // TODO: impement
-        /*        if (deviceContext) {
-                deviceContext->DrawText(
-                         static_cast<WCHAR*>(text.c_str()),
-                         text.size() / sizeof(WCHAR),
-                         IDWriteTextFormat      *textFormat,
-                         D2D1::RectF(x, y, textFormat->FontSize())
-                         targetBrush,
-                         D2D1_DRAW_TEXT_OPTIONS_NONE,
-                           DWRITE_MEASURING_MODE  measuringMode
-                         );
-                         }*/
 }
 
 void RkDirect2DGraphicsBackend::drawImage(const std::string &file, int x, int y)
@@ -231,20 +217,20 @@ void RkDirect2DGraphicsBackend::drawImage(const RkImage &image, int x, int y)
 	auto bitmapProperties = D2D1::BitmapProperties1(D2D1_BITMAP_OPTIONS_TARGET, pixelFormat);
 	ID2D1Bitmap1 *bitmap;
 	auto hr = deviceContext->CreateBitmap(size,
-										image.dataCopy().data(),
-										image.width() * 4,
-										bitmapProperties,
-										&bitmap);
-    if (!SUCCEEDED(hr)) {
+                                              image.dataCopy().data(),
+                                              image.width() * 4,
+                                              bitmapProperties,
+                                              &bitmap);
+        if (!SUCCEEDED(hr)) {
                 RK_LOG_ERROR("can't create bitmap");
                 return;
-    }
+        }
 
-    auto rect = D2D1::RectF(static_cast<FLOAT>(x),
+        auto rect = D2D1::RectF(static_cast<FLOAT>(x),
                          	static_cast<FLOAT>(y),
                          	static_cast<FLOAT>(image.width()),
- 							static_cast<FLOAT>(image.height()));
-    deviceContext->DrawBitmap(bitmap, rect, 1.0f, D2D1_INTERPOLATION_MODE_LINEAR, &rect);
+                                static_cast<FLOAT>(image.height()));
+        deviceContext->DrawBitmap(bitmap, rect, 1.0f, D2D1_INTERPOLATION_MODE_LINEAR, &rect);
 	bitmap->Release();
 	bitmap = nullptr;
 }
@@ -265,9 +251,9 @@ void RkDirect2DGraphicsBackend::drawLine(const RkPoint &p1, const RkPoint &p2)
                                                       static_cast<FLOAT>(p1.y()) + 0.5f),
                                         D2D1::Point2F(static_cast<FLOAT>(p2.x()) + 0.5f,
                                                       static_cast<FLOAT>(p2.y()) + 0.5f),
-                                       targetBrush,
-                                       strokeWidth,
-                                       strokeStyle);
+                                        targetBrush,
+                                        strokeWidth,
+                                        strokeStyle);
 	}
 }
 
