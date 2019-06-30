@@ -10,16 +10,10 @@ set(RK_EXAMPLES_SOURCES_TIMER ${RK_EXAMPLES_PATH}/timer.cpp)
 set(RK_EXAMPLES_SOURCES_KEYEVENT ${RK_EXAMPLES_PATH}/keyevent.cpp)
 set(RK_EXAMPLES_SOURCES_LINEEDIT ${RK_EXAMPLES_PATH}/lineedit.cpp)
 
-if (MSVC)
-  set(RK_EXEC_OPTION WIN32)
-else()
-  set(RK_EXEC_OPTION "")
-endif()
-
 if (RK_GRAPHICS_BACKEND MATCHES Cairo)
 set(RK_GRAPHICS_BACKEND_LINK_LIBS "-lcairo")
 elseif(RK_GRAPHICS_BACKEND MATCHES Direct2D)
-set(RK_GRAPHICS_BACKEND_LINK_LIBS "-ld2d1")
+set(CMAKE_CXX_FLAGS "-ld2d1")
 endif()
 
 add_executable(hello ${RK_EXEC_OPTION}
@@ -63,10 +57,9 @@ endif()
 
 # ------------ Label Example -------
 
-add_executable(label ${RK_EXEC_OPTION}
+add_executable(label
   ${RK_HEADERS}
   ${RK_EXAMPLES_SOURCES_LABEL})
-
 add_dependencies(label redkite)
 target_link_libraries(label redkite)
 if (CMAKE_SYSTEM_NAME MATCHES Windows)
@@ -88,8 +81,7 @@ endif()
 #target_link_libraries(widget_colors ${RK_GRAPHICS_BACKEND_LINK_LIBS})
 
 # ------------ Painter Exmaple -------
-
-add_executable(painter ${RK_EXEC_OPTION}
+add_executable(painter
   ${RK_HEADERS}
   ${RK_EXAMPLES_SOURCES_PAINTER})
 

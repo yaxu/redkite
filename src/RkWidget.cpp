@@ -561,3 +561,12 @@ Rk::PointerShape RkWidget::pointerShape() const
         return o_ptr->pointerShape();
 }
 
+bool RkWidget::flickering() const
+{
+#ifdef RK_GRAPHICS_BACKEND_DIRECT2D	
+		return false;
+#else
+		return true;
+#endif
+}
+

@@ -37,6 +37,12 @@ class  PainterExample: public RkWidget {
         {
                 RK_LOG_INFO("called");
                 setBackgroundColor(80, 80, 80);
+				auto widget = new RkWidget(this);
+				widget->setBorderWidth(2);
+				widget->setBackgroundColor({0, 255, 0});
+				widget->setSize({50, 50});
+				widget->setPosition(10, 10);
+				widget->show();
         }
 
         ~PainterExample() = default;

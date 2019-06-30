@@ -40,6 +40,9 @@ class RkLabel::RkLabelImpl : public RkWidget::RkWidgetImpl {
     void setImage(const std::string &file);
     void setImage(const RkImage &image);
     void drawLabel();
+	
+ protected:
+    void drawWithBufferImage();
 
  private:
     RK_DECALRE_INTERFACE_PTR(RkLabel)

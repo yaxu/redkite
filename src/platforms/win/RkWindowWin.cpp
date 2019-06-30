@@ -30,7 +30,7 @@ RkWindowWin::RkWindowWin(const std::shared_ptr<RkNativeWindowInfo> &parent, Rk::
         , windowHandle{{nullptr}}
         , windowPosition{0, 0}
         , windowSize{250, 250}
-        , winBorderWidth{1}
+        , winBorderWidth{0}
         , winBorderColor{255, 255, 255}
         , backgroundColor{255, 255, 255}
         , eventQueue{nullptr}
@@ -44,7 +44,7 @@ RkWindowWin::RkWindowWin(const RkNativeWindowInfo &parent, Rk::WindowFlags flags
         , windowHandle{{nullptr}}
         , windowPosition{0, 0}
         , windowSize{250, 250}
-        , winBorderWidth{1}
+        , winBorderWidth{0}
         , winBorderColor{255, 255, 255}
         , backgroundColor{255, 255, 255}
         , eventQueue{nullptr}
@@ -245,6 +245,7 @@ void RkWindowWin::createCanvasInfo()
                hr = rk_direct2d_factory()->CreateDevice(device2DInfo->dxgiDevice, &device2DInfo->device2D);
                if (!SUCCEEDED(hr)) {
                        RK_LOG_ERROR("can't create 2D device");
+					   device2DInfo->dxgiDevice->Release();
                        device2DInfo->device3D->Release();
                        canvasInfo = nullptr;
                }

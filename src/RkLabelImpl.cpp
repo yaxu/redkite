@@ -55,48 +55,42 @@ void RkLabel::RkLabelImpl::setImage(const RkImage &image)
 
 void RkLabel::RkLabelImpl::drawLabel()
 {
-	if (labelText.empty() && labelImage.isNull())
-		return;
+		if (labelText.empty() && labelImage.isNull())
+			return;
+		RK_LOG_INFO("HERE");
+		if (inf_ptr->flickering()) {
+			drawWithBufferImage();
+		} else {
+			RkPainter painter(inf_ptr);
+			if (!labelImage.isNull()) {
+				painter.drawImage(labelImage, 0, 0);
+			}
+			if (!labelText.empty()) {
+					auto pen = painter.pen();
+					pen.setColor(textColor());
+					painter.setPen(pen);
+					painter.setFont(font());
+					painter.drawText(inf_ptr->rect(), labelText);
+			}
+		}
+}
 
-	/*RK_LOG_INFO("CALLED0");
-	RkImage img(size());
-	RK_LOG_INFO("CALLED");
-	{
-	RkPainter painter(&img);
-	RK_LOG_INFO("CALLED1");
-	//painter.fillRect(rect(), {100, 0, 0});
-	painter.drawLine(10, 10, 100, 100);
-	//painter.fillRect(rect(), { 100, 0, 0 });
-	//if (!labelImage.isNull())
-	//        painter.drawImage(labelImage, 0, 0);
-	/*if (!labelText.empty()) {
-			auto pen = painter.pen();
-			pen.setColor(textColor());
-			painter.setPen(pen);
-			painter.setFont(font());
-			painter.drawText(inf_ptr->rect(), labelText);
-	}*/
-  
-	RkImage img(size());
-	{
-		RkPainter painter(&img);
-		RkPen pen(RkColor(255, 0, 0));
-		pen.setWidth(1);
-		pen.setStyle(RkPen::PenStyle::DashLine);
-		painter.setPen(pen);
-		painter.drawLine({ 10, 10 }, { 100, 100 });
-		painter.drawCircle(50, 50, 40);
-		//painter.fillRect({ 50, 50, 20, 20 }, background());
-		pen.setStyle(RkPen::PenStyle::DotLine);
-		pen.setColor({ 0, 55, 123 });
-		painter.setPen(pen);
-		painter.drawRect({ 10, 10, 10, 10 });
-	}
+void RkLabel::RkLabelImpl::drawWithBufferImage()
+{
+		RkImage img(size());
+		{
+			RkPainter painter(&img);
+			if (!labelImage.isNull())
+					painter.drawImage(labelImage, 0, 0);
+			if (!labelText.empty()) {
+					auto pen = painter.pen();
+					pen.setColor(textColor());
+					painter.setPen(pen);
+					painter.setFont(font());
+					painter.drawText(inf_ptr->rect(), labelText);
+			}
+		}
 		RkPainter paint(inf_ptr);
-		/*RkPen pen(RkColor(0, 255, 0));
-		pen.setWidth(1);
-		pen.setStyle(RkPen::PenStyle::DashLine);
-		paint.setPen(pen);*/
 		paint.drawImage(img, 0, 0);
 }
 

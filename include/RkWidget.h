@@ -126,6 +126,13 @@ class RK_EXPORT RkWidget: public RkCanvas {
           void setPointerShape(Rk::PointerShape shape);
           Rk::PointerShape pointerShape() const;
 
+		  /**
+		   * Returns true if there is a need to use
+           * an image as a buffer inside paintEvent
+           * to avoid flickering. Otherwise treturn false.
+		   */
+		  bool flickering() const;
+
   protected:
           RK_DECLARE_IMPL(RkWidget)
           RkWidget(RkWidget *parent, const std::shared_ptr<RkWidgetImpl> &impl);

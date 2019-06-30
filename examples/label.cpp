@@ -3176,17 +3176,15 @@ int main(int arc, char **argv)
         widget->setSize(250, 250);
 
         auto label = new RkLabel(widget);
-        label->setTitle("Label with text"); // for debugging only, no effect on label.
-		//label->setImage(RkImage(100, 94, rk_image));
-        label->setText("Text");
+		label->setImage(RkImage(100, 94, rk_image));
         label->setX(10);
         label->setY(10);
         label->setSize(100, 94);
         label->setBackgroundColor(200, 200, 200);
         label->show();
 
-        /*auto label = new RkLabel(widget);
-        label->setTitle("Label with image");
+        //auto label = new RkLabel(widget);
+        /*label->setTitle("Label with image");
 		label->setText("Text");
         label->setImage(RkImage(100, 94, rk_image));
         label->setX(10 + 100 + 5);
@@ -3207,9 +3205,6 @@ int main(int arc, char **argv)
         label->show();*/
 
         widget->show();
-
-        RK_LOG_DEBUG("text: " << label->text());
-
         int res = app.exec();
         return res;
 }

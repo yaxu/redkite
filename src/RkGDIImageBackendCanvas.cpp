@@ -9,6 +9,15 @@ RkGDIImageBackendCanvas::RkGDIImageBackendCanvas(const RkSize &size,
         : canvasInfo{nullptr}
         , imageSize{size}
 {
+		auto nBytes = imageSize.height() * imageSize.width() * pixelLength(RkImage::Format::ARGB32);
+		if (nBytes < 1) {
+			RK_LOG_ERROR("image data size is invalid");
+			return; 
+		} else if (data == nullptr) {
+                imageData = std::vector<unsigned char>(nBytes, 0);
+		} else {
+                imageData.assign(data, data + nBytes);
+		}
 }
 
 RkGDIImageBackendCanvas::~RkGDIImageBackendCanvas()
@@ -17,8 +26,12 @@ RkGDIImageBackendCanvas::~RkGDIImageBackendCanvas()
 
 int RkGDIImageBackendCanvas::pixelLength(RkImage::Format format) const
 {
-	// Implement.
-	return 0;
+	    switch (format)
+        {
+        case RkImage::Format::ARGB32:
+        case RkImage::Format::RGB32:  return 4;
+        default: return 1;
+        }
 }
 
 const RkSize& RkGDIImageBackendCanvas::size() const
@@ -28,7 +41,7 @@ const RkSize& RkGDIImageBackendCanvas::size() const
 
 bool RkGDIImageBackendCanvas::isNull() const
 {
-        return canvasInfo == nullptr;
+        return imageData.empty();
 }
 
 unsigned char* RkGDIImageBackendCanvas::data()

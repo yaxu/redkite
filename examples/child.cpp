@@ -11,7 +11,7 @@ int main(int arc, char **argv)
         // Create main window.
         auto mainWindow = new RkWidget(&app);
         mainWindow->setTitle("Main Window");
-	mainWindow->setPosition(180, 180);
+	    mainWindow->setPosition(180, 180);
         mainWindow->setSize(400, 500);
 
         int x = 10;
