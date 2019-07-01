@@ -148,7 +148,7 @@ RkPoint& RkWindowWin::position() const
         if (isWindowCreated()) {
                 RECT rect;
                 GetWindowRect(windowHandle.id, &rect);
-				RECT rect0 = rect;
+                RECT rect0 = rect;
                 if (hasParent())
                         MapWindowPoints(windowHandle.id, GetParent(windowHandle.id), reinterpret_cast<LPPOINT>(&rect), 2);
                 windowPosition = {rect.left - rect0.left, rect.top - rect0.top};
@@ -159,7 +159,6 @@ RkPoint& RkWindowWin::position() const
 void RkWindowWin::setPosition(const RkPoint &position)
 {
         windowPosition = position;
-		RK_LOG_DEBUG("left[" << windowHandle.id << "]: " << position.x());
         if (isWindowCreated())
                 SetWindowPos(windowHandle.id, 0, position.x(), position.y(), 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 }
