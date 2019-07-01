@@ -66,28 +66,27 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
                 return 0;
         }
         case WM_SIZE:
-		{
+	{
                 eventQueue->processEvent(rk_id_from_win(hWnd), std::make_shared<RkResizeEvent>());
                 return 0;
-		}
+        }
         case WM_PAINT:
         {
-    		    eventQueue->processEvent(rk_id_from_win(hWnd), std::make_shared<RkPaintEvent>());
+                eventQueue->processEvent(rk_id_from_win(hWnd), std::make_shared<RkPaintEvent>());
                 ValidateRect(hWnd, NULL);
                 return 0;
         }
-		case WM_ERASEBKGND:
-		{
-			    auto color = eventQueue->getWidget(rk_id_from_win(hWnd))->background();
-				auto background = CreateSolidBrush(static_cast<COLORREF>((color.blue() << 16 ) | (color.green() << 8 ) | (color.red())));
-				auto hdc = (HDC)wParam; 
-				RECT rect;
-				GetClientRect(hWnd, &rect); 
-				FillRect(hdc, &rect, background);
-				DeleteObject(background);
-
-				return 1L;
-		}
+        case WM_ERASEBKGND:
+	{
+                auto color = eventQueue->getWidget(rk_id_from_win(hWnd))->background();
+                auto background = CreateSolidBrush(static_cast<COLORREF>((color.blue() << 16 ) | (color.green() << 8 ) | (color.red())));
+                auto hdc = (HDC)wParam;
+                RECT rect;
+                GetClientRect(hWnd, &rect);
+                FillRect(hdc, &rect, background);
+                DeleteObject(background);
+                return 1L;
+        }
         default:
                 break;
         }
