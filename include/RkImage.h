@@ -77,6 +77,7 @@ class RK_EXPORT RkImage : public RkCanvas {
         int height() const;
         bool isNull() const;
 		RkCanvas::Type canvasType() const final;
+		const RkColor& background() const final;
 
  protected:
         RK_DECLARE_IMPL(RkImage)

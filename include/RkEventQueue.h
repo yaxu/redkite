@@ -56,6 +56,7 @@ class RK_EXPORT RkEventQueue {
         void processQueue();
         void clearEvents(const RkWidget *widget);
         void clearAllEvents();
+		RkWidget* getWidget(const RkWindowId &id) const;
 
  protected:
         RK_DECLARE_IMPL(RkEventQueue)

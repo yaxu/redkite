@@ -198,7 +198,6 @@ RkWindowId RkWindowWin::id() const
 
 const RkColor& RkWindowWin::background() const
 {
-	// IMPLEMENT
 	return backgroundColor;
 }
 

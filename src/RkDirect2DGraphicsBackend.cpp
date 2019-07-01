@@ -49,7 +49,7 @@ RkDirect2DGraphicsBackend::RkDirect2DGraphicsBackend(RkCanvas *canvas)
                                 RK_LOG_ERROR("can't create brush");
                                 releaseContextResources();
                         } else {
-                                deviceContext->Clear(D2D1::ColorF(D2D1::ColorF::White));
+                                deviceContext->Clear(D2D1::ColorF(canvas->background().rgb(), static_cast<FLOAT>(canvas->background().alpha()) / 255.0f));
                         }
                 }
         }

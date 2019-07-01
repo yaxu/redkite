@@ -1,6 +1,7 @@
 #include "RkPlatform.h"
 #include "RkEventQueue.h"
 #include "RkEvent.h"
+#include "RkWidget.h"
 
 #include <random>
 
@@ -73,6 +74,16 @@ static LRESULT CALLBACK RkWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM 
                 ValidateRect(hWnd, NULL);
                 return 0;
         }
+		case WM_ERASEBKGND:
+		{
+			    auto color = eventQueue->getWidget(rk_id_from_win(hWnd))->background().rgb();
+				auto background = CreateSolidBrush(static_cast<COLORREF>(color));
+				auto hdc = (HDC)wParam; 
+				RECT rect;
+				GetClientRect(hWnd, &rect); 
+				FillRect(hdc, &rect, background);
+				return 1L;
+		}
         default:
                 break;
         }

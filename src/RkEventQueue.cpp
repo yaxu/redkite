@@ -132,3 +132,8 @@ void RkEventQueue::clearAllEvents()
 {
         o_ptr->clearAllEvents();
 }
+
+RkWidget* RkEventQueue::getWidget(const RkWindowId &id) const
+{
+	return o_ptr->getWidget(id);
+}

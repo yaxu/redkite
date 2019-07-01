@@ -45,7 +45,6 @@ RkEventQueue::RkEventQueueImpl::RkEventQueueImpl(RkEventQueue* eventQueueInterfa
         , platformEventQueue{std::make_unique<RkEventQueueX>()}
 #endif
 {
-        myData = 12345;
 }
 
 RkEventQueue::RkEventQueueImpl::~RkEventQueueImpl()
@@ -199,4 +198,13 @@ void RkEventQueue::RkEventQueueImpl::clearEvents(const RkWidget *widget)
 void RkEventQueue::RkEventQueueImpl::clearAllEvents()
 {
         eventsQueue.clear();
+}
+
+RkWidget* RkEventQueue::RkEventQueueImpl::getWidget(const RkWindowId &id) const
+{
+	for(auto widget : widgetList) {
+                if (widget->id().id == id.id)
+                        return widget;
+	}
+	return nullptr;
 }

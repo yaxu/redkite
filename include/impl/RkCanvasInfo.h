@@ -26,6 +26,7 @@
 
 #include "Rk.h"
 #include "RkSize.h"
+#include "RkColor.h"
 
 #ifdef RK_GRAPHICS_BACKEND_CAIRO
 #include <cairo/cairo.h>

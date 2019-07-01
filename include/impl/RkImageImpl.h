@@ -50,11 +50,12 @@ class RkImage::RkImageImpl {
                          RkImage::Format format,
                          const unsigned char *data);
         void fill(const RkColor &color);
-
+		const RkColor& background() const;
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkImage)
         RkImage::Format imageFormat;
+		RkColor backgroundColor;
 #ifdef RK_GRAPHICS_CAIRO_BACKEND
         std::unique_ptr<RkCairoImageBackendCanvas> imageBackendCanvas;
 #elif RK_GRAPHICS_BACKEND_DIRECT2D

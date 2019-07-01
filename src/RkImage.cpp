@@ -109,3 +109,8 @@ RkCanvas::Type RkImage::canvasType() const
 {
 	return RkCanvas::Type::Image;
 }
+
+const RkColor& RkImage::background() const
+{
+	return o_ptr->background();
+}

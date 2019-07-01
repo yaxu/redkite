@@ -9,6 +9,7 @@ int main(int arc, char **argv)
 
     auto widget = new RkWidget(&app);
     widget->setTitle("Hello!");
+	widget->setBackgroundColor({80, 80, 80});
     widget->show();
 
     //    if (!app.setTopLevelWindow(widget)) {

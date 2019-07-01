@@ -25,7 +25,7 @@
 #define RK_CANVAS_H
 
 #include "Rk.h"
-#include "RkSize.h"
+#include "RkColor.h"
 
 union RK_EXPORT RkCanvasInfo;
 
@@ -39,6 +39,7 @@ class RK_EXPORT RkCanvas {
         virtual ~RkCanvas() = default;
         virtual std::shared_ptr<RkCanvasInfo> getCanvasInfo() const = 0;
         virtual Type canvasType() const = 0;
+		virtual const RkColor& background() const = 0;
 };
 
 #endif // RK_CANVAS_H

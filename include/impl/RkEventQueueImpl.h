@@ -66,14 +66,15 @@ class RkEventQueue::RkEventQueueImpl {
         void processTimers();
         void clearEvents(const RkWidget *widget);
         void clearAllEvents();
+		RkWidget* getWidget(const RkWindowId &id) const;
 
  private:
         RK_DECALRE_INTERFACE_PTR(RkEventQueue)
+		/* TODO: Use a hastable instead of list. */
         std::list<RkWidget*> widgetList;
         std::vector<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> eventsQueue;
         std::vector<std::function<void(void)>> actionsQueue;
         std::mutex actionsQueueMutex;
-        int myData;
         std::vector<RkTimer*> timersList;
 
 #ifdef RK_OS_WIN

@@ -1,4 +1,4 @@
-]/**
+/**
  * File name: RkWidget.cpp
  * Project: Redkite (A small GUI toolkit)
  *

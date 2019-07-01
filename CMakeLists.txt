@@ -194,8 +194,6 @@ else() # defaut GNU/Linux
     ${RK_SRC_PATH}/platforms/xwin/RkEventQueueX.cpp)
 endif()
 
-add_definitions(-fPIC)
-
 include_directories(${RK_INCLUDE_PATH})
 include_directories(${RK_INCLUDE_PATH}/impl)
 
@@ -204,7 +202,8 @@ if (CMAKE_SYSTEM_NAME MATCHES Windows)
 elseif (CMAKE_SYSTEM_NAME MATCHES Darwin)
   include_directories(${RK_INCLUDE_PATH}/impl/platforms/mac)
 # not implemented yet
-else() # defualt GNU/Linux
+else() # defaut GNU/Linux
+  add_definitions(-fPIC)
   include_directories(${RK_INCLUDE_PATH}/impl/platforms/xwin)
 endif()
 

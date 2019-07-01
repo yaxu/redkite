@@ -46,6 +46,7 @@ RkImage::RkImageImpl::RkImageImpl(RkImage *interface,
 #else
 #error No graphics backend defined
 #endif
+        , backgroundColor{0, 0, 0}
 {
 }
 
@@ -114,4 +115,9 @@ void RkImage::RkImageImpl::fill(const RkColor &color)
 {
         if (imageBackendCanvas)
                 imageBackendCanvas->fill(color);
+}
+
+const RkColor& RkImage::RkImageImpl::background() const
+{
+	return backgroundColor;
 }
