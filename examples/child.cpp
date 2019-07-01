@@ -22,8 +22,8 @@ int main(int arc, char **argv)
                 RK_LOG_DEBUG("create child " << i);
                 auto child = new RkWidget(mainWindow);
                 child->setTitle("Child[" + std::to_string(i) + "] - LEVEL 1");
+				child->setSize(60, 60);
                 child->setPosition(x, y);
-                child->setSize(60, 60);
                 child->setBorderColor(0, 255, 0);
 				child->setBackgroundColor(0, 0, 255);
                 child->show();
@@ -42,7 +42,7 @@ int main(int arc, char **argv)
                         x = 10;
                 }
         }
-
+	
         mainWindow->show();
         int res = app.exec();
         return res;
