@@ -13,6 +13,7 @@ int main(int arc, char **argv)
         mainWindow->setTitle("Main Window");
 	    mainWindow->setPosition(180, 180);
         mainWindow->setSize(400, 500);
+		mainWindow->setBackgroundColor(0, 255, 0);
 
         int x = 10;
         int y = 10;
@@ -24,6 +25,7 @@ int main(int arc, char **argv)
                 child->setPosition(x, y);
                 child->setSize(60, 60);
                 child->setBorderColor(0, 255, 0);
+				child->setBackgroundColor(0, 0, 255);
                 child->show();
 
                 auto child_l = new RkWidget(child);
@@ -31,6 +33,7 @@ int main(int arc, char **argv)
                 child_l->setPosition(10, 10);
                 child_l->setSize(30, 30);
                 child_l->setBorderColor(0, 0, 255);
+				child_l->setBackgroundColor(255, 0, 0);
                 child_l->show();
 
                 x += 65;

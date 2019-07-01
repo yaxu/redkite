@@ -31,18 +31,17 @@ endif()
 
 # ------------ Child Example -------
 
-#add_executable(child ${RK_EXEC_OPTION}
-#  ${RK_HEADERS}
-#  ${RK_EXAMPLES_SOURCES_CHILD})
-#add_dependencies(child redkite)
-#target_link_libraries(child redkite)
-#if (CMAKE_SYSTEM_NAME MATCHES Windows)
-#  target_link_libraries(child "-mwindows -lstdc++ -lm -lmingw32")
-#  target_link_libraries(child ${RK_GRAPHICS_BACKEND_LINK_LIBS})
-#else()
-#  target_link_libraries(child "-lX11 -lpthread -lrt -lm -ldl")
-#  target_link_libraries(child ${RK_GRAPHICS_BACKEND_LINK_LIBS})
-#endif()
+add_executable(child ${RK_EXEC_OPTION}
+  ${RK_HEADERS}
+  ${RK_EXAMPLES_SOURCES_CHILD})
+add_dependencies(child redkite)
+target_link_libraries(child redkite)
+if (CMAKE_SYSTEM_NAME MATCHES Windows)
+  target_link_libraries(child "-mwindows -s -static -ld3d11 -ld2d1 -lm")
+else()
+  target_link_libraries(child "-lX11 -lpthread -lrt -lm -ldl")
+  target_link_libraries(child ${RK_GRAPHICS_BACKEND_LINK_LIBS})
+endif()
 
 # ------------ Property -------
 

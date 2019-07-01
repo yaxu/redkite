@@ -59,7 +59,6 @@ class  PainterExample: public RkWidget {
 			 painter.setPen(pen);
 			 painter.drawRect({10, 10, 10, 10});
 
-			 RK_LOG_INFO("called2");
              RK_UNUSED(event);
 			 /*
                 if (startDraw) {

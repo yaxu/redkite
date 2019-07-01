@@ -70,7 +70,7 @@ bool RkWindowWin::init()
         windowHandle.id = CreateWindowExA(0,
                                           hasParent() ? parentWindowInfo->className.c_str() : rk_win_api_class_name().c_str(),
                                           "RkWidget",
-                                          !hasParent() ? WS_OVERLAPPEDWINDOW : WS_CHILD | WS_CLIPCHILDREN | WS_VISIBLE | WS_BORDER,
+                                          hasParent() ? (WS_CHILD | WS_CLIPCHILDREN | WS_VISIBLE) : (WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN),
                                           windowPosition.x(),
                                           windowPosition.y(),
                                           windowSize.width(),
