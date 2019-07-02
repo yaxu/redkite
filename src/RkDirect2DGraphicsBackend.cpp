@@ -34,12 +34,13 @@ RkDirect2DGraphicsBackend::RkDirect2DGraphicsBackend(RkCanvas *canvas)
         , swapChain{nullptr}
         , d2dTargetBitmap{nullptr}
         , targetBrush{nullptr}
-		, dxgiAdapter{nullptr}
-		, dxgiFactory{nullptr}
-		, backBuffer{nullptr}
-		, dxgiBackBuffer{nullptr}
+        , dxgiAdapter{nullptr}
+        , dxgiFactory{nullptr}
+        , backBuffer{nullptr}
+        , dxgiBackBuffer{nullptr}
         , strokeWidth{1.0f}
         , strokeStyle{nullptr}
+        , textFormat{nullptr}
 {
         if (validateCanvas(canvas)) {
                 auto res = prepareContext(canvas);
@@ -78,11 +79,10 @@ void RkDirect2DGraphicsBackend::releaseContextResources()
                 dxgiAdapter = nullptr;
 	}
 
-	if (dxgiBackBuffer)
-                {
-                        dxgiBackBuffer->Release();
-                        dxgiBackBuffer = nullptr;
-                }
+	if (dxgiBackBuffer) {
+                dxgiBackBuffer->Release();
+                dxgiBackBuffer = nullptr;
+        }
 
 	if (backBuffer) {
                 backBuffer->Release();
@@ -93,14 +93,17 @@ void RkDirect2DGraphicsBackend::releaseContextResources()
 		swapChain->Release();
 		swapChain = nullptr;
 	}
+
 	if (d2dTargetBitmap) {
 		d2dTargetBitmap->Release();
 		d2dTargetBitmap = nullptr;
 	}
+
 	if (deviceContext) {
 		deviceContext->Release();
 		deviceContext = nullptr;
 	}
+
 	if (targetBrush) {
 		targetBrush->Release();
 		targetBrush = nullptr;
@@ -202,12 +205,20 @@ bool RkDirect2DGraphicsBackend::prepareContext(RkCanvas *canvas)
 
 void RkDirect2DGraphicsBackend::drawText(const std::string &text, int x, int y)
 {
+        if (textFormat)
+                createDefaultTextFormat();
+        if (deviceContext && textFormat) {
+                auto rect = D2D1::RectF(x, y, , renderTargetSize.height);
+                deviceContext->DrawText(text.c_str(), text.size(), textFormat, );
+        }
         // TODO: impement
+        RK_LOG_ERROR("method not implemented yet");
 }
 
 void RkDirect2DGraphicsBackend::drawImage(const std::string &file, int x, int y)
 {
         // TODO: impement
+        RK_LOG_ERROR("method not implemented yet");
 }
 
 void RkDirect2DGraphicsBackend::drawImage(const RkImage &image, int x, int y)
@@ -262,7 +273,7 @@ void RkDirect2DGraphicsBackend::drawRect(const RkRect &rect)
         if (deviceContext) {
                 auto rectF = D2D1::RectF(rect.left(), rect.top(), rect.right(), rect.bottom());
                 deviceContext->DrawRectangle(rectF, targetBrush, strokeWidth, strokeStyle);
-		}
+        }
 }
 
 void RkDirect2DGraphicsBackend::drawPolyLine(const std::vector<RkPoint> &points)
@@ -335,7 +346,44 @@ void RkDirect2DGraphicsBackend::setPen(const RkPen &pen)
 
 void RkDirect2DGraphicsBackend::setFont(const RkFont &font)
 {
-        // TODO: implement
+        if (!textFormat)
+                textFormat->Release();
+
+        DWRITE_FONT_STYLE style;
+        switch (font.style())
+        {
+        case RkFont::Style::Normal:
+                style = DWRITE_FONT_STYLE_NORMAL;
+                break;
+        case RkFont::Style::Italic:
+                style = DWRITE_FONT_STYLE_ITALIC;
+                break;
+        case RkFont::Style::Oblique:
+                style = DWRITE_FONT_STYLE_OBLIQUE;
+                break;
+        default:
+                style = DWRITE_FONT_STYLE_NORMAL;
+        }
+
+        DWRITE_FONT_WEIGHT weight;
+        switch (font.weight())
+        {
+        case RkFont::Weight::Normal:
+                weight = DWRITE_FONT_WEIGHT_NORMAL;
+                break;
+        case RkFont::Weight::Bold:
+                weight = DWRITE_FONT_WEIGHT_BOLD;
+                break;
+        default:
+                weight = DWRITE_FONT_WEIGHT_NORMAL;
+        }
+
+        if (rk_direct_write_factory()) {
+                rk_direct_write_factory()->CreateTextFormat(L"Arial", NULL, weight, style,
+                                                            DWRITE_FONT_STRETCH_NORMAL,
+                                                            static_cast<FLOAT>(font->size()),
+                                                            L"en-us", &textFormat);
+        }
 }
 
 int RkDirect2DGraphicsBackend::getTextWidth(const std::string &text) const
@@ -351,5 +399,7 @@ void RkDirect2DGraphicsBackend::translate(const RkPoint &offset)
 
 void RkDirect2DGraphicsBackend::rotate(rk_real angle)
 {
-        // TODO: impement
+        if (deviceContext) {
+                deviceContext->SetTransform(D2D1::Matrix3x2F::Rotation(static_cast<FLOAT>(angle),
+                                                                       D2D1::Point2F(0.0f, 0.0f)));
 }

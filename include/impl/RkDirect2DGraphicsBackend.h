@@ -70,6 +70,7 @@ class RkDirect2DGraphicsBackend final : public RkGraphicsBackend {
 		IDXGISurface *dxgiBackBuffer;
         float strokeWidth;
         ID2D1StrokeStyle *strokeStyle;
+        IDWriteTextFormat *textFormat;
 };
 
 #endif // RK_DIRECT2D_GRAPHICS_BACKEND_H
