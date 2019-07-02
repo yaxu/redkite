@@ -262,7 +262,7 @@ void RkDirect2DGraphicsBackend::drawRect(const RkRect &rect)
         if (deviceContext) {
                 auto rectF = D2D1::RectF(rect.left(), rect.top(), rect.right(), rect.bottom());
                 deviceContext->DrawRectangle(rectF, targetBrush, strokeWidth, strokeStyle);
-	}
+		}
 }
 
 void RkDirect2DGraphicsBackend::drawPolyLine(const std::vector<RkPoint> &points)
@@ -285,16 +285,24 @@ void RkDirect2DGraphicsBackend::drawPolyLine(const std::vector<RkPoint> &points)
 
 void RkDirect2DGraphicsBackend::fillRect(const RkRect &rect, const RkColor &color)
 {
-        if (deviceContext)
-                deviceContext->FillRectangle(D2D1::RectF(rect.left(), rect.top(), rect.right(), rect.bottom()),
-                                             targetBrush);
+        if (deviceContext) {
+	        ID2D1SolidColorBrush *brush;
+		auto hr = deviceContext->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Black), &brush);
+		if (!SUCCEEDED(hr)) {
+		        RK_LOG_ERROR("can't create brush");
+		} else {
+		        brush->SetColor(D2D1::ColorF(color.rgb(), static_cast<FLOAT>(color.alpha()) / 255.0f));
+			deviceContext->FillRectangle(D2D1::RectF(rect.left(), rect.top(), rect.right(), rect.bottom()), brush);
+			brush->Release();
+		}
+	}
 }
 
 void RkDirect2DGraphicsBackend::setPen(const RkPen &pen)
 {
         strokeWidth = static_cast<FLOAT>(pen.width());
         if (targetBrush)
-                targetBrush->SetColor(D2D1::ColorF(pen.color().rgb(), static_cast<FLOAT>(pen.color().alpha()) / 255));
+                targetBrush->SetColor(D2D1::ColorF(pen.color().rgb(), static_cast<FLOAT>(pen.color().alpha()) / 255.0f));
         FLOAT dashLine[] = {12.0f, 8.0f};
         FLOAT dotLine[] = {1.0f, 2.0f};
 
