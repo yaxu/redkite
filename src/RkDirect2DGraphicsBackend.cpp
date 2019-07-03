@@ -208,11 +208,15 @@ void RkDirect2DGraphicsBackend::drawText(const std::string &text, int x, int y)
         if (textFormat)
                 createDefaultTextFormat();
         if (deviceContext && textFormat) {
-                auto rect = D2D1::RectF(x, y, , renderTargetSize.height);
-                deviceContext->DrawText(text.c_str(), text.size(), textFormat, );
+		auto size = deviceContext->GetSize();
+                auto rect = D2D1::RectF(x, y, size.width, size.height);
+                deviceContext->DrawText(text.c_str(),
+					text.size(),
+					textFormat,
+					rect,
+					targetBrush,
+					D2D1_DRAW_TEXT_OPTIONS_NONE);
         }
-        // TODO: impement
-        RK_LOG_ERROR("method not implemented yet");
 }
 
 void RkDirect2DGraphicsBackend::drawImage(const std::string &file, int x, int y)
