@@ -10,6 +10,7 @@ static HINSTANCE rk_winApiInstance = nullptr;
 #ifdef RK_GRAPHICS_BACKEND_DIRECT2D
 #include <d2d1_1.h>
 static ID2D1Factory1* rk_d2d1Factory = nullptr;
+static IDWriteFactory* rk_dWriteFactory = nullptr;
 #endif // RK_GRAPHICS_BACKEND_DIRECT2D
 
 HINSTANCE rk_win_api_instance()
@@ -39,9 +40,14 @@ RkWindowId rk_id_from_win(HWND window)
 }
 
 #ifdef RK_GRAPHICS_BACKEND_DIRECT2D
-ID2D1Factory1* RK_EXPORT rk_direct2d_factory()
+ID2D1Factory1* rk_direct2d_factory()
 {
         return rk_d2d1Factory;
+}
+
+IDWriteFactory* rk_direct_write_factory()
+{
+        return rk_dWriteFactory;
 }
 #endif // RK_GRAPHICS_BACKEND_DIRECT2D
 
@@ -124,6 +130,14 @@ BOOL WINAPI DllMain(HINSTANCE hInstance,
 #ifdef RK_GRAPHICS_BACKEND_DIRECT2D
         if (D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &rk_d2d1Factory) != S_OK) {
                 RK_LOG_ERROR("can't create D2D1 factory");
+                return FALSE;
+        }
+
+        if (DWriteCreateFactory(DWRITE_FACTORY_TYPE_ISOLATED,
+                                _uuidof(IDWriteFactory),
+                                reinterpret_cast<IUnknown**>(&rk_dWriteFactory)) != S_OK) {
+                RK_LOG_ERROR("can't create Direct Write factory");
+                rk_d2d1Factory->Release();
                 return FALSE;
         }
 #endif // RK_GRAPHICS_BACKEND_DIRECT2D

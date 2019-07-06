@@ -206,7 +206,7 @@ bool RkDirect2DGraphicsBackend::prepareContext(RkCanvas *canvas)
 void RkDirect2DGraphicsBackend::drawText(const std::string &text, int x, int y)
 {
         if (textFormat)
-                createDefaultTextFormat();
+                setFont(RkFont());
         if (deviceContext && textFormat) {
 		auto size = deviceContext->GetSize();
                 auto rect = D2D1::RectF(x, y, size.width, size.height);

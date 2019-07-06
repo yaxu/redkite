@@ -52,6 +52,7 @@ RkNativeWindowInfo RK_EXPORT rk_from_native_win(HINSTANCE instance, LPCSTR class
 RkWindowId RK_EXPORT rk_id_from_win(HWND window);
 #ifdef RK_GRAPHICS_BACKEND_DIRECT2D
 ID2D1Factory1* RK_EXPORT rk_direct2d_factory();
+IDWriteFactory* RK_EXPORT rk_direct_write_factory();
 #endif // RK_DIRECT2D_GRAPHICS_BACKEND
 
 
