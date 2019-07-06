@@ -35,6 +35,7 @@ struct IDXGIAdapter;
 struct IDXGIFactory2;
 struct ID3D11Texture2D;
 struct IDXGISurface;
+struct IDWriteTextFormat;
 
 class RkDirect2DGraphicsBackend final : public RkGraphicsBackend {
  public:

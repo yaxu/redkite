@@ -28,6 +28,7 @@
 #include "RkPlatform.h"
 
 #include <d2d1_1helper.h>
+#include <dwrite.h>
 
 RkDirect2DGraphicsBackend::RkDirect2DGraphicsBackend(RkCanvas *canvas)
         : deviceContext{nullptr}
@@ -210,8 +211,8 @@ void RkDirect2DGraphicsBackend::drawText(const std::string &text, int x, int y)
         if (deviceContext && textFormat) {
 		auto size = deviceContext->GetSize();
                 auto rect = D2D1::RectF(x, y, size.width, size.height);
-                deviceContext->DrawText(text.c_str(),
-					text.size(),
+                deviceContext->DrawText(L"Test"/*text.c_str()*/,
+					4/*text.size()*/,
 					textFormat,
 					rect,
 					targetBrush,
@@ -350,7 +351,7 @@ void RkDirect2DGraphicsBackend::setPen(const RkPen &pen)
 
 void RkDirect2DGraphicsBackend::setFont(const RkFont &font)
 {
-        if (!textFormat)
+        if (textFormat)
                 textFormat->Release();
 
         DWRITE_FONT_STYLE style;
@@ -385,7 +386,7 @@ void RkDirect2DGraphicsBackend::setFont(const RkFont &font)
         if (rk_direct_write_factory()) {
                 rk_direct_write_factory()->CreateTextFormat(L"Arial", NULL, weight, style,
                                                             DWRITE_FONT_STRETCH_NORMAL,
-                                                            static_cast<FLOAT>(font->size()),
+                                                            static_cast<FLOAT>(font.size()),
                                                             L"en-us", &textFormat);
         }
 }
@@ -403,7 +404,7 @@ void RkDirect2DGraphicsBackend::translate(const RkPoint &offset)
 
 void RkDirect2DGraphicsBackend::rotate(rk_real angle)
 {
-        if (deviceContext) {
+        if (deviceContext)
                 deviceContext->SetTransform(D2D1::Matrix3x2F::Rotation(static_cast<FLOAT>(angle),
                                                                        D2D1::Point2F(0.0f, 0.0f)));
 }

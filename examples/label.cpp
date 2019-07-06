@@ -3177,6 +3177,7 @@ int main(int arc, char **argv)
 
         auto label = new RkLabel(widget);
 		label->setImage(RkImage(100, 94, rk_image));
+		label->setText("Text");
         label->setX(10);
         label->setY(10);
         label->setSize(100, 94);

@@ -55,7 +55,6 @@ class RkImage::RkImageImpl {
  private:
         RK_DECALRE_INTERFACE_PTR(RkImage)
         RkImage::Format imageFormat;
-		RkColor backgroundColor;
 #ifdef RK_GRAPHICS_CAIRO_BACKEND
         std::unique_ptr<RkCairoImageBackendCanvas> imageBackendCanvas;
 #elif RK_GRAPHICS_BACKEND_DIRECT2D
@@ -63,4 +62,5 @@ class RkImage::RkImageImpl {
 #else
 #error No graphics backend defined
 #endif
+        RkColor backgroundColor;
 };

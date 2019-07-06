@@ -57,12 +57,11 @@ void RkLabel::RkLabelImpl::drawLabel()
 {
         if (labelText.empty() && labelImage.isNull())
                 return;
-
         if (inf_ptr->flickering()) {
                 drawWithBufferImage();
         } else {
                 RkPainter painter(inf_ptr);
-                if (!labelImage.isNull()) {
+				if (!labelImage.isNull()) {
                         painter.drawImage(labelImage, 0, 0);
                 }
                 if (!labelText.empty()) {

@@ -10,12 +10,11 @@ RkGDIImageBackendCanvas::RkGDIImageBackendCanvas(const RkSize &size,
         , imageSize{size}
 {
         auto nBytes = imageSize.height() * imageSize.width() * pixelLength(RkImage::Format::ARGB32);
-        if (nBytes < 1) {
-                RK_LOG_ERROR("image data size is invalid");
-        } else if (data == nullptr) {
-                imageData = std::vector<unsigned char>(nBytes, 0);
-        } else {
-                imageData.assign(data, data + nBytes);
+        if (nBytes > 0) {
+            if (data == nullptr)
+				imageData = std::vector<unsigned char>(nBytes, 0);
+			else
+				imageData.assign(data, data + nBytes);
         }
 }
 
