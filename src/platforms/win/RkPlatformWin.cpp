@@ -14,6 +14,7 @@ static ID2D1Factory1* rk_d2d1Factory = nullptr;
 static IDWriteFactory* rk_dWriteFactory = nullptr;
 #endif // RK_GRAPHICS_BACKEND_DIRECT2D
 
+
 HINSTANCE rk_win_api_instance()
 {
         return rk_winApiInstance;
@@ -190,8 +191,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
                 RK_LOG_ERROR("can't create D2D1 factory");
                 return FALSE;
         }
-		
-		if (DWriteCreateFactory(DWRITE_FACTORY_TYPE_ISOLATED,
+
+        if (DWriteCreateFactory(DWRITE_FACTORY_TYPE_ISOLATED,
                                 __uuidof(IDWriteFactory),
                                 reinterpret_cast<IUnknown**>(&rk_dWriteFactory)) != S_OK) {
                 RK_LOG_ERROR("can't create Direct Write factory");

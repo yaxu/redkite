@@ -206,13 +206,26 @@ bool RkDirect2DGraphicsBackend::prepareContext(RkCanvas *canvas)
 
 void RkDirect2DGraphicsBackend::drawText(const std::string &text, int x, int y)
 {
+        auto size = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, text.c_str(), text.size(), NULL, 0);
+        if (size < 1) {
+                RK_LOG_ERROR("can't convert to wide string");
+                return;
+        }
+
+        auto wideString = std::unique_ptr<LPWSTR[]>(size);
+        size = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, text.c_str(), text.size(), wideString, size);
+        if (size < 1) {
+                RK_LOG_ERROR("can't convert to wide string");
+                return;
+        }
+
         if (textFormat)
                 setFont(RkFont());
         if (deviceContext && textFormat) {
 		auto size = deviceContext->GetSize();
                 auto rect = D2D1::RectF(x, y, size.width, size.height);
-                deviceContext->DrawText(L"Test"/*text.c_str()*/,
-					4/*text.size()*/,
+                deviceContext->DrawText(wideString,
+					size,
 					textFormat,
 					rect,
 					targetBrush,
