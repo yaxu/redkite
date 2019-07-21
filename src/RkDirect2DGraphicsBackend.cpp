@@ -206,30 +206,31 @@ bool RkDirect2DGraphicsBackend::prepareContext(RkCanvas *canvas)
 
 void RkDirect2DGraphicsBackend::drawText(const std::string &text, int x, int y)
 {
-        auto size = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, text.c_str(), text.size(), NULL, 0);
-        if (size < 1) {
+        auto len = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, text.c_str(), text.size(), NULL, 0);
+        if (len < 1) {
                 RK_LOG_ERROR("can't convert to wide string");
                 return;
         }
 
-        auto wideString = std::unique_ptr<LPWSTR[]>(size);
-        size = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, text.c_str(), text.size(), wideString, size);
-        if (size < 1) {
+        auto wideString = std::make_unique<WCHAR[]>(len);
+        len = MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, text.c_str(), text.size(), wideString.get(), len);
+        if (len < 1) {
                 RK_LOG_ERROR("can't convert to wide string");
                 return;
         }
 
-        if (textFormat)
+        if (!textFormat)
                 setFont(RkFont());
         if (deviceContext && textFormat) {
 		auto size = deviceContext->GetSize();
                 auto rect = D2D1::RectF(x, y, size.width, size.height);
-                deviceContext->DrawText(wideString,
-					size,
+                deviceContext->DrawText(wideString.get(),
+					len,
 					textFormat,
 					rect,
 					targetBrush,
-					D2D1_DRAW_TEXT_OPTIONS_NONE);
+					D2D1_DRAW_TEXT_OPTIONS_NONE,
+					DWRITE_MEASURING_MODE_GDI_NATURAL);
         }
 }
 
