@@ -1,8 +1,8 @@
 /**
- * File name: RkMain.cpp
+ * File name: listview.cpp
  * Project: Redkite (A small GUI toolkit)
  *
- * Copyright (C) 2019 Iurie Nistor <http://quamplex.com>
+ * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
  *
  * This file is part of Redkite.
  *
@@ -23,32 +23,26 @@
 
 #include "RkMain.h"
 #include "RkLog.h"
-#include "RkWidget.h"
-#include "RkMainImpl.h"
+#include "RkModel.h"
+#include "RkListView.h"
 
-RkMain::RkMain() : o_ptr{std::make_unique<RkMainImpl>(this)}
-{
-}
+class MyModel: public RkModel {
+  public:
+        MyModel(RkEventQueue *eventQueue) : RkModel(eventQueue)
+        {
+        }
+ protected:
+ private:
+};
 
-RkMain::RkMain(int argc, char **argv) : o_ptr{std::make_unique<RkMainImpl>(this, argc, argv)}
+int main(int arc, char **argv)
 {
-}
+    RkMain app(arc, argv);
+    auto widget = new RkListView(&app);
+    widget->setTitle("Listview Example");
 
-RkMain::~RkMain()
-{
-}
+    auto model = std::make_unique<MyModel>(app.eventQueue());
+    widget->setModel(model);
 
-bool RkMain::setTopLevelWindow(RkWidget *widget)
-{
-        return o_ptr->setTopLevelWindow(widget);
-}
-
-RkEventQueue* RkMain::eventQueue()
-{
-        return o_ptr->getEventQueue().get();
-}
-
-int RkMain::exec(bool block)
-{
-	return o_ptr->exec(block);
+    return app.exec();
 }

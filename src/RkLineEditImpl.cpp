@@ -261,7 +261,7 @@ void RkLineEdit::RkLineEditImpl::paintEvent(const std::shared_ptr<RkPaintEvent> 
         RK_UNUSED(event);
         if (contentsRect.height() * contentsRect.width() == 0)
                 updateSize();
-                
+
         RkImage img(size());
         {
                 RkPainter painter(&img);
@@ -273,7 +273,7 @@ void RkLineEdit::RkLineEditImpl::paintEvent(const std::shared_ptr<RkPaintEvent> 
                         cursorX = painter.getTextWidth(textTo(selectionIndex));
                 else
                         cursorX = painter.getTextWidth(textTo(cursorIndex));
-                
+
                 if (cursorX > endX) {
                         endX += cursorX - endX;
                         beginX = endX - contentsRect.width();
