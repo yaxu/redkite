@@ -45,7 +45,7 @@ bool RkMain::setTopLevelWindow(RkWidget *widget)
 
 RkEventQueue* RkMain::eventQueue()
 {
-        return o_ptr->getEventQueue().get();
+        return o_ptr->getEventQueue();
 }
 
 int RkMain::exec(bool block)
