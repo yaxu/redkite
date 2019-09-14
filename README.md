@@ -76,6 +76,8 @@ Interface classes that now are implemented with the purpose of extending their f
 * RkSize
 * RkTimer
 * RkLineEdit
+* RkModel
+* RkListView
 * RkProgressBar
 * RkWidget
 

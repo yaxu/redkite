@@ -22,6 +22,7 @@
  */
 
 #include "RkListView.h"
+#include "RkListViewImpl.h"
 
 RkListView(RkWidget *parent)
         : RkWidget(parent, std::static_pointer_cast<RkWidget::RkWidgetImpl>(std::make_shared<RkListView::RkListViewImpl>(this, parent))))
