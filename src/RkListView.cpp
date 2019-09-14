@@ -23,6 +23,8 @@
 
 #include "RkListView.h"
 #include "RkListViewImpl.h"
+#include "RkEvent.h"
+#include "RkLog.h"
 
 RkListView::RkListView(RkWidget *parent)
         : RkWidget(parent, std::static_pointer_cast<RkWidget::RkWidgetImpl>(std::make_shared<RkListView::RkListViewImpl>(this, parent)))
@@ -68,6 +70,7 @@ void RkListView::mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event)
 
 void RkListView::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
+
 }
 
 void RkListView::mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event)
@@ -80,4 +83,7 @@ void RkListView::mouseDoubleClickEvent(const std::shared_ptr<RkMouseEvent> &even
 
 void RkListView::wheelEvent(const std::shared_ptr<RkWheelEvent> &event)
 {
+        if (event->direction() == RkWheelEvent::Direction::WheelUp
+            || event->direction() == RkWheelEvent::Direction::WheelDown)
+                impl_ptr->incrementOffsetIndex(event->direction() == RkWheelEvent::Direction::WheelDown ? 1 : -1);
 }

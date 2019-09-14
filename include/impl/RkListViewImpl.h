@@ -42,6 +42,7 @@ class RkListView::RkListViewImpl : public RkWidget::RkWidgetImpl {
         void draw(RkPainter &painter);
         void setCellPadding(int padding);
         int getCellPadding() const;
+        void incrementOffsetIndex(int index);
 
  protected:
         int drawCellText(size_t index,
@@ -53,7 +54,7 @@ class RkListView::RkListViewImpl : public RkWidget::RkWidgetImpl {
     RK_DECALRE_INTERFACE_PTR(RkListView)
 
     RkModel *listViewModel;
-    size_t offsetIndex;
+    int offsetIndex;
     int cellPadding;
 };
 

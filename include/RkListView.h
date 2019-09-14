@@ -46,8 +46,8 @@ class RK_EXPORT RkListView : public RkWidget {
     void mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event) final;
     void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) final;
     void mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event) final;
-    void mouseDoubleClickEvent(const std::shared_ptr<RkMouseEvent> &event) final;
     void wheelEvent(const std::shared_ptr<RkWheelEvent> &event) final;
+    void mouseDoubleClickEvent(const std::shared_ptr<RkMouseEvent> &event) final;
 };
 
 #endif // RK_LISTVIEW_H

@@ -46,7 +46,7 @@ class RkEventQueueX
         void getEvents(std::vector<std::pair<RkWindowId, std::shared_ptr<RkEvent>>> &eventsQueue);
 
  protected:
-        std::shared_ptr<RkEvent> processButtonPressEvent(XEvent *e);
+        std::shared_ptr<RkEvent> processButtonPressEvent(XButtonEvent *e);
         std::shared_ptr<RkEvent> processMouseMove(XEvent *e);
         std::shared_ptr<RkEvent> processKeyEvent(XEvent *e);
         std::shared_ptr<RkEvent> processFocusEvent(XEvent *e);

@@ -98,3 +98,16 @@ int RkListView::RkListViewImpl::getCellPadding() const
 {
         return cellPadding;
 }
+
+void RkListView::RkListViewImpl::incrementOffsetIndex(int val)
+{
+        if (listViewModel->rows() < 1 || val == 0)
+                return;
+        else if (offsetIndex + val < 0)
+                offsetIndex = 0;
+        else if (offsetIndex > listViewModel->rows() - 1)
+                offsetIndex = listViewModel->rows() - 1;
+        else
+                  offsetIndex += val;
+        inf_ptr->update();
+}
