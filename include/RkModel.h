@@ -31,11 +31,21 @@ class RkEventQueue;
 
 class RK_EXPORT RkModel {
  public:
-    RkModel(RkEventQueue *queue);
-    virtual ~RkModel() = default;
+    enum class DataType: int {
+            Alignment = 0,
+            Font = 1,
+            Color = 2,
+            Text = 3
+    };
 
-    virtual RkVariant data(int index) const = 0;
+    RkModel(RkEventQueue *queue) : eventQueue{queue} {}
+    virtual ~RkModel() = default;
+    RK_DECL_ACT(updated, updated(), RK_ARG_TYPE(), RK_ARG_VAL());
+    virtual RkVariant data(int index, DataType type) const = 0;
     virtual size_t rows() const = 0;
+
+ private:
+    RkEventQueue* eventQueue;
 };
 
 #endif // RK_MODEL_H

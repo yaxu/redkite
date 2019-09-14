@@ -25,24 +25,56 @@
 #include "RkLog.h"
 #include "RkModel.h"
 #include "RkListView.h"
+#include "RkModel.h"
 
 class MyModel: public RkModel {
   public:
         MyModel(RkEventQueue *eventQueue) : RkModel(eventQueue)
         {
         }
- protected:
- private:
+
+       void setData(std::vector<std::string> &list)
+       {
+               stringList = list;
+               action updated();
+       }
+
+       RkVariant data(int index, RkModel::DataType type) const final
+       {
+               if (type == RkModel::DataType::Text && index >=0 && index < stringList.size())
+                       return RkVariant(stringList[index]);
+               return RkVariant();
+       }
+
+       size_t rows() const final
+       {
+               return stringList.size();
+       }
+
+private:
+        std::vector<std::string> stringList;
 };
 
 int main(int arc, char **argv)
 {
     RkMain app(arc, argv);
-    auto widget = new RkListView(&app);
+    auto widget = new RkWidget(&app);
     widget->setTitle("Listview Example");
+    widget->setSize({250, 400});
+
+    auto listViewWidget = new RkListView(widget);
+    listViewWidget->setTitle("Listview Widget");
+    //    listViewWidget->setBackgroundColor({100, 100, 100});
+    listViewWidget->setSize(widget->size());
+
 
     auto model = std::make_unique<MyModel>(app.eventQueue());
-    widget->setModel(model);
+    std::vector<std::string> data;
+    for (int i = 0; i < 100; i++)
+            data.emplace_back("row " + std::to_string(i));
+    model->setData(data);
+    listViewWidget->setModel(model.get());
+    widget->show();
 
     return app.exec();
 }

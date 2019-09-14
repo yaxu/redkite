@@ -65,8 +65,8 @@ int RkListView::RkListViewImpl::drawCellText(size_t index,
                                              int offsetY,
                                              const std::string &text)
 {
-        data = listViewModel->data(index, RkModel::DataType::Alignemnt);
-        auto alignment = Rk::Alignment::AlignCenter;
+        auto data = listViewModel->data(index, RkModel::DataType::Alignment);
+        auto alignment = Rk::Alignment::AlignLeft;
         if (std::holds_alternative<Rk::Alignment>(data))
                 alignment = std::get<Rk::Alignment>(data);
 
@@ -74,15 +74,18 @@ int RkListView::RkListViewImpl::drawCellText(size_t index,
         if (std::holds_alternative<RkFont>(data))
                 painter.setFont(std::get<RkFont>(data));
 
-        auto data = listViewModel->data(index, RkModel::DataType::Color);
+        data = listViewModel->data(index, RkModel::DataType::Color);
         if (std::holds_alternative<RkColor>(data)) {
                 auto pen = painter.pen();
-                pen.setColor(std::get<Rkcolor>(data));
-                painter.setPen(Pen);
+                pen.setColor(std::get<RkColor>(data));
+                painter.setPen(pen);
         }
 
-        RkRect rect{0, offsety, inf_ptr->width() - 2 * cellPadding, painter.font().size() + 2 * cellPadding};
-        painter.drawText(rect, text, aligment);
+        RkRect rect{cellPadding,
+                    offsetY,
+                    inf_ptr->width() - cellPadding,
+                    painter.font().size() + 2 * cellPadding};
+        painter.drawText(rect, text, alignment);
         return rect.height();
 }
 

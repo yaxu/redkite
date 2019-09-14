@@ -68,6 +68,7 @@ endif()
 set(RK_HEADERS
   ${RK_INCLUDE_PATH}/Rk.h
   ${RK_INCLUDE_PATH}/RkLog.h
+  ${RK_INCLUDE_PATH}/RkVariant.h
   ${RK_INCLUDE_PATH}/RkPoint.h
   ${RK_INCLUDE_PATH}/RkRealPoint.h
   ${RK_INCLUDE_PATH}/RkSize.h

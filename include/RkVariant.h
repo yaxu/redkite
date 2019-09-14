@@ -24,11 +24,37 @@
 #ifndef RK_VARIANT_H
 #define RK_VARIANT_H
 
+#include "Rk.h"
 #include "RkFont.h"
 #include "RkColor.h"
+#include "RkPoint.h"
+#include "RkRealPoint.h"
+#include "RkRect.h"
+#include "RkSize.h"
+#include "RkPen.h"
+#include "RkImage.h"
 
+#include <variant>
 #include <string>
 
-using RkVariant = std::variant<std::string, RkFont, RkColor>;
+using RkVariant = std::variant<std::string,
+                               unsigned int,
+                               float,
+                               double,
+                               bool,
+                               long int,
+                               long long int,
+                               unsigned long int,
+                               unsigned long long int,
+                               char,
+                               unsigned char,
+                               RkFont,
+                               RkColor,
+                               RkPoint,
+                               RkRealPoint,
+                               RkSize,
+                               RkPen,
+                               Rk::Alignment>;
+
 
 #endif // RK_VARIANT_H

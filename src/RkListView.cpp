@@ -24,15 +24,16 @@
 #include "RkListView.h"
 #include "RkListViewImpl.h"
 
-RkListView(RkWidget *parent)
-        : RkWidget(parent, std::static_pointer_cast<RkWidget::RkWidgetImpl>(std::make_shared<RkListView::RkListViewImpl>(this, parent))))
+RkListView::RkListView(RkWidget *parent)
+        : RkWidget(parent, std::static_pointer_cast<RkWidget::RkWidgetImpl>(std::make_shared<RkListView::RkListViewImpl>(this, parent)))
         , impl_ptr{std::static_pointer_cast<RkListView::RkListViewImpl>(o_ptr)}
 {
+        show();
 }
 
 void RkListView::setModel(RkModel *model)
 {
-        impl_ptr->setMode(model);
+        impl_ptr->setModel(model);
         update();
 }
 
@@ -41,28 +42,42 @@ RkModel* RkListView::model() const
         return impl_ptr->getModel();
 }
 
+void RkListView::setCellPadding(int padding)
+{
+        impl_ptr->setCellPadding(padding);
+}
+
+int RkListView::cellPadding() const
+{
+        return impl_ptr->getCellPadding();
+}
+
 void RkListView::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
 {
         RkPainter painter(this);
+        painter.fillRect(rect(), background());
+        auto pen = painter.pen();
+        pen.setColor(textColor());
+        painter.setPen(pen);
         impl_ptr->draw(painter);
 }
 
-void RkListView::mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event) final
+void RkListView::mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
 }
 
-void RkListView::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) final
+void RkListView::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
 }
 
-void RkListView::mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event) final
+void RkListView::mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
 }
 
-void RkListView::mouseDoubleClickEvent(const std::shared_ptr<RkMouseEvent> &event) final
+void RkListView::mouseDoubleClickEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
 }
 
-void RkListView::wheelEvent(const std::shared_ptr<RkWheelEvent> &event) final
+void RkListView::wheelEvent(const std::shared_ptr<RkWheelEvent> &event)
 {
 }

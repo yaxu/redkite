@@ -24,18 +24,24 @@
 #ifndef RK_LISTVIEW_IMPL_H
 #define RK_LISTVIEW_IMPL_H
 
+#include "RkListView.h"
 #include "RkWidgetImpl.h"
 #include "RkPainter.h"
+#include "RkVariant.h"
 
 class RkModel;
 
-class RkLineEdit::RkListViewImpl : public RkWidget::RkWidgetImpl {
+class RkListView::RkListViewImpl : public RkWidget::RkWidgetImpl {
  public:
-        RkListViewImpl(RkLineEdit *interface,  RkWidget *parent = nullptr);
+        RkListViewImpl(RkListView *interface,  RkWidget *parent = nullptr);
         virtual ~RkListViewImpl() = default;
         RK_DISABLE_COPY(RkListViewImpl)
         RK_DISABLE_MOVE(RkListViewImpl)
-        RkVariant data(int index);
+        void setModel(RkModel *model);
+        RkModel* getModel() const;
+        void draw(RkPainter &painter);
+        void setCellPadding(int padding);
+        int getCellPadding() const;
 
  protected:
         int drawCellText(size_t index,

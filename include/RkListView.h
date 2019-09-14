@@ -32,13 +32,15 @@ class RK_EXPORT RkListView : public RkWidget {
  public:
     RkListView(RkWidget *parent);
     virtual ~RkListView() = default;
+    RK_DISABLE_COPY(RkListView)
+    RK_DISABLE_MOVE(RkListView)
     void setModel(RkModel *model);
     RkModel* model() const;
+    void setCellPadding(int padding);
+    int cellPadding() const;
 
  protected:
     RK_DELCATE_IMPL_PTR(RkListView)
-    RK_DISABLE_COPY(RkListView)
-    RK_DISABLE_MOVE(RkListView)
 
     void paintEvent(const std::shared_ptr<RkPaintEvent> &event) final;
     void mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event) final;
