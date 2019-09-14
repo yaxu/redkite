@@ -82,6 +82,7 @@ set(RK_HEADERS
   ${RK_INCLUDE_PATH}/RkWidget.h
   ${RK_INCLUDE_PATH}/RkLabel.h
   ${RK_INCLUDE_PATH}/RkLineEdit.h
+  ${RK_INCLUDE_PATH}/RkModel.h
   ${RK_INCLUDE_PATH}/RkListView.h
   ${RK_INCLUDE_PATH}/RkProgressBar.h
   ${RK_INCLUDE_PATH}/RkCanvas.h

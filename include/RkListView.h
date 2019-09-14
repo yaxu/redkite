@@ -36,14 +36,16 @@ class RK_EXPORT RkListView : public RkWidget {
     RkModel* model() const;
 
  protected:
-    RK_DELCATE_IMPL_PTR(RkListViewEdit)
+    RK_DELCATE_IMPL_PTR(RkListView)
+    RK_DISABLE_COPY(RkListView)
+    RK_DISABLE_MOVE(RkListView)
+
     void paintEvent(const std::shared_ptr<RkPaintEvent> &event) final;
     void mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event) final;
     void mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event) final;
     void mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event) final;
     void mouseDoubleClickEvent(const std::shared_ptr<RkMouseEvent> &event) final;
     void wheelEvent(const std::shared_ptr<RkWheelEvent> &event) final;
-
 };
 
 #endif // RK_LISTVIEW_H

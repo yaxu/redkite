@@ -1,5 +1,5 @@
 /**
- * File name: RkListViewImpl.h
+ * File name: RkModel.h
  * Project: Redkite (A small GUI toolkit)
  *
  * Copyright (C) 2019 Iurie Nistor <http://geontime.com>
@@ -21,34 +21,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef RK_LISTVIEW_IMPL_H
-#define RK_LISTVIEW_IMPL_H
+#ifndef RK_MODEL_H
+#define RK_MODEL_H
 
-#include "RkWidgetImpl.h"
-#include "RkPainter.h"
+#include "Rk.h"
+#include "RkVariant.h"
 
-class RkModel;
+class RkEventQueue;
 
-class RkLineEdit::RkListViewImpl : public RkWidget::RkWidgetImpl {
+class RK_EXPORT RkModel {
  public:
-        RkListViewImpl(RkLineEdit *interface,  RkWidget *parent = nullptr);
-        virtual ~RkListViewImpl() = default;
-        RK_DISABLE_COPY(RkListViewImpl)
-        RK_DISABLE_MOVE(RkListViewImpl)
-        RkVariant data(int index);
+    RkModel(RkEventQueue *queue);
+    virtual ~RkModel() = default;
 
- protected:
-        int drawCellText(size_t index,
-                         RkPainter &painter,
-                         int offsetY,
-                         const std::string &text);
-
- private:
-    RK_DECALRE_INTERFACE_PTR(RkListView)
-
-    RkModel *listViewModel;
-    size_t offsetIndex;
-    int cellPadding;
+    virtual RkVariant data(int index) const = 0;
+    virtual size_t rows() const = 0;
 };
 
-#endif // RK_LISTVIEW_IMPL_H
+#endif // RK_MODEL_H
