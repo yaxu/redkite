@@ -67,10 +67,14 @@ void RkListView::paintEvent(const std::shared_ptr<RkPaintEvent> &event)
 
 void RkListView::mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
+        RK_UNUSED(event);
 }
 
 void RkListView::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
+        if (!model())
+                return;
+
         RkPoint p = {event->x(), event->y()};
         auto index = impl_ptr->getCellIndex(p);
         if (index > -1) {
@@ -89,7 +93,61 @@ void RkListView::mouseDoubleClickEvent(const std::shared_ptr<RkMouseEvent> &even
 
 void RkListView::wheelEvent(const std::shared_ptr<RkWheelEvent> &event)
 {
-        if (event->direction() == RkWheelEvent::Direction::WheelUp
-            || event->direction() == RkWheelEvent::Direction::WheelDown)
+        if (model() && model()->rows() > impl_ptr->visibleRows() &&
+            (event->direction() == RkWheelEvent::Direction::WheelUp
+             || event->direction() == RkWheelEvent::Direction::WheelDown)) {
                 impl_ptr->incrementOffsetIndex(event->direction() == RkWheelEvent::Direction::WheelDown ? 1 : -1);
+        }
+}
+
+void RkListView::keyPressEvent(const std::shared_ptr<RkKeyEvent> &event)
+{
+        if (!model())
+                return;
+
+        switch (event->key())
+        {
+        case Rk::Key::Key_Home:
+        case Rk::Key::Key_Left:
+                model()->selectIndex(0);
+                if (model()->selectedIndex() < impl_ptr->getOffsetIndex())
+                        impl_ptr->incrementOffsetIndex(model()->selectedIndex() - impl_ptr->getOffsetIndex());
+                update();
+                break;
+        case Rk::Key::Key_End:
+        case Rk::Key::Key_Right:
+                model()->selectIndex(model()->rows() - 1);
+                if (model()->selectedIndex() - impl_ptr->getOffsetIndex() > impl_ptr->visibleRows() - 1)
+                        impl_ptr->incrementOffsetIndex(model()->selectedIndex() - impl_ptr->getOffsetIndex());
+                update();
+                break;
+        case Rk::Key::Key_Up:
+                if (model()->selectedIndex() - 1 > -1) {
+                        model()->selectIndex(model()->selectedIndex() - 1);
+                        if (model()->selectedIndex() < impl_ptr->getOffsetIndex())
+                                impl_ptr->incrementOffsetIndex(model()->selectedIndex() - impl_ptr->getOffsetIndex());
+                        update();
+                }
+                break;
+        case Rk::Key::Key_Down:
+                if (model()->selectedIndex() + 1 < model()->rows()) {
+                        model()->selectIndex(model()->selectedIndex() + 1);
+                        if (model()->selectedIndex() - impl_ptr->getOffsetIndex() > impl_ptr->visibleRows() - 1)
+                                impl_ptr->incrementOffsetIndex(model()->selectedIndex() - impl_ptr->getOffsetIndex());
+                        update();
+                }
+                break;
+        case Rk::Key::Key_Page_Up:
+                model()->selectIndex(model()->selectedIndex() - impl_ptr->visibleRows());
+                impl_ptr->incrementOffsetIndex(-impl_ptr->visibleRows());
+                update();
+                break;
+        case Rk::Key::Key_Page_Down:
+                model()->selectIndex(model()->selectedIndex() + impl_ptr->visibleRows());
+                impl_ptr->incrementOffsetIndex(impl_ptr->visibleRows());
+                update();
+                break;
+        default:
+                break;
+        }
 }

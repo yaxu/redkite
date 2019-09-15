@@ -145,3 +145,8 @@ int RkListView::RkListViewImpl::getCellIndex(const RkPoint &point) const
                 return -1;
         return point.y() / cellHeight;
 }
+
+size_t RkListView::RkListViewImpl::visibleRows() const
+{
+        return inf_ptr->height() / cellHeight + (inf_ptr->height() % cellHeight ? 1 : 0);
+}

@@ -47,6 +47,8 @@ class RkListView::RkListViewImpl : public RkWidget::RkWidgetImpl {
         void incrementOffsetIndex(int val);
         int getOffsetIndex() const;
         int getCellIndex(const RkPoint &point) const;
+        bool indexVisible(int index) const;
+        size_t visibleRows() const;
 
  protected:
         int drawCellText(size_t index,

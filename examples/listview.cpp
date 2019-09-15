@@ -83,6 +83,7 @@ int main(int arc, char **argv)
     std::vector<std::string> data;
     for (int i = 0; i < 100; i++)
             data.emplace_back("row " + std::to_string(i));
+
     model->setData(data);
     listViewWidget->setModel(model.get());
     widget->show();
