@@ -24,6 +24,7 @@
 #include "RkListView.h"
 #include "RkListViewImpl.h"
 #include "RkEvent.h"
+#include "RkModel.h"
 #include "RkLog.h"
 
 RkListView::RkListView(RkWidget *parent)
@@ -70,7 +71,12 @@ void RkListView::mouseMoveEvent(const std::shared_ptr<RkMouseEvent> &event)
 
 void RkListView::mouseButtonPressEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
-
+        RkPoint p = {event->x(), event->y()};
+        auto index = impl_ptr->getCellIndex(p);
+        if (index > -1) {
+                model()->selectIndex(impl_ptr->getOffsetIndex() + index);
+                update();
+        }
 }
 
 void RkListView::mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &event)

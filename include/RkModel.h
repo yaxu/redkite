@@ -35,17 +35,32 @@ class RK_EXPORT RkModel {
             Alignment = 0,
             Font = 1,
             Color = 2,
-            Text = 3
+            Text = 3,
+            Background = 4
     };
 
-    RkModel(RkEventQueue *queue) : eventQueue{queue} {}
+    RkModel(RkEventQueue *queue)
+            : eventQueue{queue}
+            , selectedModelIndex{-1}
+        {}
     virtual ~RkModel() = default;
     RK_DECL_ACT(updated, updated(), RK_ARG_TYPE(), RK_ARG_VAL());
     virtual RkVariant data(int index, DataType type) const = 0;
     virtual size_t rows() const = 0;
+    void selectIndex(int index)
+    {
+            if (rows() > 0 && index > -1 && index < rows())
+                    selectedModelIndex = index;
+    }
+
+    int selectedIndex() const
+    {
+            return selectedModelIndex;
+    }
 
  private:
     RkEventQueue* eventQueue;
+    int selectedModelIndex;
 };
 
 #endif // RK_MODEL_H

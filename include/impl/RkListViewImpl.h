@@ -42,7 +42,11 @@ class RkListView::RkListViewImpl : public RkWidget::RkWidgetImpl {
         void draw(RkPainter &painter);
         void setCellPadding(int padding);
         int getCellPadding() const;
-        void incrementOffsetIndex(int index);
+        void setCellHeight(int height);
+        int getCellHeight() const;
+        void incrementOffsetIndex(int val);
+        int getOffsetIndex() const;
+        int getCellIndex(const RkPoint &point) const;
 
  protected:
         int drawCellText(size_t index,
@@ -56,6 +60,7 @@ class RkListView::RkListViewImpl : public RkWidget::RkWidgetImpl {
     RkModel *listViewModel;
     int offsetIndex;
     int cellPadding;
+    int cellHeight;
 };
 
 #endif // RK_LISTVIEW_IMPL_H

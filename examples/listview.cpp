@@ -41,8 +41,19 @@ class MyModel: public RkModel {
 
        RkVariant data(int index, RkModel::DataType type) const final
        {
-               if (type == RkModel::DataType::Text && index >=0 && index < stringList.size())
+               if (stringList.empty() || index > stringList.size() - 1 || index < 0)
+                       return RkVariant();
+
+               if (type == RkModel::DataType::Text)
                        return RkVariant(stringList[index]);
+
+               if (type == RkModel::DataType::Color && index == selectedIndex())
+                       return RkVariant(RkColor(255, 255, 255));
+
+               if (type == RkModel::DataType::Background && index == selectedIndex())
+                       return RkVariant(RkColor(100, 100, 200));
+
+
                return RkVariant();
        }
 
