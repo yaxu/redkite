@@ -31,14 +31,15 @@
 #include <queue>
 #include <mutex>
 
-#ifdef RK_OS_WIN
+#ifdef RK_WINDOW_SYSTEM_API
         class RkEventQueueWin;
-#elif RK_OS_MAC
-        class RkEventQueueMac;
-#else // X11
-        class RkEventQueueX;
+#elif RK_WINDOW_SYSTEM_X11
+        class RkEventQueueX11;
+#elseif RK_WINDOW_SYSTEM_WAYLAND
+        class RkEventQueueWayland;
+#else
+#error Window system not defined
 #endif
-
 
 class RkEventQueue::RkEventQueueImpl {
  public:
@@ -55,7 +56,6 @@ class RkEventQueue::RkEventQueueImpl {
         void removeWidgetEvents(RkWidget *widget);
         void postEvent(RkWidget *widget, const std::shared_ptr<RkEvent> &event);
         void postEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event);
-        void postEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event);
         void processEvent(RkWidget *widget, const std::shared_ptr<RkEvent> &event);
         void processEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event);
         void processEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event);
@@ -76,12 +76,14 @@ class RkEventQueue::RkEventQueueImpl {
         std::mutex actionsQueueMutex;
         std::vector<RkTimer*> timersList;
 
-#ifdef RK_OS_WIN
+#ifdef RK_WINDOW_SYSTEM_API
         std::unique_ptr<RkEventQueueWin> platformEventQueue;
-#elif RK_OS_MAC
-        std::unique_ptr<RkEventQueueMac> platformEventQueue;
-#else // X11
-        std::unique_ptr<RkEventQueueX> platformEventQueue;
+#ifdef RK_WINDOW_SYSTEM_X11
+        std::unique_ptr<RkEventQueueX11> platformEventQueue;
+#ifdef RK_WINDOW_SYSTEM_WAYLAND
+        std::unique_ptr<RkEventQueueWayland> platformEventQueue;
+#else
+#error Window system not defined
 #endif
 };
 

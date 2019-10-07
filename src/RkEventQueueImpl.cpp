@@ -26,23 +26,26 @@
 #include "RkEventQueueImpl.h"
 #include "RkTimer.h"
 
-#ifdef RK_OS_WIN
+#ifdef RK_WINDOW_SYSTEM_WINAPI
 #include "RkEventQueueWin.h"
-#elif RK_OS_MAC
-#include "RkEventQueueMac.h"
-#else // X11
-#include "RkEventQueueX.h"
+#elseif RK_WINDOW_SYSTEM_X11
+#include "RkEventQueueX11.h"
+#elseif RK_WINDOW_SYSTEM_WAYLAND
+#include "RkEventQueueWayland.h"
+#else
+#error Window system not defined
 #endif
-
 
 RkEventQueue::RkEventQueueImpl::RkEventQueueImpl(RkEventQueue* eventQueueInterface)
         : inf_ptr{eventQueueInterface}
-#ifdef RK_OS_WIN
+#ifdef RK_WINDOW_SYSTEM_WINAPI
         , platformEventQueue{std::make_unique<RkEventQueueWin>()}
-#elif RK_OS_MAC
-        , platformEventQueue{std::make_unique<RkEventQueueMac>()}
-#else // X11
-        , platformEventQueue{std::make_unique<RkEventQueueX>()}
+#elif RK_WINDOW_SYSTEM_X11
+        , platformEventQueue{std::make_unique<RkEventQueueX11>()}
+#elseif RK_WINDOW_SYSTEM_X11
+        , platformEventQueue{std::make_unique<RkEventQueueWayland>()}
+#else
+#error Window system not defined
 #endif
 {
 }
@@ -87,9 +90,8 @@ void RkEventQueue::RkEventQueueImpl::removeWidget(RkWidget *widget)
 void RkEventQueue::RkEventQueueImpl::removeWidgetEvents(RkWidget *widget)
 {
         for (auto it = eventsQueue.begin(); it != eventsQueue.end();) {
-                if (it->first.id == widget->id().id) {
+                if (it->first.id == widget->id().id)
                         it = eventsQueue.erase(it);
-                }
                 else
                         ++it;
         }
@@ -103,11 +105,6 @@ void RkEventQueue::RkEventQueueImpl::postEvent(RkWidget *widget, const std::shar
 void RkEventQueue::RkEventQueueImpl::postEvent(const RkWindowId &id, const std::shared_ptr<RkEvent> &event)
 {
         eventsQueue.push_back({id, event});
-}
-
-void RkEventQueue::RkEventQueueImpl::postEvent(const RkNativeWindowInfo &info, const std::shared_ptr<RkEvent> &event)
-{
-        //        eventsQueue.push({info.window, event});
 }
 
 void RkEventQueue::RkEventQueueImpl::processEvent(RkWidget* widget, const std::shared_ptr<RkEvent> &event)

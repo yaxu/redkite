@@ -25,28 +25,32 @@
 #include "RkEvent.h"
 #include "RkPainter.h"
 
-#ifdef RK_OS_WIN
+#ifdef RK_WINDOW_SYSTEM_WINAPI
 #include "RkWindowWin.h"
-#elif RK_OS_MAC
-#include "RkWindowMac.h"
-#else // X11
-#include "RkWindowX.h"
+#elif RK_WINDOW_SYSTEM_X11
+#include "RkWindowX11.h"
 #undef KeyPress
 #undef KeyRelease
 #undef Paint
 #undef FocusIn
 #undef FocusOut
+#elseif RK_WINDOW_SYSTEM_WAYLAND
+#include "RkWindowWayland.h"
+#else
+#error Window system not defined
 #endif
 
 RkWidget::RkWidgetImpl::RkWidgetImpl(RkWidget* widgetInterface, RkWidget* parent, Rk::WindowFlags flags)
         : inf_ptr{widgetInterface}
         , parentWidget{parent}
-#ifdef RK_OS_WIN
+#ifdef RK_WINDOW_SYSTEM_WINAPI
         , platformWindow{!parent ? std::make_unique<RkWindowWin>(nullptr, flags) : std::make_unique<RkWindowWin>(parent->nativeWindowInfo(), flags)}
-#elif RK_OS_MAC
-        , platformWindow{!parent ? std::make_unique<RkWindowMac>(nullptr, flags) : std::make_unique<RkWindowMac>(parent->nativeWindowInfo(), flags)}
-#else // X11
-        , platformWindow{!parent ? std::make_unique<RkWindowX>(nullptr, flags) : std::make_unique<RkWindowX>(parent->nativeWindowInfo(), flags)}
+#elseif RK_WINDOW_SYSTEM_X11
+        , platformWindow{!parent ? std::make_unique<RkWindowX11>(nullptr, flags) : std::make_unique<RkWindowX11>(parent->nativeWindowInfo(), flags)}
+#elseif RK_WINDOW_SYSTEM_WAYLAND
+        , platformWindow{!parent ? std::make_unique<RkWindowWayland>(nullptr, flags) : std::make_unique<RkWindowWayland>(parent->nativeWindowInfo(), flags)}
+#else
+#error Window system not defined
 #endif
         , widgetClosed{false}
         , eventQueue{nullptr}
