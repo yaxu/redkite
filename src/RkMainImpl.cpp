@@ -33,7 +33,7 @@
 RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain)
         : inf_ptr{interfaceMain}
         , topWindow(nullptr)
-        , eventQueue{std::make_shared<RkEventQueue>()}
+        , eventQueue{std::make_unique<RkEventQueue>()}
 {
         RK_LOG_INFO("called");
 }
@@ -41,7 +41,7 @@ RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain)
 RkMain::RkMainImpl::RkMainImpl(RkMain *interfaceMain, int argc, char **argv)
         : inf_ptr{interfaceMain}
         , topWindow(nullptr)
-        , eventQueue{std::make_shared<RkEventQueue>()}
+        , eventQueue{std::make_unique<RkEventQueue>()}
 {
         RK_UNUSED(argc);
         RK_UNUSED(argv);
@@ -68,9 +68,9 @@ RkWidget* RkMain::RkMainImpl::topLevelWindow(void)
       return topWindow;
 }
 
-std::shared_ptr<RkEventQueue> RkMain::RkMainImpl::getEventQueue()
+RkEventQueue* RkMain::RkMainImpl::getEventQueue()
 {
-        return eventQueue;
+        return eventQueue.get();
 }
 
 int RkMain::RkMainImpl::exec(bool block)

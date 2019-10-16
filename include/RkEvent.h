@@ -30,7 +30,6 @@
 class RkCloseEvent;
 class RkKeyEvent;
 class RkMouseEvent;
-class RkWheelEvent;
 class RkMoveEvent;
 class RkResizeEvent;
 class RkPaintEvent;
@@ -111,9 +110,7 @@ class RkMouseEvent: public RkEvent {
                 Unknown = 0,
                 Left = 1,
                 Middle = 2,
-                Right = 3,
-                WheelUp  = 4,
-                WheelDown = 5
+                Right = 3
         };
 
       RkMouseEvent(Type type = Type::MouseButtonPress)
@@ -133,6 +130,30 @@ class RkMouseEvent: public RkEvent {
 };
 
 class RkWheelEvent: public RkEvent {
+    public:
+        enum class Direction : int {
+            WheelUp = 0,
+            WheelDown = 1
+        };
+
+        RkWheelEvent()
+                : RkEvent(Type::Wheel),
+                  wheelDirection{Direction::WheelUp}
+        {
+        }
+
+        void setDirection(Direction direction)
+        {
+                wheelDirection = direction;
+        }
+
+        Direction direction() const
+        {
+                return wheelDirection;
+        }
+
+    private:
+        Direction wheelDirection;
 };
 
 class RkMoveEvent: public RkEvent {

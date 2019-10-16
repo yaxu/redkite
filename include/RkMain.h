@@ -36,7 +36,7 @@ class RK_EXPORT RkMain {
           ~RkMain();
           bool setTopLevelWindow(RkWidget* widget);
           int exec(bool block = true);
-          std::shared_ptr<RkEventQueue> eventQueue();
+          RkEventQueue* eventQueue();
   protected:
        	  RK_DECLARE_IMPL(RkMain)
 

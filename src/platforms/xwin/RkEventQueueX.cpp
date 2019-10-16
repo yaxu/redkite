@@ -81,8 +81,20 @@ void RkEventQueueX::getEvents(std::vector<std::pair<RkWindowId, std::shared_ptr<
                         event = processFocusEvent(&e);
                         break;
                 case ButtonPress:
-                        event = processButtonPressEvent(&e);
+                {
+                        auto buttonEvent = reinterpret_cast<XButtonEvent*>(&e);
+                        if (buttonEvent->button == Button4 || buttonEvent->button == Button5) {
+                                auto wheelEvent = std::make_shared<RkWheelEvent>();
+                                if (buttonEvent->button == Button4)
+                                        wheelEvent->setDirection(RkWheelEvent::Direction::WheelUp);
+                                else
+                                        wheelEvent->setDirection(RkWheelEvent::Direction::WheelDown);
+                                event = wheelEvent;
+                        } else {
+                                event = processButtonPressEvent(buttonEvent);
+                        }
                         break;
+                }
                 case ButtonRelease:
                         event = std::make_shared<RkMouseEvent>();
                         event->setType(RkEvent::Type::MouseButtonRelease);
@@ -109,9 +121,9 @@ void RkEventQueueX::getEvents(std::vector<std::pair<RkWindowId, std::shared_ptr<
         }
 }
 
-std::shared_ptr<RkEvent> RkEventQueueX::processButtonPressEvent(XEvent *e)
+std::shared_ptr<RkEvent> RkEventQueueX::processButtonPressEvent(XButtonEvent *e)
 {
-        auto buttonEvent = reinterpret_cast<XButtonEvent*>(e);
+        auto buttonEvent = e;
         auto mouseEvent = std::make_shared<RkMouseEvent>();
         mouseEvent->setTime(std::chrono::system_clock::time_point(std::chrono::milliseconds(buttonEvent->time)));
         mouseEvent->setX(buttonEvent->x);
@@ -127,12 +139,6 @@ std::shared_ptr<RkEvent> RkEventQueueX::processButtonPressEvent(XEvent *e)
                 break;
         case Button3:
                 mouseEvent->setButton(RkMouseEvent::ButtonType::Right);
-                break;
-        case Button4:
-                mouseEvent->setButton(RkMouseEvent::ButtonType::WheelUp);
-                break;
-        case Button5:
-                mouseEvent->setButton(RkMouseEvent::ButtonType::WheelDown);
                 break;
         default:
                 mouseEvent->setButton(RkMouseEvent::ButtonType::Unknown);

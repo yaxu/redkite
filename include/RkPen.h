@@ -37,17 +37,17 @@ class RK_EXPORT RkPen {
                 DotLine   = 3
         };
 
-        explicit constexpr RkPen(PenStyle style = PenStyle::SolidLine)
+       explicit constexpr RkPen(PenStyle style = PenStyle::SolidLine)
                 : penStyleVal{style}
                 , penWidthVal{1}
                 , penColorVal{RkColor()}
        {
        }
 
-       constexpr RkPen(const RkColor &color)
+       explicit constexpr RkPen(const RkColor &color)
                :  penStyleVal{PenStyle::SolidLine}
-                , penWidthVal{1}
-                , penColorVal{color}
+               , penWidthVal{1}
+               , penColorVal{color}
        {
        }
 

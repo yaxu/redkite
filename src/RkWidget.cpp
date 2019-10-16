@@ -435,7 +435,7 @@ void RkWidget::mouseButtonReleaseEvent(const std::shared_ptr<RkMouseEvent> &even
 
 void RkWidget::mouseDoubleClickEvent(const std::shared_ptr<RkMouseEvent> &event)
 {
-        mouseButtonPressEvent(event);
+        RK_UNUSED(event);
 }
 
 void RkWidget::wheelEvent(const std::shared_ptr<RkWheelEvent> &event)
