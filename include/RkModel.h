@@ -41,26 +41,17 @@ class RK_EXPORT RkModel {
 
     RkModel(RkEventQueue *queue)
             : eventQueue{queue}
-            , selectedModelIndex{-1}
         {}
     virtual ~RkModel() = default;
     RK_DECL_ACT(updated, updated(), RK_ARG_TYPE(), RK_ARG_VAL());
-    virtual RkVariant data(int index, DataType type) const = 0;
+    virtual RkVariant data(int row, DataType type) const = 0;
     virtual size_t rows() const = 0;
-    void selectIndex(int index)
-    {
-            if (rows() > 0 && index > -1 && index < rows())
-                    selectedModelIndex = index;
-    }
-
-    int selectedIndex() const
-    {
-            return selectedModelIndex;
-    }
+    virtual void selectIndex(int index) { RK_UNUSED(index); }
+    virtual int selectedIndex() const { return 0; }
+    RK_DECL_ACT(modelChanged, modelChanged(), RK_ARG_TYPE(), RK_ARG_VAL());
 
  private:
     RkEventQueue* eventQueue;
-    int selectedModelIndex;
 };
 
 #endif // RK_MODEL_H

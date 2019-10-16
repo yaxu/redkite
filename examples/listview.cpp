@@ -30,6 +30,7 @@
 class MyModel: public RkModel {
   public:
         MyModel(RkEventQueue *eventQueue) : RkModel(eventQueue)
+                                          , currentIndex{-1}
         {
         }
 
@@ -53,7 +54,6 @@ class MyModel: public RkModel {
                if (type == RkModel::DataType::Background && index == selectedIndex())
                        return RkVariant(RkColor(100, 100, 200));
 
-
                return RkVariant();
        }
 
@@ -62,8 +62,12 @@ class MyModel: public RkModel {
                return stringList.size();
        }
 
+        void selectIndex(int index) final { currentIndex = index; }
+        int selectedIndex() const final { return currentIndex; }
+
 private:
         std::vector<std::string> stringList;
+        int currentIndex;
 };
 
 int main(int arc, char **argv)

@@ -38,6 +38,10 @@ class RK_EXPORT RkListView : public RkWidget {
     RkModel* model() const;
     void setCellPadding(int padding);
     int cellPadding() const;
+    RK_DECL_ACT(selectedIndex,
+                selectedIndex(int index),
+                RK_ARG_TYPE(int),
+                RK_ARG_TYPE(index));
 
  protected:
     RK_DELCATE_IMPL_PTR(RkListView)
