@@ -111,6 +111,7 @@ class RK_EXPORT RkWidget: public RkCanvas {
           RkRect rect() const;
           void update();
           void close();
+          void setModality(Rk::Modality modality);
           Rk::Modality modality() const;
           bool isModal() const;
           void setWidgetAttribute(Rk::WidgetAttribute attribute);

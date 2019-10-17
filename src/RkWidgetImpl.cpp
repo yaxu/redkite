@@ -359,6 +359,11 @@ void RkWidget::RkWidgetImpl::deleteChild(RkWidget* child)
         }
 }
 
+void RkWidget::RkWidgetImpl::setModality(Rk::Modality modality)
+{
+        widgetModality = modality;
+}
+
 Rk::Modality RkWidget::RkWidgetImpl::modality() const
 {
         return widgetModality;

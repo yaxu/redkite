@@ -82,6 +82,7 @@ class RkWidget::RkWidgetImpl {
         void update();
         void deleteChild(RkWidget* child);
         static Rk::WidgetAttribute defaultWidgetAttributes();
+        void setModality(Rk::Modality modality);
         Rk::Modality modality() const;
         const std::list<RkWidget*>& childWidgets() const;
         void setWidgetAttribute(Rk::WidgetAttribute attribute);

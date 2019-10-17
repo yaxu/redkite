@@ -509,6 +509,24 @@ bool RkWidget::isModal() const
         return modality() != Rk::Modality::NonModal;
 }
 
+void RkWidget::setModality(Rk::Modality modality)
+{
+        o_ptr->setModality(modality);
+        auto topWindow = getTopWindow();
+        if (modality == Rk::Modality::NonModal) {
+                if (topWindow)
+                        topWindow->enableInput();
+        } else if (modality == Rk::Modality::ModalParent) {
+                if (parent())
+                        parent()->disableInput();
+                enableInput();
+        } else  if (modality == Rk::Modality::ModalTopWindow) {
+                if (topWindow)
+                        topWindow->disableInput();
+                enableInput();
+        }
+}
+
 Rk::Modality RkWidget::modality() const
 {
         return o_ptr->modality();
