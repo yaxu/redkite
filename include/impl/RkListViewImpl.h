@@ -38,6 +38,7 @@ class RkListView::RkListViewImpl : public RkWidget::RkWidgetImpl {
         RK_DISABLE_COPY(RkListViewImpl)
         RK_DISABLE_MOVE(RkListViewImpl)
         void setModel(RkModel *model);
+        void modelChanged();
         RkModel* getModel() const;
         void draw(RkPainter &painter);
         void setCellPadding(int padding);

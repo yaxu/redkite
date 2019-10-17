@@ -37,7 +37,6 @@ RkListView::RkListView(RkWidget *parent)
 void RkListView::setModel(RkModel *model)
 {
         impl_ptr->setModel(model);
-        RK_ACT_BIND(model, modelChanged, RK_ACT_ARGS(), this, update());
         update();
 }
 

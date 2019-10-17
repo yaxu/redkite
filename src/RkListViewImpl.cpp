@@ -38,8 +38,17 @@ RkListView::RkListViewImpl::RkListViewImpl(RkListView *interface, RkWidget *pare
 void RkListView::RkListViewImpl::setModel(RkModel *model)
 {
         listViewModel = model;
-        if (model->rows() > 0)
+        RK_ACT_BIND(listViewModel, modelChanged, RK_ACT_ARGS(), this, modelChanged());
+        if (listViewModel->rows() > 0)
                 offsetIndex = 0;
+}
+
+void RkListView::RkListViewImpl::modelChanged()
+{
+        offsetIndex = -1;
+        if (listViewModel->rows() > 0)
+                offsetIndex = 0;
+        inf_ptr->update();
 }
 
 RkModel* RkListView::RkListViewImpl::getModel() const
@@ -49,7 +58,7 @@ RkModel* RkListView::RkListViewImpl::getModel() const
 
 void RkListView::RkListViewImpl::draw(RkPainter &painter)
 {
-        if (!listViewModel)
+        if (!listViewModel || offsetIndex < 0)
                 return;
 
         auto pen = painter.pen();
